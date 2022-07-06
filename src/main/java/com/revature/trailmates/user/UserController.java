@@ -4,6 +4,9 @@ package com.revature.trailmates.user;
 //This is the class that wraps servlets for all netcode
 
 
+import com.revature.trailmates.auth.AuthService;
+import com.revature.trailmates.auth.TokenService;
+import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.user.dtos.requests.EditUserRequest;
 import com.revature.trailmates.util.annotations.*;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
@@ -35,8 +38,11 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody User editUser(@RequestBody EditUserRequest request) {
-        return userService.UpdateUser(request);
+    public @ResponseBody User editUser(@RequestHeader("Authorization") String token, @RequestBody EditUserRequest request) {
+        Principal principal = new TokenService().extractRequesterDetails(token);
+        if (principal.getId() == null) throw new UnauthorizedException();
+
+        return userService.UpdateUser(principal.getId(), request);
     }
 
     //region Exception Handlers

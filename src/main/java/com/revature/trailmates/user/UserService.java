@@ -32,16 +32,15 @@ public class UserService {
         return userRepository.getUserByUsername(username);
     }
 
-    public User UpdateUser(EditUserRequest request){
-        User currentUser = userRepository.getUserByID(request.getId());
+    public User UpdateUser(String tokenId, EditUserRequest request){
+        User currentUser = userRepository.getUserByID(tokenId);
 
         boolean isPasswordChanged = false;
 
         if (!request.getEmail().equals("")) {
             if (new AuthService(userRepository).isValidEmail(request.getEmail()))
                 currentUser.setEmail(request.getEmail());
-            else{
-                //FAIL!
+            else{ // Email invalid format
                 throw new InvalidRequestException("Email invalid!"); //Change to 406 later.
             }
         }
@@ -53,10 +52,11 @@ public class UserService {
 
         if (!request.getBio().equals("") ) {
             if (request.getBio().length() < 255) currentUser.setBio(request.getBio());
-            else throw new InvalidRequestException("Bio must be less than 255 characters!");
+            else throw new InvalidRequestException("Bio must be less than 255 characters!"); //Change to 406 later
         }
 
-        if (request.getAge() > 13) currentUser.setAge(request.getAge());
+        if (request.getAge() > 13 || request.getAge() == 0) currentUser.setAge(request.getAge());
+        else if (request.getAge() <= 13) throw new InvalidRequestException("Users must be older than 13 to use our services for Child Protection."); //Change to 406 later
 
 //        if (!request.getRole_id().equals("")){
 //            boolean roleExists = new UserRolesService(new UserRolesDAO()).getExistsInColumnByStringValue("id", request.getRole_id());
