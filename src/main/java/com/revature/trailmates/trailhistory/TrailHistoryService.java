@@ -19,11 +19,11 @@ public class TrailHistoryService {
     public TrailHistoryService() {
     }
 
-    public List<History> getAscHistory(String userID){
+    public List<TrailHistory> getAscHistory(String userID){
         return repo.getAscHistory(userID);
     }
 
-    public List<History> getDescHistory(String userID){
+    public List<TrailHistory> getDescHistory(String userID){
         return repo.getDescHistory(userID);
     }
 

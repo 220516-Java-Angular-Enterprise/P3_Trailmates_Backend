@@ -40,7 +40,7 @@ public class TrailHistoryController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @GetMapping(path = "/desc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<History> descendingTrailHistory(@RequestHeader("Authorization") String token){
+    public @ResponseBody List<TrailHistory> descendingTrailHistory(@RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
         return trailHistoryService.getDescHistory(user.getId());
     }
@@ -52,7 +52,7 @@ public class TrailHistoryController {
     @CrossOrigin
     @GetMapping(path = "/asc", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<History> ascendingTrailHistory(@RequestHeader("Authorization") String token){
+    List<TrailHistory> ascendingTrailHistory(@RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
         return trailHistoryService.getAscHistory(user.getId());
     }
