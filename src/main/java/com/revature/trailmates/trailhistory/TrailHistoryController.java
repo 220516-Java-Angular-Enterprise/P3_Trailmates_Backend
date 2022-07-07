@@ -3,7 +3,9 @@ package com.revature.trailmates.trailhistory;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
+import com.revature.trailmates.trailhistory.dto.requests.NewHistory;
 import com.revature.trailmates.trailhistory.dto.response.History;
+import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -52,9 +54,18 @@ public class TrailHistoryController {
     @CrossOrigin
     @GetMapping(path = "/asc", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<TrailHistory> ascendingTrailHistory(@RequestHeader("Authorization") String token){
+    List<History> ascendingTrailHistory(@RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
         return trailHistoryService.getAscHistory(user.getId());
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @CrossOrigin
+    @PostMapping(path = "/newHistory", consumes = "application/json",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    TrailHistory insertingNewHistory(@RequestHeader("Authorization") String token, @RequestBody NewHistory newHistory){
+        Principal user = tokenService.noTokenThrow(token);
+        return trailHistoryService.insertNewHistory(newHistory, user.getId());
     }
 
 

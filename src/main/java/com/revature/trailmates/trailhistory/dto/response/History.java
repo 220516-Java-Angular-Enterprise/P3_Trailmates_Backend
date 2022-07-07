@@ -1,41 +1,42 @@
 package com.revature.trailmates.trailhistory.dto.response;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * this class will be used to return history objects
  */
 public class History {
 
-    private String trailName;
-    private String partnerName;
+    private String trailname;
+    private String partnername;
     private String comment;
-    private Date date;
+    private Timestamp trail_date;
 
     public History() {
     }
 
-    public History(String trailName, String partnerName, String comment, Date date) {
-        this.trailName = trailName;
-        this.partnerName = partnerName;
+    public History(String trailName, String partnerName, String comment, Timestamp date) {
+        this.trailname = trailName;
+        this.partnername = partnerName;
         this.comment = comment;
-        this.date = date;
+        this.trail_date = date;
     }
 
     public String getTrailName() {
-        return trailName;
+        return trailname;
     }
 
     public void setTrailName(String trailName) {
-        this.trailName = trailName;
+        this.trailname = trailName;
     }
 
     public String getPartnerName() {
-        return partnerName;
+        return partnername;
     }
 
     public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
+        this.partnername = partnerName;
     }
 
     public String getComment() {
@@ -46,21 +47,21 @@ public class History {
         this.comment = comment;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getDate() {
+        return trail_date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Timestamp date) {
+        this.trail_date = date;
     }
 
     @Override
     public String toString() {
         return "History{" +
-                "trailName='" + trailName + '\'' +
-                ", partnerName='" + partnerName + '\'' +
+                "trailName='" + partnername + '\'' +
+                ", partnerName='" + trailname + '\'' +
                 ", comment='" + comment + '\'' +
-                ", date=" + date +
+                ", date=" + trail_date +
                 '}';
     }
 }
