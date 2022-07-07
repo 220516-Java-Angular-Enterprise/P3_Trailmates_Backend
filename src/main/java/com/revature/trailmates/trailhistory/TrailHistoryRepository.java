@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.transaction.Transactional;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -22,11 +23,8 @@ public interface TrailHistoryRepository extends CrudRepository<TrailHistory, Str
     @Query(value = "select * from trailhistory where user_id = ?1 order by trailDate DESC", nativeQuery = true)
     List<History> getDescHistory(String userID);*/
 
-    @Query(value = "select NEW History(name as trailname, username as partnerName, th.comment, trail_date) from trailhistory as th\n" +
-            "inner join trails as t on th.trail_id = t.id \n" +
-            "inner join users as u on th.user_id = u.id \n" +
-            "where user_id = ?1 order by trail_date ASC", nativeQuery = true)
-    List<History> getAscHistory(String userID);
+    @Query(value = "select * from trailhistory where user_id = ?1 order by trail_date DESC", nativeQuery = true)
+    List<TrailHistory> getAscHistory(String userID);
 
     @Query(value = "select * from trailhistory where user_id = ?1 order by trail_date DESC", nativeQuery = true)
     List<TrailHistory> getDescHistory(String userID);
@@ -34,4 +32,7 @@ public interface TrailHistoryRepository extends CrudRepository<TrailHistory, Str
     @Modifying
     @Query(value = "insert into trailhistory values(?1,?2,?3,?4,?5)", nativeQuery = true)
     void addNewHistory(String id, String comment, Timestamp date, String trail_id, String user_id);
+
+    @Query(value = "select id from trails where name = ?1", nativeQuery = true)
+    String trailID(String trail_name);
 }

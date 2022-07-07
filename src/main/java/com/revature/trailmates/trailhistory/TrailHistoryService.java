@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class TrailHistoryService {
     public TrailHistoryService() {
     }
 
-    public List<History> getAscHistory(String userID){
+    public List<TrailHistory> getAscHistory(String userID){
         return repo.getAscHistory(userID);
     }
 
@@ -29,9 +30,10 @@ public class TrailHistoryService {
         return repo.getDescHistory(userID);
     }
 
-    public TrailHistory insertNewHistory(NewHistory newHistory, String userID){
-        repo.addNewHistory(UUID.randomUUID().toString(), newHistory.getComment(), newHistory.getDate(), newHistory.getTrail_name(), userID);
-        return null;
+    public void insertNewHistory(NewHistory newHistory, String userID){
+        Timestamp date = Timestamp.valueOf(newHistory.getDate().replaceAll("[A-Z]", " "));
+        String trailID = repo.trailID(newHistory.getTrail_name());
+        repo.addNewHistory(UUID.randomUUID().toString(), newHistory.getComment(), date, trailID, userID);
     }
 
 }

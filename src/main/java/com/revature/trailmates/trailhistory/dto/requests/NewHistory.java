@@ -10,9 +10,9 @@ public class NewHistory {
 
     private String trail_name;
     private String comment;
-    private Timestamp date;
+    private String date;
 
-    public NewHistory(String trail_name, String comment, Timestamp date) {
+    public NewHistory(String trail_name, String comment, String date) {
         this.trail_name = trail_name;
         this.comment = comment;
         this.date = date;
@@ -37,11 +37,11 @@ public class NewHistory {
         this.comment = comment;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
