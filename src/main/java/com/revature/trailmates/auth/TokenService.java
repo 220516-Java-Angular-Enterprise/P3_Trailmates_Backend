@@ -6,7 +6,6 @@ import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.user.User;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
-import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
@@ -45,7 +44,7 @@ public class TokenService {
         long now = System.currentTimeMillis();
         JwtBuilder tokenBuilder = Jwts.builder()
                 .setId(subject.getId())
-                .setIssuer("yolp")
+                .setIssuer("TrailMates")
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtConfig.getExpiration()))
                 .setSubject(subject.getUsername())

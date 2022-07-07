@@ -14,16 +14,10 @@ public class NewTrailFlagRequest {
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
 //    private User user_id;
-
-private String user_id;
-
-
+    private String user_id;
     private long date_int;
-
-
     public NewTrailFlagRequest() {
     }
-
 
     public String getTrail_id() {
         return trail_id;

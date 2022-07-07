@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +36,23 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
+//region getting users
+    @GetMapping(value = "/all-users")
+    public @ResponseBody ArrayList<User> getAllUsers(){
+        return userService.getAllUsers();
+    }
+
+    @GetMapping(value = "user-id/{id}")
+    public @ResponseBody User getUserById(@PathVariable String id){
+        return userService.getUserById(id);
+    }
+
+    @GetMapping(value = "user-username/{username}")
+    public @ResponseBody User getUserByUsername(@PathVariable String username){
+        return userService.getUserByUsername(username);
+    }
+
+//endregion
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)

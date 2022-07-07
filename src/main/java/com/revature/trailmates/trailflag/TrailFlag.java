@@ -32,12 +32,12 @@ public class TrailFlag {
         this.date_int = request.getDate_int();
     }
 
-    public String get_Id() {
+    public String getId() {
         return id;
     }
 
-    public void set_Id(String entry_id) {
-        this.id = entry_id;
+    public void set_Id(String id) {
+        this.id = id;
     }
 
     public String getTrail_id() {
@@ -62,5 +62,15 @@ public class TrailFlag {
 
     public void setDate_int(long date_int) {
         this.date_int = date_int;
+    }
+
+    @Override
+    public String toString() {
+        return "TrailFlag{" +
+                "id='" + id + '\'' +
+                ", trail_id='" + trail_id + '\'' +
+                ", user_id=" + user_id +
+                ", date_int=" + date_int +
+                '}';
     }
 }

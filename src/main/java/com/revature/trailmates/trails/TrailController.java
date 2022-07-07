@@ -67,4 +67,21 @@ public class TrailController {
     @GetMapping(value = "searchState/{page}/{state}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<Trail> searchTrailByState(@PathVariable("state") String state, @PathVariable("page") int page) { return trailService.searchTrailByState(state, page); }
 
+    /**
+     * Returns a List of Trails that fir the Park Name search criteria on a specific page
+     * @param search_park
+     * @param page
+     * @return
+     */
+    @CrossOrigin
+    @GetMapping(value = "searchPark/{page}/{search_park}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Trail> searchTrailByParkName(@PathVariable("search_park") String search_park, @PathVariable("page") int page) { return trailService.searchTrailByParkName(search_park, page); }
+
+
+    //FOR BACKEND USE ONLY, DON'T CALL THIS ON FRONT END.
+    @CrossOrigin
+    @GetMapping(value = "/getAllAPI/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Trail> getAllTrailsAPI(@PathVariable int page) { return trailService.getAllTrailsAPI(page); }
+
+
 }

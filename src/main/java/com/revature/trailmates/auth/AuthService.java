@@ -10,11 +10,14 @@ import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
+@Transactional
 public class AuthService {
 
     @Inject
@@ -29,8 +32,8 @@ public class AuthService {
     public User login(LoginRequest loginRequest){
         if(loginRequest.getUsername() == null || loginRequest.getPassword() == null) throw new InvalidRequestException();//401
         //todo talk with alec about user input validation (username, password, and other things)
-        //if(!isValidUsername(loginRequest.getUsername()) || !isValidPassword(loginRequest.getPassword())) throw new InvalidRequestException("Invalid username or password");//404
-        User user = userRepository.getUserByUsername(loginRequest.getUsername());
+        if(!isValidUsername(loginRequest.getUsername()) || !isValidPassword(loginRequest.getPassword())) throw new InvalidRequestException("Invalid username or password");//404
+        User user = userRepository.getUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         if(user == null)throw new InvalidRequestException("Invalid credentials");//404
         //if (!user.getIsActive()) throw new AuthenticationException("Inactive User");//403
         return user;
@@ -42,12 +45,13 @@ public class AuthService {
         //validation checks
         String message = nullChecker(request);
         if(!message.isEmpty()) throw new InvalidRequestException(message);
+        if(request.getAge() < 13) throw new InvalidRequestException("User age is below 13");
         if(userExists(user.getUsername())) throw new ResourceConflictException("This username is already taken");
-        //if(!isValidUsername(user.getUsername())) throw new InvalidRequestException("Invalid username, must be 8-20 characters long and no special characters except _ and .");
-        //if(!isValidPassword(user.getPassword())) throw new InvalidRequestException("Invalid password, must be longer than 8 characters and contain one number, one special character, and one alphabetical character");
+        if(!isValidUsername(user.getUsername())) throw new InvalidRequestException("Invalid username, must be 8-20 characters long and no special characters except _ and .");
+        if(!isValidPassword(user.getPassword())) throw new InvalidRequestException("Invalid password, must be longer than 8 characters and contain one number, one special character, and one alphabetical character");
         if(!isValidEmail(user.getEmail())) throw new InvalidRequestException("Invalid email, must be a valid email address");
 
-        userRepository.save(user);
+        userRepository.saveUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole(), user.getBio(), user.getAge());
         //todo talk with alec about password encryption
         //userRepository.encryptPassword(user.getPassword(),user.getId());
 
@@ -81,6 +85,14 @@ public class AuthService {
 
     public boolean isValidEmail(String email){
         return email.matches("^([\\w][\\-\\_\\.]?)*\\w@([\\w+]\\-?)*\\w\\.\\w+$");
+    }
+
+    private boolean isValidUsername(String username){
+        return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
+    }
+
+    private boolean isValidPassword(String password){
+        return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
 

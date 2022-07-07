@@ -12,8 +12,10 @@ public class Trail {
 
     @Id
     private String id;
-    @Column(name="name", nullable = false)
+    @Column(name="name")
     private String name;
+    @Column(name="park_name")
+    private String park_name;
     @Column(name="short_desc", columnDefinition = "TEXT")
     private String short_desc;
     @Column(name="long_desc", columnDefinition = "TEXT")
@@ -34,10 +36,15 @@ public class Trail {
     private String states;
     @Column(name="park_code")
     private String parkCode;
+    @Column(name="latitude")
+    private String latitude;
+    @Column(name="longitude")
+    private String longitude;
 
-    public Trail(String id, String name, String short_desc, String long_desc, String image_url, String website_url, Boolean isReservationRequired, Boolean arePetsPermitted, Boolean doFeesApply, String duration, String states, String parkCode) {
+    public Trail(String id, String name, String park_name, String short_desc, String long_desc, String image_url, String website_url, Boolean isReservationRequired, Boolean arePetsPermitted, Boolean doFeesApply, String duration, String states, String parkCode, String latitude, String longitude) {
         this.id = id;
         this.name = name;
+        this.park_name = park_name;
         this.short_desc = short_desc;
         this.long_desc = long_desc;
         this.image_url = image_url;
@@ -48,6 +55,8 @@ public class Trail {
         this.duration = duration;
         this.states = states;
         this.parkCode = parkCode;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Trail() { }
@@ -68,6 +77,14 @@ public class Trail {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPark_name() {
+        return park_name;
+    }
+
+    public void setPark_name(String park_name) {
+        this.park_name = park_name;
     }
 
     public String getShort_desc() {
@@ -148,6 +165,22 @@ public class Trail {
 
     public void setParkCode(String parkCode) {
         this.parkCode = parkCode;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     //</editor-fold>

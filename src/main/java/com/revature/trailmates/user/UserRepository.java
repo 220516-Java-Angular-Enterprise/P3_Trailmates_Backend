@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, String> {
@@ -20,13 +21,15 @@ public interface UserRepository extends CrudRepository<User, String> {
     User getUserByUsername(String username);
     @Query (value = "SELECT * FROM users WHERE username = ?1 AND password = crypt(?2, gen_salt('bf'))", nativeQuery = true)
     User getUserByUsernameAndPassword(String username, String password);
+    @Query (value = "SELECT * FROM users", nativeQuery = true)
+    ArrayList<User> getAllUsers();
 
     //</editor-fold desc="Query>
 
     //<editor-fold desc="Save">
     @Modifying
     @Query (value = "INSERT INTO users (id, username, password, email, role, bio, age) VALUES (?1, ?2, crypt(?3, gen_salt('bf')), ?4, ?5, ?6, ?7)", nativeQuery = true)
-    public void saveUser(User user);
+    public void saveUser(String id, String username, String password, String email, String role, String bio, int age);
     //</editor-fold desc="Save">
 
     //<editor-fold desc="Update User">
