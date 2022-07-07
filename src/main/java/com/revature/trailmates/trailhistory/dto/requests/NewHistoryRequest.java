@@ -6,19 +6,19 @@ import java.sql.Timestamp;
 /**
  * this class will be used to create a new trail history
  */
-public class NewHistory {
+public class NewHistoryRequest {
 
     private String trail_name;
     private String comment;
     private String date;
 
-    public NewHistory(String trail_name, String comment, String date) {
+    public NewHistoryRequest(String trail_name, String comment, String date) {
         this.trail_name = trail_name;
         this.comment = comment;
         this.date = date;
     }
 
-    public NewHistory() {
+    public NewHistoryRequest() {
     }
 
     public String getTrail_name() {

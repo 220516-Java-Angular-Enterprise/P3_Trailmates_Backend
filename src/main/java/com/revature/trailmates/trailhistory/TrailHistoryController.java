@@ -3,9 +3,8 @@ package com.revature.trailmates.trailhistory;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
-import com.revature.trailmates.trailhistory.dto.requests.NewHistory;
+import com.revature.trailmates.trailhistory.dto.requests.NewHistoryRequest;
 import com.revature.trailmates.trailhistory.dto.response.History;
-import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -37,7 +36,7 @@ public class TrailHistoryController {
     }
 
     /**
-     * @param token verifying it is a user
+     * @param token verifying it is a user in the database
      * @return returns a list of history sorted in descending order
      */
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -49,7 +48,7 @@ public class TrailHistoryController {
     }
 
     /**
-     * @param token verifying it is a user
+     * @param token verifying it is a user in the database
      * @return returns a list of history sorted in ascending order
      */
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -63,15 +62,15 @@ public class TrailHistoryController {
 
 
     /**
-     * @param token verifying it is a user
-     * @param newHistory taking in a json object to create a new history
+     * @param token verifying it is a user in the database
+     * @param newHistory taking in a json object to create a new history object
      * @return returning the json object used
      */
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @PostMapping(path = "/newHistory", consumes = "application/json",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    NewHistory insertingNewHistory(@RequestHeader("Authorization") String token, @RequestBody NewHistory newHistory){
+    NewHistoryRequest insertingNewHistory(@RequestHeader("Authorization") String token, @RequestBody NewHistoryRequest newHistory){
         Principal user = tokenService.noTokenThrow(token);
         trailHistoryService.insertNewHistory(newHistory, user.getId());
         return newHistory;
