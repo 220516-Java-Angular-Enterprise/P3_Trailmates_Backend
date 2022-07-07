@@ -18,11 +18,14 @@ public interface UserRepository extends CrudRepository<User, String> {
     User getUserByID(String id);
     @Query (value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
     User getUserByUsername(String username);
+    @Query (value = "SELECT * FROM users WHERE username = ?1 AND password = crypt(?2, gen_salt('bf'))", nativeQuery = true)
+    User getUserByUsernameAndPassword(String username, String password);
+
     //</editor-fold desc="Query>
 
     //<editor-fold desc="Save">
     @Modifying
-    @Query (value = "INSERT INTO users (id, username, password, email, role, bio, age) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)", nativeQuery = true)
+    @Query (value = "INSERT INTO users (id, username, password, email, role, bio, age) VALUES (?1, ?2, crypt(?3, gen_salt('bf')), ?4, ?5, ?6, ?7)", nativeQuery = true)
     public void saveUser(User user);
     //</editor-fold desc="Save">
 

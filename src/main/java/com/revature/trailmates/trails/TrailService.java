@@ -1,16 +1,14 @@
 package com.revature.trailmates.trails;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,35 +25,81 @@ public class TrailService {
         this.trailRepository = trailRepository;
     }
 
+    public List<Trail> searchTrailByState(String state, int page) {
+        List<Trail> allTrails = trailRepository.getAllTrails();
+        List<Trail> searchedTrails = new ArrayList<>();
 
-
-    public List<Trail> searchTrailByName(String name, int page) {
-        List<Trail> trails = new ArrayList<>();
-        JsonNode temp = trailAPIConnector.getAllPlainJSON(0);
-
-        int total = temp.get("total").asInt();
-        for (int i = 0; i < total/10; i++) {
-            JsonNode content = trailAPIConnector.getAllPlainJSON(i);
-
-            int totalTemp = content.get("total").asInt() - (i * 10);
-            if (totalTemp > 10) {
-                for (int j = 0; j < 10; j++) {
-                    trails.add(getTrailAPI(content.at("/data").get(j).get("id").asText()));
-                }
-            }
-            else if (totalTemp > 0){
-                for (int j = 0; j < totalTemp; j++) {
-                    trails.add(getTrailAPI(content.at("/data").get(j).get("id").asText()));
-                }
-            }
+        for (int i = 0; i < allTrails.size(); i++) {
             try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (allTrails.get(i).getStates().toLowerCase().contains(state.toLowerCase())) searchedTrails.add(allTrails.get(i));
+            } catch (IndexOutOfBoundsException ignore) { }
+        }
+
+        List<Trail> trails = new ArrayList<>();
+        int total = searchedTrails.size() - (page * 10);
+        if (total > 10) {
+            for (int i = 0; i < 10; i++) {
+                trails.add(searchedTrails.get(page*10 + i));
+            }
+        }
+
+        else if (total > 0){
+            for (int i = 0; i < total; i++) {
+                trails.add(searchedTrails.get(page*10 + i));
             }
         }
         return trails;
     }
+
+    public List<Trail> searchTrailByName(String name, int page) {
+        List<Trail> allTrails = trailRepository.getAllTrails();
+        List<Trail> searchedTrails = new ArrayList<>();
+
+        for (int i = 0; i < allTrails.size(); i++) {
+            try {
+                if (allTrails.get(i).getName().toLowerCase().contains(name.toLowerCase())) searchedTrails.add(allTrails.get(i));
+            } catch (IndexOutOfBoundsException ignore) { }
+        }
+
+        List<Trail> trails = new ArrayList<>();
+        int total = searchedTrails.size() - (page * 10);
+        if (total > 10) {
+            for (int i = 0; i < 10; i++) {
+                trails.add(searchedTrails.get(page*10 + i));
+            }
+        }
+
+        else if (total > 0){
+            for (int i = 0; i < total; i++) {
+                trails.add(searchedTrails.get(page*10 + i));
+            }
+        }
+        return trails;
+    }
+
+    public List<Trail> getAllTrailsPage(int page) {
+        List<Trail> allTrails = trailRepository.getAllTrails();
+        List<Trail> trails = new ArrayList<>();
+
+        int total = allTrails.size() - (page * 10);
+        if (total > 10) {
+            for (int i = 0; i < 10; i++) {
+                trails.add(allTrails.get(page*10 + i));
+            }
+        }
+        else if (total > 0){
+            for (int i = 0; i < total; i++) {
+                trails.add(allTrails.get(page*10 + i));
+            }
+        }
+        return trails;
+    }
+
+    public Optional<Trail> getTrail(String id) { return trailRepository.findById(id); }
+    public List<Trail> getAllTrails() { return trailRepository.getAllTrails(); }
+
+    //<editor-fold desc="Functions Connected to the NPS Trail API">
+
 
     public List<Trail> getAllTrailsAPI(int page) {
         JsonNode content = trailAPIConnector.getAllPlainJSON(page);
@@ -167,6 +211,7 @@ public class TrailService {
             code = content.at("/relatedParks").get(0).get("parkCode").asText();
         return code;
     }
+    //</editor-fold>
 
     public void addTrail(Trail trail) {
         trailRepository.saveTrailName(trail.getId(), trail.getName(), trail.getShort_desc(), trail.getLong_desc(), trail.getImage_url(), trail.getWebsite_url(), trail.getReservationRequired(), trail.getArePetsPermitted(), trail.getDoFeesApply(), trail.getDuration(), trail.getStates(), trail.getParkCode());
