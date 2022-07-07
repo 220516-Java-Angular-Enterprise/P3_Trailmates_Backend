@@ -23,4 +23,7 @@ public interface TrailHistoryRepository extends CrudRepository<TrailHistory, Str
 
     @Query(value = "select id from trails where name = ?1", nativeQuery = true)
     String trailID(String trail_name);
+
+    /*@Query(value = "select id from trailhistory where trail_date = ?1 and trail_id = ?2")
+    String isDuplicateHistory(Timestamp date, String trail_id);*/
 }

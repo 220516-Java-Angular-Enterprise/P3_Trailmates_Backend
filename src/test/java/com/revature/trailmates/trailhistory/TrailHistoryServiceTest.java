@@ -12,7 +12,12 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -55,4 +60,7 @@ class TrailHistoryServiceTest {
         newHistory.setDate("2022-12-10 13:45:00.0");
         assertThrows(InvalidRequestException.class, () -> service.insertNewHistory(newHistory, "0c2b4bc1-7270-4264-96c0-7d897fbd1771"));
     }
+
+
+
 }

@@ -44,4 +44,8 @@ public class TrailHistoryService {
         return date.getTime() <= System.currentTimeMillis();
     }
 
+    /*private boolean isDuplicateHistory(Timestamp date, String trail_id){
+        return repo.isDuplicateHistory(date, trail_id) != null;
+    }*/
+
 }
