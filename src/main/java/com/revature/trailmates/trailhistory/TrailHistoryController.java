@@ -37,28 +37,36 @@ public class TrailHistoryController {
     }
 
     /**
+     * @param token verifying it is a user
      * @return returns a list of history sorted in descending order
      */
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @GetMapping(path = "/desc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<TrailHistory> descendingTrailHistory(@RequestHeader("Authorization") String token){
+    public @ResponseBody List<History> descendingTrailHistory(@RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
         return trailHistoryService.getDescHistory(user.getId());
     }
 
     /**
+     * @param token verifying it is a user
      * @return returns a list of history sorted in ascending order
      */
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @GetMapping(path = "/asc", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<TrailHistory> ascendingTrailHistory(@RequestHeader("Authorization") String token){
+    List<History> ascendingTrailHistory(@RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
         return trailHistoryService.getAscHistory(user.getId());
     }
 
+
+    /**
+     * @param token verifying it is a user
+     * @param newHistory taking in a json object to create a new history
+     * @return returning the json object used
+     */
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @PostMapping(path = "/newHistory", consumes = "application/json",produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,5 +1,7 @@
 package com.revature.trailmates.trailhistory.dto.response;
 
+import com.revature.trailmates.trailhistory.TrailHistory;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -11,12 +13,12 @@ public class History {
     private String trailname;
     private String partnername;
     private String comment;
-    private Timestamp trail_date;
+    private Date trail_date;
 
     public History() {
     }
 
-    public History(String trailName, String partnerName, String comment, Timestamp date) {
+    public History(String trailName, String partnerName, String comment, Date date) {
         this.trailname = trailName;
         this.partnername = partnerName;
         this.comment = comment;
@@ -47,12 +49,20 @@ public class History {
         this.comment = comment;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return trail_date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.trail_date = date;
+    }
+
+    public History extractTrail(TrailHistory trail){
+        this.comment = trail.getComment();
+        this.trailname = trail.getTrail().getName();
+        this.trail_date = new Date(trail.getDate().getTime());
+        this.partnername = trail.getUser().getUsername();
+        return this;
     }
 
     @Override
