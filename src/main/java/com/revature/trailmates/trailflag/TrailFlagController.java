@@ -31,20 +31,22 @@ public class TrailFlagController {
     private TrailFlagService trailFlagService;
     /**
      * gets all flags that match a dateInt and trail ID
-     * @param d The dateInt of the date to be queried
-     * @param t the user ID to be queried
+     * @param d The dateInt of the date to be queried, added in the url as a parameter
+     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"t","u"})
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","t"})
     public @ResponseBody Optional<List<TrailFlag>> getByDateIntAndTrailId(@RequestParam Long d, String t, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndTrailId(d, t);
     }
     /**
      * gets all flags that match a dateInt and user ID
-     * @param d The dateInt of the date to be queried
-     * @param u the user ID to be queried
+     * @param d The dateInt of the date to be queried, added in the url as a parameter
+     * @param u the user ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
@@ -61,8 +63,9 @@ public class TrailFlagController {
 
     /**
      * gets all flags that match a user ID
-     * @param u the user ID to be queried
-     * @return A list of TrailFlag objects
+     * @param u the user ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
+     * @return A list of TrailFlag objects, added in the url as a parameter
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
@@ -72,8 +75,9 @@ public class TrailFlagController {
     }
     /**
      * gets all flags that match a trail ID
-     * @param t The trail ID to be queried
-     * @return A list of TrailFlag objects
+     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
+     * @return A list of TrailFlag objects, added in the url as a parameter
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"t"})
@@ -84,6 +88,7 @@ public class TrailFlagController {
     /**
      * saves a trail flag to the database
      * @param request the request body, in JSON, with parameters trail_id, user_id, and date_int
+     * @param token the authentication token provided under the Authorization header
      * @return On success, returns the TrailFlag that was saved
      */
     @CrossOrigin
@@ -95,7 +100,8 @@ public class TrailFlagController {
     }
     /**
      * saves a trail flag to the database
-     * @param id id of the TrailFlag to be deleted
+     * @param id id of the TrailFlag to be deleted, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
      * @return On success, returns true
      */
     @CrossOrigin
