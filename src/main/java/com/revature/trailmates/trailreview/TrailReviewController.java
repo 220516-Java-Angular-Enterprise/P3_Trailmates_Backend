@@ -45,7 +45,7 @@ public class TrailReviewController {
     @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @GetMapping(value = "/all/{trailID}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TrailReview> getAllReviews(@RequestHeader("Authorization") String token, @PathVariable String trailID){
+    public List<TrailReview> getAllReviewsForATrail(@RequestHeader("Authorization") String token, @PathVariable String trailID){
         Principal requester = tokenService.noTokenThrow(token);
         return trailReviewService.getAllReviewsForTrail(trailID);
     }
