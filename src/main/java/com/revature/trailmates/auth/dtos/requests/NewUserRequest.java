@@ -77,11 +77,11 @@ public class NewUserRequest {
     public User extractUser(){
         User user = new User();
         user.setId(UUID.randomUUID().toString());
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setBio(bio);
-        user.setAge(age);
+        user.setUsername(getUsername());
+        user.setPassword(getPassword());
+        user.setEmail(getEmail());
+        user.setBio(getBio());
+        user.setAge(getAge());
         //user.setActive(false);
         user.setRole("DEFAULT");
         return user;

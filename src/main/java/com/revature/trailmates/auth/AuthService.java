@@ -31,7 +31,6 @@ public class AuthService {
 
     public User login(LoginRequest loginRequest){
         if(loginRequest.getUsername() == null || loginRequest.getPassword() == null) throw new InvalidRequestException();//401
-        //todo talk with alec about user input validation (username, password, and other things)
         if(!isValidUsername(loginRequest.getUsername()) || !isValidPassword(loginRequest.getPassword())) throw new InvalidRequestException("Invalid username or password");//404
         User user = userRepository.getUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         if(user == null)throw new InvalidRequestException("Invalid credentials");//404
@@ -52,9 +51,6 @@ public class AuthService {
         if(!isValidEmail(user.getEmail())) throw new InvalidRequestException("Invalid email, must be a valid email address");
 
         userRepository.saveUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole(), user.getBio(), user.getAge());
-        //todo talk with alec about password encryption
-        //userRepository.encryptPassword(user.getPassword(),user.getId());
-
         return user;
     }
 

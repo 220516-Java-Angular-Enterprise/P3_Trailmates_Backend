@@ -2,9 +2,9 @@
 
 ---
 ## Default User Story:
-A user logs on to trailmates.com looking for a buddy to hike, they search up a specific trail in the hiking search bar.<br />
-Then the user flags that they want to do the hike and see other people that want to do the hike in a similar time frame.<br />
-The user then messages another user asking to go on a hike. The other user gets a notification from the original user<br />
+A user logs on to trailmates.com looking for a buddy to hike, they search up a specific trail in the hiking search bar.<br>
+Then the user flags that they want to do the hike and see other people that want to do the hike in a similar time frame.<br>
+The user then messages another user asking to go on a hike. The other user gets a notification from the original user<br>
 who messaged them, and they set up the hiking plan from there.
 
 ## MVP
@@ -24,8 +24,7 @@ who messaged them, and they set up the hiking plan from there.
 - After flagging a trail that a user wants to hike, other users who have flagged the same trail with overlapping schedules will be shown
 - Trail difficulty rating
 
-![TrailMates ERD](https://link-to-the-image_Can-be-stored-on-github)
-
+<img src = "src/main/resources/ERD.png" width="800"/>
 
 ## Technologies
 <table>
@@ -35,6 +34,10 @@ who messaged them, and they set up the hiking plan from there.
         <tr> <td>J-Unit</td> <td rowspan="2">Unit Testing</td> </tr>
         <tr> <td>Mockito</td> </tr>
         <tr> <td>AWS RDS</td> <td>Data Persistence</td> </tr>
+        <tr>
+            <td>National Park Service API<a href="https://www.nps.gov/subjects/developer/api-documentation.htm"><sup>1</sup></a></td>
+            <td>External API for<br>trail information</td>
+        </tr>
     </tbody>
 </table>
 
