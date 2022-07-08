@@ -19,7 +19,7 @@ public interface UserRepository extends CrudRepository<User, String> {
     User getUserByID(String id);
     @Query (value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
     User getUserByUsername(String username);
-    @Query (value = "SELECT * FROM users WHERE username = ?1 AND password = crypt(?2, gen_salt('bf'))", nativeQuery = true)
+    @Query (value = "SELECT * FROM users WHERE username = ?1 AND password = crypt(?2, password)", nativeQuery = true)
     User getUserByUsernameAndPassword(String username, String password);
     @Query (value = "SELECT * FROM users", nativeQuery = true)
     ArrayList<User> getAllUsers();

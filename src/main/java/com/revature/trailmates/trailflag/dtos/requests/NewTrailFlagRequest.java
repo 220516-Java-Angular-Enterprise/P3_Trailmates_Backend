@@ -10,13 +10,16 @@ public class NewTrailFlagRequest {
 
 
     private String trail_id;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user_id;
+
     private String user_id;
     private long date_int;
-    public NewTrailFlagRequest() {
+    public NewTrailFlagRequest() { super();
+    }
+
+    public NewTrailFlagRequest(String trail_id, String user_id, long date_int) {
+        this.trail_id = trail_id;
+        this.user_id = user_id;
+        this.date_int = date_int;
     }
 
     public String getTrail_id() {
@@ -41,5 +44,14 @@ public class NewTrailFlagRequest {
 
     public void setDate_int(long date_int) {
         this.date_int = date_int;
+    }
+
+    @Override
+    public String toString() {
+        return "NewTrailFlagRequest{" +
+                "trail_id='" + trail_id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", date_int=" + date_int +
+                '}';
     }
 }

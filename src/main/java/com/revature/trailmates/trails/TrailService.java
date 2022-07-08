@@ -2,9 +2,11 @@ package com.revature.trailmates.trails;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.trailmates.util.annotations.Inject;
+import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +37,23 @@ public class TrailService {
             } catch (IndexOutOfBoundsException ignore) { }
         }
 
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+
+
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
         if (total > 10) {
             for (int i = 0; i < 10; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
+                trails.add(searchedTrails.get(page * 10 + i));
             }
         }
-
         else if (total > 0){
             for (int i = 0; i < total; i++) {
                 trails.add(searchedTrails.get(page*10 + i));
             }
         }
+
         return trails;
     }
 
@@ -60,6 +66,9 @@ public class TrailService {
                 if (allTrails.get(i).getStates().toLowerCase().contains(state.toLowerCase())) searchedTrails.add(allTrails.get(i));
             } catch (IndexOutOfBoundsException ignore) { }
         }
+
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
 
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
@@ -87,6 +96,9 @@ public class TrailService {
             } catch (IndexOutOfBoundsException ignore) { }
         }
 
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
         if (total > 10) {
@@ -105,6 +117,9 @@ public class TrailService {
 
     public List<Trail> getAllTrailsPage(int page) {
         List<Trail> allTrails = trailRepository.getAllTrails();
+        if (allTrails.isEmpty())    throw new InvalidRequestException("Could not retrieve any results from the Database.");
+        if (page < 0)               throw new InvalidRequestException("Invalid Page Number");
+
         List<Trail> trails = new ArrayList<>();
 
         int total = allTrails.size() - (page * 10);
@@ -121,11 +136,22 @@ public class TrailService {
         return trails;
     }
 
-    public Optional<Trail> getTrail(String id) { return trailRepository.findById(id); }
-    public List<Trail> getAllTrails() { return trailRepository.getAllTrails(); }
+    public Optional<Trail> getTrail(String id) {
+        Optional<Trail> returnList = trailRepository.findById(id);
+        if (!returnList.isPresent()||returnList.get().getId() == null){
+            throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        } else return returnList;
+    }
+    public List<Trail> getAllTrails() {
+        List<Trail> returnList = trailRepository.getAllTrails();
+        if (returnList.isEmpty()){
+            throw new InvalidRequestException("Could not retrieve any results.");
+        } else return returnList;
+    }
 
     //<editor-fold desc="Functions Connected to the NPS Trail API">
 
+    /*
 
     public List<Trail> getAllTrailsAPI(int page) {
         JsonNode content = trailAPIConnector.getAllPlainJSON(page);
@@ -171,6 +197,7 @@ public class TrailService {
 
         return trail;
     }
+
 
     private String getId(JsonNode content) {
         String id = content.get("id").asText();
@@ -256,13 +283,13 @@ public class TrailService {
         String name = "";
         name = content.get("longitude").asText();
         return name;
-    }
+    } */
     //</editor-fold>
 
-    public void addTrail(Trail trail) {
-        if ( trail.getPark_name() != null)
-            trailRepository.saveTrailName(trail.getId(), trail.getName(), trail.getPark_name(), trail.getShort_desc(), trail.getLong_desc(), trail.getImage_url(), trail.getWebsite_url(), trail.getReservationRequired(), trail.getArePetsPermitted(), trail.getDoFeesApply(), trail.getDuration(), trail.getStates(), trail.getParkCode(), trail.getLatitude(), trail.getLongitude());
-    }
+    //public void addTrail(Trail trail) {
+    //    if ( trail.getPark_name() != null)
+    //        trailRepository.saveTrailName(trail.getId(), trail.getName(), trail.getPark_name(), trail.getShort_desc(), trail.getLong_desc(), trail.getImage_url(), trail.getWebsite_url(), trail.getReservationRequired(), trail.getArePetsPermitted(), trail.getDoFeesApply(), trail.getDuration(), trail.getStates(), trail.getParkCode(), trail.getLatitude(), trail.getLongitude());
+    //}
 
 
 }

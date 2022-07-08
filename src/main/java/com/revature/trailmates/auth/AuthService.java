@@ -31,7 +31,6 @@ public class AuthService {
 
     public User login(LoginRequest loginRequest){
         if(loginRequest.getUsername() == null || loginRequest.getPassword() == null) throw new InvalidRequestException();//401
-        //todo talk with alec about user input validation (username, password, and other things)
         if(!isValidUsername(loginRequest.getUsername()) || !isValidPassword(loginRequest.getPassword())) throw new InvalidRequestException("Invalid username or password");//404
         User user = userRepository.getUserByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
         if(user == null)throw new InvalidRequestException("Invalid credentials");//404
@@ -46,15 +45,13 @@ public class AuthService {
         String message = nullChecker(request);
         if(!message.isEmpty()) throw new InvalidRequestException(message);
         if(request.getAge() < 13) throw new InvalidRequestException("User age is below 13");
+        if(!isValidBio(request.getBio())) throw new InvalidRequestException("Bio is longer than 255 characters");
         if(userExists(user.getUsername())) throw new ResourceConflictException("This username is already taken");
         if(!isValidUsername(user.getUsername())) throw new InvalidRequestException("Invalid username, must be 8-20 characters long and no special characters except _ and .");
         if(!isValidPassword(user.getPassword())) throw new InvalidRequestException("Invalid password, must be longer than 8 characters and contain one number, one special character, and one alphabetical character");
         if(!isValidEmail(user.getEmail())) throw new InvalidRequestException("Invalid email, must be a valid email address");
 
         userRepository.saveUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getRole(), user.getBio(), user.getAge());
-        //todo talk with alec about password encryption
-        //userRepository.encryptPassword(user.getPassword(),user.getId());
-
         return user;
     }
 
@@ -93,6 +90,10 @@ public class AuthService {
 
     private boolean isValidPassword(String password){
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
+    }
+
+    private boolean isValidBio(String bio){
+        return bio.length() < 255;
     }
 
 

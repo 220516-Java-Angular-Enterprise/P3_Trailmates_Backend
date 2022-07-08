@@ -59,12 +59,5 @@ public class Principal {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "Principal{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
+
 }

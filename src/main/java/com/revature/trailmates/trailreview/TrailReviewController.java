@@ -1,10 +1,9 @@
-package com.revature.trailmates.trailhistory;
-
+package com.revature.trailmates.trailreview;
 
 import com.revature.trailmates.auth.TokenService;
+import com.revature.trailmates.auth.dtos.requests.NewUserRequest;
 import com.revature.trailmates.auth.dtos.response.Principal;
-import com.revature.trailmates.trailhistory.dto.requests.NewHistoryRequest;
-import com.revature.trailmates.trailhistory.dto.response.History;
+import com.revature.trailmates.trailreview.dtos.requests.TrailReviewRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -21,67 +20,40 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/history")
-public class TrailHistoryController {
+@RequestMapping("/trailreview")
+public class TrailReviewController {
+
+    @Inject
+    private TrailReviewService trailReviewService;
+    private TokenService tokenService;
 
     @Inject
     @Autowired
-    private TrailHistoryService trailHistoryService;
-
-    @Autowired
-    private TokenService tokenService;
-
-    public TrailHistoryController() {
-        super();
+    public TrailReviewController(TrailReviewService trailReviewService, TokenService tokenService) {
+        this.trailReviewService = trailReviewService;
+        this.tokenService = tokenService;
     }
 
-    /**
-     * @param token verifying it is a user in the database
-     * @return returns a list of history sorted in descending order
-     */
-    @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
-    @GetMapping(path = "/desc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<History> descendingTrailHistory(@RequestHeader("Authorization") String token){
-        Principal user = tokenService.noTokenThrow(token);
-        return trailHistoryService.getDescHistory(user.getId());
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/{trailID}",consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void createReview(@RequestHeader("Authorization") String token, @RequestBody TrailReviewRequest trailReviewRequest, @PathVariable String trailID){
+        Principal requester = tokenService.noTokenThrow(token);
+        trailReviewService.newTrailReview(trailReviewRequest, requester.getId(), trailID);
     }
 
-    /**
-     * @param token verifying it is a user in the database
-     * @return returns a list of history sorted in ascending order
-     */
-    @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
-    @GetMapping(path = "/asc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    List<History> ascendingTrailHistory(@RequestHeader("Authorization") String token){
-        Principal user = tokenService.noTokenThrow(token);
-        return trailHistoryService.getAscHistory(user.getId());
+    @ResponseStatus(HttpStatus.CREATED)
+    @GetMapping(value = "/all/{trailID}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TrailReview> getAllReviews(@RequestHeader("Authorization") String token, @PathVariable String trailID){
+        Principal requester = tokenService.noTokenThrow(token);
+        return trailReviewService.getAllReviewsForTrail(trailID);
     }
-
-
-    /**
-     * @param token verifying it is a user in the database
-     * @param newHistory taking in a json object to create a new history object
-     * @return returning the json object used
-     */
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @CrossOrigin
-    @PostMapping(path = "/newHistory", consumes = "application/json",produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    NewHistoryRequest insertingNewHistory(@RequestHeader("Authorization") String token, @RequestBody NewHistoryRequest newHistory){
-        Principal user = tokenService.noTokenThrow(token);
-        trailHistoryService.insertNewHistory(newHistory, user.getId());
-        return newHistory;
-    }
-
 
     //region Exception Handlers
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody
-    Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
+    public @ResponseBody Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status", 401);
         responseBody.put("message", e.getMessage());
@@ -109,7 +81,13 @@ public class TrailHistoryController {
         return responseBody;
     }
 
-
+    /**
+     * Catches any exceptions in other methods and returns status code 409 if
+     * a ResourceConflictException occurs.
+     * @param e The resource conflict request being thrown
+     * @return A map containing the status code, error message, and timestamp of
+     * when the error occurred.
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public @ResponseBody Map<String, Object> handleResourceConflictException(ResourceConflictException e){
@@ -119,4 +97,5 @@ public class TrailHistoryController {
         responseBody.put("timestamp", LocalDateTime.now().toString());
         return responseBody;
     }
+    //endregion
 }
