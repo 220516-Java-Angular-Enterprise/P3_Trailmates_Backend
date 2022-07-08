@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,8 +47,15 @@ public class TrailReviewService {
                 trailReview.getTrailReviewID().getTrailID());
     }
 
+    public void deleteReview(TrailReview trailReview){
+        trailReviewRepository.delete(trailReview);
+    }
+
     public List<TrailReview> getAllReviewsForTrail(String trailID){
-        return null;
+        List<TrailReview> trailReviews = new ArrayList<>();
+        trailReviewRepository.findAll().forEach(trailReviews::add);
+        if(trailReviews.isEmpty()) throw new InvalidRequestException("No reviews found");
+        return trailReviews;
     }
 
     public TrailReview getReviewByTrailIDAndUserID(String trailID, String userID){
