@@ -2,6 +2,7 @@ package com.revature.trailmates.trails;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.trailmates.util.annotations.Inject;
+import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -105,6 +106,8 @@ public class TrailService {
 
     public List<Trail> getAllTrailsPage(int page) {
         List<Trail> allTrails = trailRepository.getAllTrails();
+        if (page < 0) throw new InvalidRequestException("Invalid Page Number");
+
         List<Trail> trails = new ArrayList<>();
 
         int total = allTrails.size() - (page * 10);
@@ -126,6 +129,7 @@ public class TrailService {
 
     //<editor-fold desc="Functions Connected to the NPS Trail API">
 
+    /*
 
     public List<Trail> getAllTrailsAPI(int page) {
         JsonNode content = trailAPIConnector.getAllPlainJSON(page);
@@ -171,6 +175,7 @@ public class TrailService {
 
         return trail;
     }
+
 
     private String getId(JsonNode content) {
         String id = content.get("id").asText();
@@ -256,13 +261,13 @@ public class TrailService {
         String name = "";
         name = content.get("longitude").asText();
         return name;
-    }
+    } */
     //</editor-fold>
 
-    public void addTrail(Trail trail) {
-        if ( trail.getPark_name() != null)
-            trailRepository.saveTrailName(trail.getId(), trail.getName(), trail.getPark_name(), trail.getShort_desc(), trail.getLong_desc(), trail.getImage_url(), trail.getWebsite_url(), trail.getReservationRequired(), trail.getArePetsPermitted(), trail.getDoFeesApply(), trail.getDuration(), trail.getStates(), trail.getParkCode(), trail.getLatitude(), trail.getLongitude());
-    }
+    //public void addTrail(Trail trail) {
+    //    if ( trail.getPark_name() != null)
+    //        trailRepository.saveTrailName(trail.getId(), trail.getName(), trail.getPark_name(), trail.getShort_desc(), trail.getLong_desc(), trail.getImage_url(), trail.getWebsite_url(), trail.getReservationRequired(), trail.getArePetsPermitted(), trail.getDoFeesApply(), trail.getDuration(), trail.getStates(), trail.getParkCode(), trail.getLatitude(), trail.getLongitude());
+    //}
 
 
 }
