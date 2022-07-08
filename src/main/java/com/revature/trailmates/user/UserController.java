@@ -37,16 +37,19 @@ public class UserController {
         this.userService = userService;
     }
 //region getting users
+@CrossOrigin
     @GetMapping(value = "/all-users")
     public @ResponseBody ArrayList<User> getAllUsers(){
         return userService.getAllUsers();
     }
 
+    @CrossOrigin
     @GetMapping(value = "user-id/{id}")
     public @ResponseBody User getUserById(@PathVariable String id){
         return userService.getUserById(id);
     }
 
+    @CrossOrigin
     @GetMapping(value = "user-username/{username}")
     public @ResponseBody User getUserByUsername(@PathVariable String username){
         return userService.getUserByUsername(username);
@@ -54,6 +57,7 @@ public class UserController {
 
 //endregion
 
+    @CrossOrigin
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody User editUser(@RequestHeader("Authorization") String token, @RequestBody EditUserRequest request) {
