@@ -45,6 +45,7 @@ public class AuthService {
         String message = nullChecker(request);
         if(!message.isEmpty()) throw new InvalidRequestException(message);
         if(request.getAge() < 13) throw new InvalidRequestException("User age is below 13");
+        if(!isValidBio(request.getBio())) throw new InvalidRequestException("Bio is longer than 255 characters");
         if(userExists(user.getUsername())) throw new ResourceConflictException("This username is already taken");
         if(!isValidUsername(user.getUsername())) throw new InvalidRequestException("Invalid username, must be 8-20 characters long and no special characters except _ and .");
         if(!isValidPassword(user.getPassword())) throw new InvalidRequestException("Invalid password, must be longer than 8 characters and contain one number, one special character, and one alphabetical character");
@@ -89,6 +90,10 @@ public class AuthService {
 
     private boolean isValidPassword(String password){
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
+    }
+
+    private boolean isValidBio(String bio){
+        return bio.length() < 255;
     }
 
 
