@@ -1,4 +1,4 @@
-package com.revature.trailmates.communication;
+package com.revature.trailmates.communication.conversation;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;

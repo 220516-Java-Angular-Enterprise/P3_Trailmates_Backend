@@ -1,6 +1,5 @@
-package com.revature.trailmates.communication;
+package com.revature.trailmates.communication.conversation;
 
-import com.revature.trailmates.communication.Conversation;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

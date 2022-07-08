@@ -1,13 +1,5 @@
 package com.revature.trailmates.communication.privatemessages.dto.requests;
 
-import com.revature.trailmates.communication.Conversation;
-import com.revature.trailmates.user.User;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 public class NewPrivateMessageRequest {
 
     //private String id;

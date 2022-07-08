@@ -2,10 +2,8 @@ package com.revature.trailmates.communication.privatemessages;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
-import com.revature.trailmates.communication.Conversation;
+
 import com.revature.trailmates.communication.privatemessages.dto.requests.NewPrivateMessageRequest;
-import com.revature.trailmates.user.User;
-import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;

@@ -1,10 +1,10 @@
 package com.revature.trailmates.communication.privatemessages;
 
-import com.revature.trailmates.communication.Conversation;
+
+import com.revature.trailmates.communication.conversation.Conversation;
 import com.revature.trailmates.user.User;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "private_messages")

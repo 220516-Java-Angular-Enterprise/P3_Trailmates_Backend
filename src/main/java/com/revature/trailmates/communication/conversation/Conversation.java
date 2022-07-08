@@ -1,4 +1,4 @@
-package com.revature.trailmates.communication;
+package com.revature.trailmates.communication.conversation;
 
 import com.revature.trailmates.communication.privatemessages.PrivateMessage;
 import com.revature.trailmates.user.User;

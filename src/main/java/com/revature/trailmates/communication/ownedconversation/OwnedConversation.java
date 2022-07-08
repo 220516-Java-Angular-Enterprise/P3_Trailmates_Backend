@@ -1,6 +1,6 @@
 package com.revature.trailmates.communication.ownedconversation;
 
-import com.revature.trailmates.communication.Conversation;
+import com.revature.trailmates.communication.conversation.Conversation;
 import com.revature.trailmates.user.User;
 
 import javax.persistence.*;

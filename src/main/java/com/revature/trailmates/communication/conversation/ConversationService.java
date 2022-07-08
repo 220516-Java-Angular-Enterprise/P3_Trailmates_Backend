@@ -1,7 +1,5 @@
-package com.revature.trailmates.communication;
+package com.revature.trailmates.communication.conversation;
 
-import com.revature.trailmates.communication.privatemessages.PrivateMessage;
-import com.revature.trailmates.communication.privatemessages.PrivateMessageRepository;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

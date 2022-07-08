@@ -1,16 +1,11 @@
 package com.revature.trailmates.communication.privatemessages;
 
-import com.revature.trailmates.communication.Conversation;
 import com.revature.trailmates.communication.privatemessages.dto.requests.NewPrivateMessageRequest;
-import com.revature.trailmates.user.User;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.UUID;
