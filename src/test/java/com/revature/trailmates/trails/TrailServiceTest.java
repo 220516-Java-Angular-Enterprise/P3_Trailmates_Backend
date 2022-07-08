@@ -32,11 +32,23 @@ class TrailServiceTest {
 
     @Test
     void searchTrailByState() {
-
+        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByState("", -1));
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByState("~", 0));
     }
 
     @Test
     void searchTrailByName() {
+        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByName("", -1));
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByName("~", 0));
+    }
+
+    @Test
+    void searchTrailByParkName() {
+        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByParkName("", -1));
+        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByParkName("~", 0));
     }
 
     @Test
@@ -53,6 +65,8 @@ class TrailServiceTest {
 
     @Test
     void getAllTrails() {
+        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
+        assertThrows(InvalidRequestException.class, () -> trailService.getAllTrails());
     }
 
 }

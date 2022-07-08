@@ -6,6 +6,7 @@ import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +37,23 @@ public class TrailService {
             } catch (IndexOutOfBoundsException ignore) { }
         }
 
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+
+
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
         if (total > 10) {
             for (int i = 0; i < 10; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
+                trails.add(searchedTrails.get(page * 10 + i));
             }
         }
-
         else if (total > 0){
             for (int i = 0; i < total; i++) {
                 trails.add(searchedTrails.get(page*10 + i));
             }
         }
+
         return trails;
     }
 
@@ -61,6 +66,9 @@ public class TrailService {
                 if (allTrails.get(i).getStates().toLowerCase().contains(state.toLowerCase())) searchedTrails.add(allTrails.get(i));
             } catch (IndexOutOfBoundsException ignore) { }
         }
+
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
 
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
@@ -88,6 +96,9 @@ public class TrailService {
             } catch (IndexOutOfBoundsException ignore) { }
         }
 
+        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+
         List<Trail> trails = new ArrayList<>();
         int total = searchedTrails.size() - (page * 10);
         if (total > 10) {
@@ -106,7 +117,8 @@ public class TrailService {
 
     public List<Trail> getAllTrailsPage(int page) {
         List<Trail> allTrails = trailRepository.getAllTrails();
-        if (page < 0) throw new InvalidRequestException("Invalid Page Number");
+        if (allTrails.isEmpty())    throw new InvalidRequestException("Could not retrieve any results from the Database.");
+        if (page < 0)               throw new InvalidRequestException("Invalid Page Number");
 
         List<Trail> trails = new ArrayList<>();
 
@@ -124,8 +136,18 @@ public class TrailService {
         return trails;
     }
 
-    public Optional<Trail> getTrail(String id) { return trailRepository.findById(id); }
-    public List<Trail> getAllTrails() { return trailRepository.getAllTrails(); }
+    public Optional<Trail> getTrail(String id) {
+        Optional<Trail> returnList = trailRepository.findById(id);
+        if (!returnList.isPresent()||returnList.get().getId() == null){
+            throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        } else return returnList;
+    }
+    public List<Trail> getAllTrails() {
+        List<Trail> returnList = trailRepository.getAllTrails();
+        if (returnList.isEmpty()){
+            throw new InvalidRequestException("Could not retrieve any results.");
+        } else return returnList;
+    }
 
     //<editor-fold desc="Functions Connected to the NPS Trail API">
 
