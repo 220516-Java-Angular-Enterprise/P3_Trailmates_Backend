@@ -3,6 +3,7 @@ package com.revature.trailmates.trailflag;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
+import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndTrailIdRequest;
 import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndUserIdRequest;
 import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
 import com.revature.trailmates.util.annotations.Inject;
@@ -28,27 +29,43 @@ public class TrailFlagController {
     @Inject
     @Autowired
     private TrailFlagService trailFlagService;
-    @Autowired
-    private TokenService tokenService;
-
-    public TrailFlagController() {super();}
-
+    /**
+     * gets all flags that match a dateInt and trail ID
+     * @param d The dateInt of the date to be queried, added in the url as a parameter
+     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
+     * @return A list of TrailFlag objects
+     */
+    @CrossOrigin
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","t"})
+    public @ResponseBody Optional<List<TrailFlag>> getByDateIntAndTrailId(@RequestParam Long d, String t, @RequestHeader("Authorization") String token) {
+        Principal user = tokenService.noTokenThrow(token);
+        return trailFlagService.getAllByDateIntAndTrailId(d, t);
+    }
     /**
      * gets all flags that match a dateInt and user ID
-     * @param d The dateInt of the date to be queried
-     * @param u the user ID to be queried
+     * @param d The dateInt of the date to be queried, added in the url as a parameter
+     * @param u the user ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","u"})
     public @ResponseBody Optional<List<TrailFlag>> getByDateIntAndUserId(@RequestParam Long d, String u, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.getAllByDateIntAndUserId(new GetAllByDateIntAndUserIdRequest(d,u));
+        return trailFlagService.getAllByDateIntAndUserId(d,u);
     }
+
+    @Autowired
+    private TokenService tokenService;
+
+    public TrailFlagController() {super();}
+
     /**
      * gets all flags that match a user ID
-     * @param u the user ID to be queried
-     * @return A list of TrailFlag objects
+     * @param u the user ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
+     * @return A list of TrailFlag objects, added in the url as a parameter
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
@@ -58,8 +75,9 @@ public class TrailFlagController {
     }
     /**
      * gets all flags that match a trail ID
-     * @param t The trail ID to be queried
-     * @return A list of TrailFlag objects
+     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
+     * @return A list of TrailFlag objects, added in the url as a parameter
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"t"})
@@ -70,6 +88,7 @@ public class TrailFlagController {
     /**
      * saves a trail flag to the database
      * @param request the request body, in JSON, with parameters trail_id, user_id, and date_int
+     * @param token the authentication token provided under the Authorization header
      * @return On success, returns the TrailFlag that was saved
      */
     @CrossOrigin
@@ -81,16 +100,17 @@ public class TrailFlagController {
     }
     /**
      * saves a trail flag to the database
-     * @param id id of the TrailFlag to be deleted
+     * @param id id of the TrailFlag to be deleted, added in the url as a parameter
+     * @param token the authentication token provided under the Authorization header
      * @return On success, returns true
      */
     @CrossOrigin
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"id"})
-    public @ResponseBody boolean deleteEntry(@RequestParam String id, @RequestHeader("Authorization") String token){
+    public @ResponseBody String deleteEntry(@RequestParam String id, @RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
-        if (trailFlagService.deleteTrailFlag(id)){
-            return true;
-        } else return false;
+        if(trailFlagService.deleteTrailFlag(id)){
+            return "Flag was deleted.";
+        } else return "Failed to delete flag.";
     }
 
 

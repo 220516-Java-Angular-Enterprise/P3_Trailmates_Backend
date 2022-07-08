@@ -15,7 +15,7 @@ public class TrailHistory {
     private String id;
     @Column(name = "comment", nullable = false)
     private String comment;
-    @Column(name = "trailDate", nullable = false)
+    @Column(name = "trail_date", nullable = false)
     private Timestamp date;
 
     @ManyToOne(cascade = CascadeType.ALL)
