@@ -69,7 +69,7 @@ public class TrailHistoryController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @PostMapping(path = "/newHistory", consumes = "application/json",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
+    public @ResponseBody
     NewHistoryRequest insertingNewHistory(@RequestHeader("Authorization") String token, @RequestBody NewHistoryRequest newHistory){
         Principal user = tokenService.noTokenThrow(token);
         trailHistoryService.insertNewHistory(newHistory, user.getId());
