@@ -31,10 +31,6 @@ class TrailFlagServiceTest {
     @InjectMocks
     private TrailFlagService service;
     @Spy
-    GetAllByDateIntAndUserIdRequest getAllByDateIntAndUserIdRequest = new GetAllByDateIntAndUserIdRequest();
-    @Spy
-    GetAllByDateIntAndTrailIdRequest getAllByDateIntAndTrailIdRequest = new GetAllByDateIntAndTrailIdRequest();
-    @Spy
     NewTrailFlagRequest newTrailFlagRequest = new NewTrailFlagRequest();
 
     @Spy
@@ -64,10 +60,8 @@ class TrailFlagServiceTest {
     @Test
     //only fails if new trail flag has null fields or is a duplicate
     //throws exception if any fields to be saved are null
-    void saveNewTrailFlag() {
-        //assert throws exception when new flag has null fields.
-        Exception e = assertThrows(RuntimeException.class, () ->service.saveNewTrailFlag(newTrailFlagRequest));
-        assertTrue(e.getMessage().contains("is null"));
+    void saveNewTrailFlagResourceConflict() {
+
         //assert throws exception if new flag is duplicate (i.e. isDuplicateFlag=true)
         //initialize dummy flag to avoid null pointers
         newTrailFlagRequest.setTrail_id("foo");
@@ -82,6 +76,23 @@ class TrailFlagServiceTest {
         Mockito.when(repo.getAllByDateIntAndUserIdAndTrailId(dummyFlag.getDate_int(),dummyFlag.getUser_id(),dummyFlag.getTrail_id())).thenReturn(Optional.of(dummyList));
         //if returned list is populated, we have a duplicate.  Throw exception.
         assertThrows(ResourceConflictException.class, () -> service.saveNewTrailFlag(newTrailFlagRequest));
+    }
+    @Test
+    void saveNewTrailFlagNullFields() {
+        //assert throws exception when new flag has null fields.
+        Exception e = assertThrows(RuntimeException.class, () ->service.saveNewTrailFlag(newTrailFlagRequest));
+        assertTrue(e.getMessage().contains("is null"));
+    }
+    @Test
+    void saveNewTrailFlagSQLException(){
+        //assert throws exception if we get an SQL exception due to user_id or trail_id not matching in database
+        newTrailFlagRequest.setTrail_id("foo");
+        newTrailFlagRequest.setUser_id("bar");
+        newTrailFlagRequest.setDate_int(100L);
+        dummyFlag= new TrailFlag(newTrailFlagRequest);
+        //throw an exception when trying to save this data
+        Mockito.when(repo.save(dummyFlag)).thenThrow(new RuntimeException("An exception occurred when saving"));
+        assertThrows(InvalidRequestException.class,()->service.saveNewTrailFlag(newTrailFlagRequest));
     }
     @Test
     //returns false if no matching flag is found with given parameters

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.*;
 @Service
 @Transactional
@@ -51,7 +52,11 @@ public class TrailFlagService {
             throw new ResourceConflictException("Flag already exists for this user on this trail on this date.");
         }
         //if the new flag has null values, throw exception
-        trailFlagRepository.save(newFlag);
+        try {
+            trailFlagRepository.save(newFlag);
+        }catch (Exception e){
+            throw new InvalidRequestException("Unable to save trail flag.  Either the user or trail id were not found in the database.");
+        }
         return newFlag;
     }
     public boolean isDuplicateFlag(TrailFlag flag){
