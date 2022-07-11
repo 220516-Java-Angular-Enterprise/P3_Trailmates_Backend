@@ -11,9 +11,16 @@ import java.sql.Timestamp;
 public class Conversation {
     @Id
     private String id;
-    @OneToOne
-    @JoinColumn(name="recent_message", referencedColumnName = "id", nullable = true)
-    private PrivateMessage recent_message;
+    @Column (name="name", nullable = false)
+    private String name;
+//    @OneToOne
+//    @JoinColumn(name="recent_message", referencedColumnName = "id", nullable = true)
+//    private PrivateMessage recent_message;
+    public Conversation(){}
+    public Conversation(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     //region Get/Set
 
@@ -25,13 +32,21 @@ public class Conversation {
         this.id = id;
     }
 
-    public PrivateMessage getRecent_message() {
-        return recent_message;
+    public String getName() {
+        return name;
     }
 
-    public void setRecent_message(PrivateMessage recent_message) {
-        this.recent_message = recent_message;
+    public void setName(String name) {
+        this.name = name;
     }
+
+    //    public PrivateMessage getRecent_message() {
+//        return recent_message;
+//    }
+//
+//    public void setRecent_message(PrivateMessage recent_message) {
+//        this.recent_message = recent_message;
+//    }
 
     //endregion
 

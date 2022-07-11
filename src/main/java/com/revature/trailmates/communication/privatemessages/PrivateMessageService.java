@@ -29,9 +29,10 @@ public class PrivateMessageService {
 
     public ArrayList<PrivateMessage> getAllPrivateMessagesInConversation( String conversationID ) { return privateMessageRepository.getAllPrivateMessagesInConversation(conversationID); }
 
-    public PrivateMessage saveNewPrivateMessage(NewPrivateMessageRequest request) {
-        UUID newUUID = UUID.randomUUID();
-        return privateMessageRepository.saveNewPrivateMessage(newUUID.toString(), request.getMessage(), request.getTime_sent(), request.getSender_id(), request.getConversation_id());
+    public String saveNewPrivateMessage(String userID, NewPrivateMessageRequest request) {
+        String newUUID = UUID.randomUUID().toString();
+        privateMessageRepository.saveNewPrivateMessage(newUUID, request.getMessage(), request.getTime_sent(), userID, request.getConversation_id());
+        return newUUID;
     }
     //endregion
 

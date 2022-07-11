@@ -5,7 +5,6 @@ public class NewPrivateMessageRequest {
     //private String id;
     private String message;
     private long time_sent;
-    private String sender_id;
     private String conversation_id;
 
     public NewPrivateMessageRequest(){}
@@ -26,14 +25,6 @@ public class NewPrivateMessageRequest {
 
     public void setTime_sent(long time_sent) {
         this.time_sent = time_sent;
-    }
-
-    public String getSender_id() {
-        return sender_id;
-    }
-
-    public void setSender_id(String sender_id) {
-        this.sender_id = sender_id;
     }
 
     public String getConversation_id() {

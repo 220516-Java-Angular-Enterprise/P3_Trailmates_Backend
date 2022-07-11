@@ -16,14 +16,14 @@ public interface ConversationRepository extends CrudRepository<Conversation, Str
     @Query(value = "SELECT * FROM conversations WHERE id = ?1", nativeQuery = true)
     Conversation getConversationByID(String id);
 
-    @Query(value = "SELECT * FROM conversations WHERE owner = ?1 INNER JOIN private_messages ON id = conversation ORDER BY time_sent", nativeQuery = true)
-    ArrayList<Conversation> getAllConversationsOfUser(String userID);
+    @Query(value = "SELECT * FROM conversations cv WHERE owner = ?1 INNER JOIN private_messages pm ON cv.id = pm.conversation ORDER BY pm.time_sent", nativeQuery = true)
+    ArrayList<Conversation> getAllConversationsOfUser(String userID);// INNER JOIN private_messages pm ON cv.id = pm.conversation ORDER BY pm.time_sent
     //</editor-fold desc="Query>
 
     //<editor-fold desc="Save">
     @Modifying
-    @Query(value = "INSERT INTO conversations (id, message, time_sent, sender_id, conversation) VALUES (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-    public void saveConversations(String id, String message, long time_sent, String sender_id, String conversation);
+    @Query(value = "INSERT INTO conversations (id, name) VALUES (?1, ?2)", nativeQuery = true)
+    public void saveConversations(String id, String name);
     //</editor-fold desc="Save">
 
     //<editor-fold desc="Update PrivateMessage">

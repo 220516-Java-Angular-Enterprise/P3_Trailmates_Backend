@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -23,6 +24,16 @@ public class ConversationService {
     public Conversation getConversationById(String id) { return conversationRepository.getConversationByID(id); }
 
     public ArrayList<Conversation> getAllConversationsOfUser(String id) { return conversationRepository.getAllConversationsOfUser(id); }
+    //endregion
+
+    //region Save
+
+    public String createNewConversation(String conversationName){
+        String newConversationID = UUID.randomUUID().toString();
+        conversationRepository.saveConversations(newConversationID, conversationName);
+        return newConversationID;
+    }
+
     //endregion
 
 }

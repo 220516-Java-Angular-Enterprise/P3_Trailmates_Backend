@@ -21,7 +21,7 @@ public interface PrivateMessageRepository extends CrudRepository<PrivateMessage,
     @Query(value = "SELECT * FROM private_messages", nativeQuery = true)
     ArrayList<PrivateMessage> getAllPrivateMessages();
 
-    @Query(value = "SELECT * FROM private_messages WHERE conversation = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM private_messages WHERE conversation = ?1 ORDER BY time_sent", nativeQuery = true)
     ArrayList<PrivateMessage> getAllPrivateMessagesInConversation(String conversation);
 
     //</editor-fold desc="Query>
@@ -29,7 +29,7 @@ public interface PrivateMessageRepository extends CrudRepository<PrivateMessage,
     //<editor-fold desc="Save">
     @Modifying
     @Query(value = "INSERT INTO private_messages (id, message, time_sent, sender_id, conversation) VALUES (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-    PrivateMessage saveNewPrivateMessage(String uuid, String message, long time_sent, String sender_id, String conversation_id);
+    void saveNewPrivateMessage(String uuid, String message, long time_sent, String sender_id, String conversation_id);
 
     //</editor-fold desc="Save">
     

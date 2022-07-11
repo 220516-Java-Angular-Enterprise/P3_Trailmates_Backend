@@ -9,6 +9,7 @@ import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import com.revature.trailmates.util.custom_exception.UnauthorizedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,27 +25,31 @@ import java.util.Map;
 public class PrivateMessageController {
     @Inject
     private final PrivateMessageService privateMessageService;
-
+    @Inject
+    private final TokenService tokenService;
     @Inject
     @Autowired
-    public PrivateMessageController(PrivateMessageService privateMessageService){
+    public PrivateMessageController(PrivateMessageService privateMessageService, TokenService tokenService){
         this.privateMessageService = privateMessageService;
+        this.tokenService = tokenService;
     }
 
 
     @GetMapping(value = "/conversation/{conversation}")
-    public @ResponseBody ArrayList<PrivateMessage> getConversationsOfUser(@RequestHeader("Authorization") String token, @PathVariable String conversation){
-        Principal principal = new TokenService().extractRequesterDetails(token);
+    public @ResponseBody ArrayList<PrivateMessage> getConversationsOfUser(@PathVariable String conversation, @RequestHeader("Authorization") String token){
+        Principal principal = tokenService.noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
         return privateMessageService.getAllPrivateMessagesInConversation(conversation);
     }
 
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String saveNewPrivateMessage(@RequestBody NewPrivateMessageRequest request){
-        return privateMessageService.saveNewPrivateMessage(request).getId();
+    public @ResponseBody String saveNewPrivateMessage(@RequestHeader("Authorization") String token, @RequestBody NewPrivateMessageRequest request){
+        Principal principal = tokenService.noTokenThrow(token);
+        if (principal.getId() == null) throw new UnauthorizedException();
+
+        return privateMessageService.saveNewPrivateMessage(principal.getId(), request);
     }
 
 

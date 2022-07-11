@@ -16,16 +16,19 @@ import java.util.ArrayList;
 public class OwnedConversationController {
     @Inject
     private final OwnedConversationService ownedConversationService;
+    @Inject
+    private final TokenService tokenService;
 
     @Inject
     @Autowired
-    public OwnedConversationController(OwnedConversationService ownedConversationService){
+    public OwnedConversationController(OwnedConversationService ownedConversationService, TokenService tokenService){
         this.ownedConversationService = ownedConversationService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping(value = "/active")
     public @ResponseBody ArrayList<OwnedConversation> getAllUsers(@RequestHeader("Authorization") String token){
-        Principal principal = new TokenService().extractRequesterDetails(token);
+        Principal principal = tokenService.noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
         return ownedConversationService.getAllOwnedConversationsOfUser(principal.getId());

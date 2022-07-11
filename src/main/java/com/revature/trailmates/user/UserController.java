@@ -57,7 +57,7 @@ public class UserController {
     }
 
     //endregion
-    
+
     //region Modify User
     @CrossOrigin
     @ResponseStatus(HttpStatus.ACCEPTED)
