@@ -4,6 +4,7 @@ import com.revature.trailmates.auth.dtos.requests.NewUserRequest;
 import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndTrailIdRequest;
 import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndUserIdRequest;
 import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
+import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.*;
 @Service
 @Transactional
 public class TrailFlagService {
+    @Inject
     private final TrailFlagRepository trailFlagRepository;
     @Autowired
     public TrailFlagService(TrailFlagRepository trailFlagRepository){
@@ -45,6 +47,7 @@ public class TrailFlagService {
         } else return returnList;
     }
     public TrailFlag saveNewTrailFlag(NewTrailFlagRequest request){
+        //todo: check that user ID in request body matches user ID in token, or user is admin
         if (!nullChecker(request).isEmpty()){throw new InvalidRequestException(nullChecker(request));}
         TrailFlag newFlag = new TrailFlag(request);
         //if flag already exists, throw exception
@@ -66,6 +69,7 @@ public class TrailFlagService {
         } else return true;
     }
     public boolean deleteTrailFlag(String id){
+        //todo: should check that the one deleting the review is admin or the one who created it
         try {
             trailFlagRepository.deleteById(id);
             return true;
