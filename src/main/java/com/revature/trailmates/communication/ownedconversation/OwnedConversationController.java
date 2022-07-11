@@ -1,5 +1,6 @@
 package com.revature.trailmates.communication.ownedconversation;
 
+import com.revature.trailmates.user.User;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,13 @@ public class OwnedConversationController {
         if (principal.getId() == null) throw new UnauthorizedException();
 
         return ownedConversationService.getAllOwnedConversationsOfUser(principal.getId());
+    }
+
+    @GetMapping(value = "/active-in-chat/{chatid}")
+    public @ResponseBody ArrayList<User> getAllUsers(@RequestHeader("Authorization") String token, @PathVariable String chatid){
+        Principal principal = tokenService.noTokenThrow(token);
+        if (principal.getId() == null) throw new UnauthorizedException();
+
+        return ownedConversationService.getAllUsersOfConversationID(chatid);
     }
 }

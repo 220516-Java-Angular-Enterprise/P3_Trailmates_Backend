@@ -59,7 +59,7 @@ public class ConversationController {
         if (principal.getId() == null) throw new UnauthorizedException();
 
         String conversationID = conversationService.createNewConversation(request.getConversationName());
-        System.out.println("Conversation: @@@@@ " + conversationID);
+        //System.out.println("Conversation: @@@@@ " + conversationID);
 
         ArrayList<String> usersToAddToConversation = request.getUserIDs();
 
