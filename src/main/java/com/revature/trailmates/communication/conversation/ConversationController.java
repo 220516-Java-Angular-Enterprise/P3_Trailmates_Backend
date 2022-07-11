@@ -33,7 +33,7 @@ public class ConversationController {
 
     @GetMapping(value = "/user-conversations")
     public @ResponseBody ArrayList<Conversation> getConversationsOfUser(@RequestHeader("Authorization") String token){
-        Principal principal = new TokenService().extractRequesterDetails(token);
+        Principal principal = new TokenService().noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
         return conversationService.getAllConversationsOfUser(principal.getId());

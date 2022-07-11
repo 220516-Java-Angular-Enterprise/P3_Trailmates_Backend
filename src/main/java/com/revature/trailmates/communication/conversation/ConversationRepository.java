@@ -23,7 +23,7 @@ public interface ConversationRepository extends CrudRepository<Conversation, Str
     //<editor-fold desc="Save">
     @Modifying
     @Query(value = "INSERT INTO conversations (id, message, time_sent, sender_id, conversation) VALUES (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-    public void saveConversations(String id, String message, Timestamp time_sent, String sender_id, String conversation);
+    public void saveConversations(String id, String message, long time_sent, String sender_id, String conversation);
     //</editor-fold desc="Save">
 
     //<editor-fold desc="Update PrivateMessage">
