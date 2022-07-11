@@ -21,7 +21,7 @@ public class TrailFlag {
     @Column(name = "date_int", nullable=false)
     private long date_int;
 
-    public TrailFlag() {
+    public TrailFlag() { super(); this.user_id= new User();
     }
 
     public TrailFlag(NewTrailFlagRequest request) {
@@ -36,7 +36,7 @@ public class TrailFlag {
         return id;
     }
 
-    public void set_Id(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

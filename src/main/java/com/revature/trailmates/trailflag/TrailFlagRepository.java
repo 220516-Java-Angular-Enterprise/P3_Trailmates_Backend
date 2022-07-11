@@ -16,4 +16,6 @@ public interface TrailFlagRepository extends CrudRepository<TrailFlag,String> {
     Optional<List<TrailFlag>> getAllByTrailId(String trail_id);
     @Query(value ="SELECT * FROM trail_flags where date_int = ?1 and user_id = ?2 and trail_id = ?3", nativeQuery =true)
     Optional<List<TrailFlag>> getAllByDateIntAndUserIdAndTrailId(long dateInt, String user_id, String trail_id);
+    @Query(value ="SELECT * FROM trail_flags where date_int = ?1 and trail_id = ?2", nativeQuery =true)
+    Optional<List<TrailFlag>> getAllByDateIntAndTrailId(long dateInt, String trail_id);
 }
