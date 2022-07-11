@@ -1,11 +1,10 @@
-package com.revature.trailmates.trailflag;
-
+package com.revature.trailmates.userreviews;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
-import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndTrailIdRequest;
-import com.revature.trailmates.trailflag.dtos.requests.GetAllByDateIntAndUserIdRequest;
+import com.revature.trailmates.trailflag.TrailFlag;
 import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
+import com.revature.trailmates.userreviews.dtos.requests.NewUserReviewRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -23,96 +22,45 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/flag")
-public class TrailFlagController {
-
+@RequestMapping("/reviews/users")
+public class UserReviewController {
     @Inject
     @Autowired
-    private TrailFlagService trailFlagService;
-    /**
-     * gets all flags that match a dateInt and trail ID
-     * @param d The dateInt of the date to be queried, added in the url as a parameter
-     * @param t The trail ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
-     * @return A list of TrailFlag objects
-     */
+    private UserReviewService userReviewService;
     @Autowired
     private TokenService tokenService;
+    //get all by reviewer id
     @CrossOrigin
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","t"})
-    public @ResponseBody Optional<List<TrailFlag>> getByDateIntAndTrailId(@RequestParam Long d, String t, @RequestHeader("Authorization") String token) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<UserReview>> getByReviewer(@RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.getAllByDateIntAndTrailId(d, t);
+        //uses principal to request only the authenticated user's reviews.
+        return userReviewService.getAllByReviewerId(user.getId());
     }
-    /**
-     * gets all flags that match a dateInt and user ID
-     * @param d The dateInt of the date to be queried, added in the url as a parameter
-     * @param u the user ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
-     * @return A list of TrailFlag objects
-     */
-    @CrossOrigin
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","u"})
-    public @ResponseBody Optional<List<TrailFlag>> getByDateIntAndUserId(@RequestParam Long d, String u, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.getAllByDateIntAndUserId(d,u);
-    }
-
-    public TrailFlagController() {super();}
-
-    /**
-     * gets all flags that match a user ID
-     * @param u the user ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
-     * @return A list of TrailFlag objects, added in the url as a parameter
-     */
+    //get all by user id
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
-    public @ResponseBody Optional<List<TrailFlag>> getByUserId(@RequestParam String u, @RequestHeader("Authorization") String token) {
+    public @ResponseBody Optional<List<UserReview>> getByUser(@RequestParam String u, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.getAllByUserId(u);
+        return userReviewService.getAllByUserId(u);
     }
-    /**
-     * gets all flags that match a trail ID
-     * @param t The trail ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
-     * @return A list of TrailFlag objects, added in the url as a parameter
-     */
-    @CrossOrigin
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"t"})
-    public @ResponseBody Optional<List<TrailFlag>> getByTrailId(@RequestParam String t, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.getAllByTrailId(t);
-    }
-    /**
-     * saves a trail flag to the database
-     * @param request the request body, in JSON, with parameters trail_id, user_id, and date_int
-     * @param token the authentication token provided under the Authorization header
-     * @return On success, returns the TrailFlag that was saved
-     */
+    //save new review (also has update functionality)
     @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody TrailFlag saveNewTrailFlag(@RequestBody NewTrailFlagRequest request, @RequestHeader("Authorization") String token) {
+    public @ResponseBody UserReview saveNewUserReview(@RequestBody NewUserReviewRequest request, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailFlagService.saveNewTrailFlag(request);
+        return userReviewService.saveNewUserReview(request, user);
     }
-    /**
-     * saves a trail flag to the database
-     * @param id id of the TrailFlag to be deleted, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
-     * @return On success, returns true
-     */
+    //delete review
     @CrossOrigin
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"id"})
-    public @ResponseBody String deleteEntry(@RequestParam String id, @RequestHeader("Authorization") String token){
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"u"})
+    public @ResponseBody String deleteReview(@RequestParam String u, @RequestHeader("Authorization") String token){
         Principal user = tokenService.noTokenThrow(token);
-        if(trailFlagService.deleteTrailFlag(id)){
-            return "Flag was deleted.";
-        } else return "Failed to delete flag.";
+        if(userReviewService.deleteReview(u,user)){
+            return "Review was deleted.";
+        } else return "Failed to delete review.";
     }
-
-
     //region Exception Handlers
     /**
      * Catches any exceptions in other methods and returns status code 401 if
