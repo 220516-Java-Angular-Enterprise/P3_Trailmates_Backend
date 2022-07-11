@@ -51,6 +51,7 @@ public class ConversationController {
 //    }
 
     //Expects NewConversationRequest json object
+    @CrossOrigin
     @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Conversation newConversationRequest(@RequestHeader("Authorization") String token, @RequestBody NewConversationRequest request){
 
@@ -59,7 +60,7 @@ public class ConversationController {
         if (principal.getId() == null) throw new UnauthorizedException();
 
         String conversationID = conversationService.createNewConversation(request.getConversationName());
-        System.out.println("Conversation: @@@@@ " + conversationID);
+        //System.out.println("Conversation: @@@@@ " + conversationID);
 
         ArrayList<String> usersToAddToConversation = request.getUserIDs();
 
