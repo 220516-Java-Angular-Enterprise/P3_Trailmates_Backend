@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailreview.dtos.requests;
 
 import com.revature.trailmates.trailreview.TrailReview;
+import com.revature.trailmates.trailreview.TrailReviewID;
 import com.revature.trailmates.trailreview.TrailReviewRepository;
 
 import java.math.BigDecimal;
@@ -31,8 +32,8 @@ public class TrailReviewRequest {
 
     public TrailReview createTrailReview(String userID, String trailID){
         TrailReview trailReview = new TrailReview();
-        trailReview.getTrailReviewID().setUserID(userID);
-        trailReview.getTrailReviewID().setTrailID(trailID);
+        TrailReviewID trailReviewID = new TrailReviewID(trailID, userID);
+        trailReview.setTrailReviewID(trailReviewID);
         trailReview.setComment(getComment());
         trailReview.setRating(getRating());
         return trailReview;

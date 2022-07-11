@@ -32,5 +32,6 @@ hs_err_pid*
 
 *.idea/
 *out/
+application.properties
 target/
 
