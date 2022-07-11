@@ -33,6 +33,8 @@ who messaged them, and they set up the hiking plan from there.
         <tr> <td>Postman</td> <td>Endpoint Testing</td> </tr>
         <tr> <td>J-Unit</td> <td rowspan="2">Unit Testing</td> </tr>
         <tr> <td>Mockito</td> </tr>
+        <tr> <td>AWS CodePipeline</td> <td rowspan="1">Continuous Delivery</td> </tr>
+        <tr> <td>AWS CodeDeploy</td> <td>Deployment</td> </tr>
         <tr> <td>AWS RDS</td> <td>Data Persistence</td> </tr>
         <tr>
             <td>National Park Service API<a href="https://www.nps.gov/subjects/developer/api-documentation.htm"><sup>1</sup></a></td>
