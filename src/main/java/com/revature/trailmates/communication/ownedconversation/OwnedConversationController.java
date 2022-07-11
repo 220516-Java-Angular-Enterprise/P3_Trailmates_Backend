@@ -27,6 +27,7 @@ public class OwnedConversationController {
         this.tokenService = tokenService;
     }
 
+    @CrossOrigin
     @GetMapping(value = "/active")
     public @ResponseBody ArrayList<OwnedConversation> getAllUsers(@RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
@@ -35,6 +36,7 @@ public class OwnedConversationController {
         return ownedConversationService.getAllOwnedConversationsOfUser(principal.getId());
     }
 
+    @CrossOrigin
     @GetMapping(value = "/active-in-chat/{chatid}")
     public @ResponseBody ArrayList<User> getAllUsers(@RequestHeader("Authorization") String token, @PathVariable String chatid){
         Principal principal = tokenService.noTokenThrow(token);

@@ -51,6 +51,7 @@ public class ConversationController {
 //    }
 
     //Expects NewConversationRequest json object
+    @CrossOrigin
     @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Conversation newConversationRequest(@RequestHeader("Authorization") String token, @RequestBody NewConversationRequest request){
 

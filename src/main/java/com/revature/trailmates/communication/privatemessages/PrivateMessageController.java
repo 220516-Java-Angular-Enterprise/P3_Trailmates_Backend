@@ -35,6 +35,7 @@ public class PrivateMessageController {
     }
 
 
+    @CrossOrigin
     @GetMapping(value = "/conversation/{conversation}")
     public @ResponseBody ArrayList<PrivateMessage> getConversationsOfUser(@PathVariable String conversation, @RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
@@ -43,6 +44,7 @@ public class PrivateMessageController {
         return privateMessageService.getAllPrivateMessagesInConversation(conversation);
     }
 
+    @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String saveNewPrivateMessage(@RequestHeader("Authorization") String token, @RequestBody NewPrivateMessageRequest request){
