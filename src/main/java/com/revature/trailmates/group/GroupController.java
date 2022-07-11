@@ -16,14 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.DescriptorKey;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(name ="/group")
+@RequestMapping("/group")
 public class GroupController {
 
     @Inject
@@ -36,6 +35,10 @@ public class GroupController {
 
     public GroupController() {
     }
+
+    //show all users on a group
+    //edit group
+    //delete group
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
@@ -63,6 +66,27 @@ public class GroupController {
         service.addUserToGroup(user.getId(), join.getGroupName());
         return null;
     }
+
+    @CrossOrigin
+    @PutMapping(path = "/editGroup/{groupName}/{editName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void editGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName ,@PathVariable String editName){
+        Principal user = tokenService.noTokenThrow(token);
+        service.editGroup(editName, groupName);
+    }
+
+    @CrossOrigin
+    @DeleteMapping(path = "/leaveGroup/{groupName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void removeUser(@RequestHeader("Authorization") String token, @PathVariable String groupName){
+        Principal user = tokenService.noTokenThrow(token);
+        service.removeUserFromGroup(user.getId(), groupName);
+    }
+
+    /*@CrossOrigin
+    @GetMapping(path = "/getUsers/{groupName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<User> getUsersFromGroup(@RequestHeader("Authorization") String token, @PathVariable String groupName){
+        Principal user = tokenService.noTokenThrow(token);
+        return service.getUsers(groupName);
+    }*/
 
 
 
