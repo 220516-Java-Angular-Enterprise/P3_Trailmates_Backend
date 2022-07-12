@@ -38,8 +38,8 @@ public class TrailReviewService {
         if(!trailExists(trailID)) throw new InvalidRequestException("Cannot find trail");
         if(!userExists(userID)) throw new InvalidRequestException("Cannot find user");
         if(review.getComment().length() > 255) throw new InvalidRequestException("Comment is longer than 255 characters");
-        if(!(review.getRating().compareTo(BigDecimal.valueOf(5)) <= 0)) throw new InvalidRequestException("Rating is greater than 5 stars");
-        if(!(review.getRating().compareTo(BigDecimal.valueOf(1)) >= 0)) throw new InvalidRequestException("Rating is less than 1 stars");
+        if(review.getRating().compareTo(BigDecimal.valueOf(5)) > 0) throw new InvalidRequestException("Rating is greater than 5 stars");
+        if(review.getRating().compareTo(BigDecimal.valueOf(1)) < 0) throw new InvalidRequestException("Rating is less than 1 stars");
         //validation checks here
         if(checkIfTrailReviewExists(userID, trailID)) {
             updateTrailReview(review);

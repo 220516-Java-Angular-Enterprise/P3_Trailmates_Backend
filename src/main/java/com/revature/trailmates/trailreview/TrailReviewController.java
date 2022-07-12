@@ -65,7 +65,7 @@ public class TrailReviewController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @GetMapping(value = "/avg/{trailID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public TrailAverageRating getAverageReviewsForATrail(@RequestHeader("Authorization") String token, @PathVariable String trailID){
-        Principal requester = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailReviewService.getAverageReviewsForTrail(trailID);
     }
 
@@ -80,7 +80,7 @@ public class TrailReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     @GetMapping(value = "/all/{trailID}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TrailReview> getAllReviewsForATrail(@RequestHeader("Authorization") String token, @PathVariable String trailID){
-        Principal requester = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailReviewService.getAllReviewsForTrail(trailID);
     }
 
