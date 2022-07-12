@@ -40,6 +40,11 @@ public class GroupController {
     //edit group
     //delete group
 
+    /**
+     * @param token verifying it is a user in the database
+     * @param newGroup creates a new group
+     * @return returns the group created
+     */
     @ResponseStatus(HttpStatus.ACCEPTED)
     @CrossOrigin
     @PostMapping(path = "/newGroup", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,6 +55,10 @@ public class GroupController {
         return newGroup;
     }
 
+    /**
+     * @param token verifying it is a user in the database
+     * @return returns a list of all the groups active
+     */
     @CrossOrigin
     @GetMapping(path = "/allgroups", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -58,6 +67,11 @@ public class GroupController {
         return null;
     }
 
+    /**
+     * @param token verifying it is a user in the database
+     * @param join name of the group they want to join
+     * @return returns the user that joined
+     */
     @CrossOrigin
     @PostMapping(path = "/addUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -67,6 +81,11 @@ public class GroupController {
         return null;
     }
 
+    /**
+     * @param token verifying it is a user in the database
+     * @param groupName group they want to edit
+     * @param editName the name they want to change it to
+     */
     @CrossOrigin
     @PutMapping(path = "/editGroup/{groupName}/{editName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody void editGroup(@RequestHeader("Authorization") String token,@PathVariable String groupName ,@PathVariable String editName){
@@ -74,6 +93,10 @@ public class GroupController {
         service.editGroup(editName, groupName);
     }
 
+    /**
+     * @param token verifying it is a user in the database
+     * @param groupName which group they want to leave
+     */
     @CrossOrigin
     @DeleteMapping(path = "/leaveGroup/{groupName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody void removeUser(@RequestHeader("Authorization") String token, @PathVariable String groupName){
@@ -81,6 +104,11 @@ public class GroupController {
         service.removeUserFromGroup(user.getId(), groupName);
     }
 
+    /**
+     * @param token verifying it is a user in the database
+     * @param groupName the group they want to return
+     * @return returning all users in that group
+     */
     @CrossOrigin
     @GetMapping(path = "/getUsers/{groupName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<User> getUsersFromGroup(@RequestHeader("Authorization") String token, @PathVariable String groupName){
