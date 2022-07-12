@@ -33,7 +33,6 @@ public class UserReviewController {
 
     /**
      *gets all user reviews attached to an authenticated user's id
-     * @return A list of UserReviews
      * @param token the authentication token provided under the Authorization header
      * @return a ReviewSummaryResponse object, which contains an average of reviews as its first element, and a list of anonymized reviews as its second element.
      */
@@ -47,13 +46,13 @@ public class UserReviewController {
 
     /**
      * gets all reviews submitted on a particular user.  Results are anonymized, with only comment and rating visible.
-     * @param u the id of the user whose reviews
      * @param token the authentication token provided under the Authorization header
+     * @param u the id of the user whose reviews
      * @return a ReviewSummaryResponse object, which contains an average of reviews as its first element, and a list of anonymized reviews as its second element.
      */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
-    public @ResponseBody ReviewSummaryResponse getByUser(@RequestParam String u, @RequestHeader("Authorization") String token) {
+    public @ResponseBody ReviewSummaryResponse getByUser(@RequestHeader("Authorization") String token, @RequestParam String u) {
         Principal user = tokenService.noTokenThrow(token);
         return userReviewService.getAllByUserId(u);
     }
@@ -68,7 +67,7 @@ public class UserReviewController {
     @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody UserReview saveNewUserReview(@RequestBody NewUserReviewRequest request, @RequestHeader("Authorization") String token) {
+    public @ResponseBody UserReview saveNewUserReview(@RequestHeader("Authorization") String token, @RequestBody NewUserReviewRequest request) {
         Principal user = tokenService.noTokenThrow(token);
         //technically the request could contain a reviewer ID, but the next line ensures that the authenticated user ID is the reviewer ID.
         request.setReviewerId(user.getId());
@@ -83,7 +82,7 @@ public class UserReviewController {
      */
     @CrossOrigin
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"u"})
-    public @ResponseBody String deleteReview(@RequestParam String u, @RequestHeader("Authorization") String token){
+    public @ResponseBody String deleteReview( @RequestHeader("Authorization") String token, @RequestParam String u){
         Principal user = tokenService.noTokenThrow(token);
         if(userReviewService.deleteReview(u,user)){
             return "Review was deleted.";
