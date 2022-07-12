@@ -2,6 +2,8 @@ package com.revature.trailmates.trailreview;
 
 import com.revature.trailmates.trailreview.dtos.requests.TrailReviewRequest;
 import com.revature.trailmates.trailreview.dtos.responses.TrailAverageRating;
+import com.revature.trailmates.trails.TrailService;
+import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,15 @@ public class TrailReviewService {
 
     @Inject
     private TrailReviewRepository trailReviewRepository;
+    private TrailService trailService;
+    private UserService userService;
 
     @Inject
     @Autowired
-    public TrailReviewService(TrailReviewRepository trailReviewRepository) {
+    public TrailReviewService(TrailReviewRepository trailReviewRepository, TrailService trailService, UserService userService) {
         this.trailReviewRepository = trailReviewRepository;
+        this.trailService = trailService;
+        this.userService = userService;
     }
 
     //region Public methods
@@ -80,11 +86,16 @@ public class TrailReviewService {
     }
 
     private boolean trailExists(String trailID){
-        return true;
+        try {
+            trailService.getTrail(trailID);
+            return true;
+        }catch (InvalidRequestException exception){
+            return false;
+        }
     }
 
     private boolean userExists(String userID){
-        return true;
+        return userService.getUserById(userID) != null;
     }
     //endregion
 
