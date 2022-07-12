@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailreview;
 
 import com.revature.trailmates.trailreview.dtos.requests.TrailReviewRequest;
+import com.revature.trailmates.trailreview.dtos.responses.TrailAverageRating;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +32,10 @@ public class TrailReviewService {
         if(!trailExists(trailID)) throw new InvalidRequestException("Cannot find trail");
         if(!userExists(userID)) throw new InvalidRequestException("Cannot find user");
         if(review.getComment().length() > 255) throw new InvalidRequestException("Comment is longer than 255 characters");
-        if(review.getRating().compareTo(BigDecimal.valueOf(5)) <= 0) throw new InvalidRequestException("Rating is greater than 5 stars");
-        if(review.getRating().compareTo(BigDecimal.valueOf(0)) >= 0) throw new InvalidRequestException("Rating is less than 0 stars");
+        if(!(review.getRating().compareTo(BigDecimal.valueOf(5)) <= 0)) throw new InvalidRequestException("Rating is greater than 5 stars");
+        if(!(review.getRating().compareTo(BigDecimal.valueOf(1)) >= 0)) throw new InvalidRequestException("Rating is less than 1 stars");
         //validation checks here
-        if(checkIfTrailReviewExists(review)) {
+        if(checkIfTrailReviewExists(userID, trailID)) {
             updateTrailReview(review);
             return;
         }
@@ -47,11 +49,18 @@ public class TrailReviewService {
                 trailReview.getTrailReviewID().getTrailID());
     }
 
-    public void deleteReview(TrailReview trailReview){
-        trailReviewRepository.delete(trailReview);
+    public void deleteReview(String userID, String trailID){
+        if(!checkIfTrailReviewExists(userID, trailID)) throw new InvalidRequestException("Trail Review does not exist");
+        trailReviewRepository.deleteTrailReview(userID, trailID);
     }
 
+    public TrailAverageRating getAverageReviewsForTrail(String trailID){
+        if(!trailExists(trailID)) throw new InvalidRequestException("Cannot find trail");
+        TrailReviewAverage trailReviewAverage = trailReviewRepository.avgRating(trailID);
+        return new TrailAverageRating(trailID, trailReviewAverage.getRatingAvg().setScale(2, RoundingMode.HALF_UP), trailReviewAverage.getRatingCount());
+    }
     public List<TrailReview> getAllReviewsForTrail(String trailID){
+        if(!trailExists(trailID)) throw new InvalidRequestException("Cannot find trail");
         List<TrailReview> trailReviews = new ArrayList<>();
         trailReviewRepository.findAll().forEach(trailReviews::add);
         if(trailReviews.isEmpty()) throw new InvalidRequestException("No reviews found");
@@ -66,8 +75,8 @@ public class TrailReviewService {
     //endregion
 
     //region Validation Checks
-    private boolean checkIfTrailReviewExists(TrailReview trailReview){
-        return trailReviewRepository.ifReviewExists(trailReview.getTrailReviewID().getUserID(), trailReview.getTrailReviewID().getTrailID()) != null;
+    private boolean checkIfTrailReviewExists(String userID, String trailID){
+        return trailReviewRepository.ifReviewExists(userID, trailID) != null;
     }
 
     private boolean trailExists(String trailID){
