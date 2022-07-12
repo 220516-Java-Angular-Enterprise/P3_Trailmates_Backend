@@ -27,6 +27,11 @@ public class OwnedConversationController {
         this.tokenService = tokenService;
     }
 
+    /**
+     * Gets all the conversations the logged in user owns.
+     * @param token authorization token to get user ID.
+     * @return
+     */
     @CrossOrigin
     @GetMapping(value = "/active")
     public @ResponseBody ArrayList<OwnedConversation> getAllUsers(@RequestHeader("Authorization") String token){
@@ -36,6 +41,12 @@ public class OwnedConversationController {
         return ownedConversationService.getAllOwnedConversationsOfUser(principal.getId());
     }
 
+    /**
+     * Gets all the people that are in a chat.
+     * @param token  Assures the user is logged in before doing their request.
+     * @param chatid The ID of the chat
+     * @return
+     */
     @CrossOrigin
     @GetMapping(value = "/active-in-chat/{chatid}")
     public @ResponseBody ArrayList<User> getAllUsers(@RequestHeader("Authorization") String token, @PathVariable String chatid){

@@ -51,6 +51,13 @@ public class ConversationController {
 //    }
 
     //Expects NewConversationRequest json object
+
+    /**
+     * Creates a new conversation.
+     * @param token   Requires user to be logged in.
+     * @param request Takes in the name of the conversation & the users in the conversation.
+     * @return
+     */
     @CrossOrigin
     @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Conversation newConversationRequest(@RequestHeader("Authorization") String token, @RequestBody NewConversationRequest request){
