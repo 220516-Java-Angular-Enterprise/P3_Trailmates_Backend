@@ -81,12 +81,12 @@ public class GroupController {
         service.removeUserFromGroup(user.getId(), groupName);
     }
 
-    /*@CrossOrigin
+    @CrossOrigin
     @GetMapping(path = "/getUsers/{groupName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<User> getUsersFromGroup(@RequestHeader("Authorization") String token, @PathVariable String groupName){
         Principal user = tokenService.noTokenThrow(token);
         return service.getUsers(groupName);
-    }*/
+    }
 
 
 

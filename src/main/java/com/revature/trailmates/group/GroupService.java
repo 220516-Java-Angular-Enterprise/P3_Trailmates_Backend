@@ -48,9 +48,9 @@ public class GroupService {
         repo.editGroupName(editName, repo.retrieveGroupID(groupName));
     }
 
-    /*public List<User> getUsers(String groupName){
-        return repo.getUsers(repo.retrieveGroupID(groupName));
-    }*/
+    public List<User> getUsers(String groupName){
+        return repo.getUsers(repo.retrieveGroupID(groupName)).getUsers();
+    }
 
     private boolean groupExists(String groupName){
         return repo.retrieveGroupID(groupName) != null;

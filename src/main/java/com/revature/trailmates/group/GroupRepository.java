@@ -1,6 +1,7 @@
 package com.revature.trailmates.group;
 
 
+import com.revature.trailmates.user.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -26,6 +27,9 @@ public interface GroupRepository extends CrudRepository<Group, String> {
     @Modifying
     @Query(value = "update \"group\" set name = ?1 where id = ?2", nativeQuery = true)
     void editGroupName(String editName, String groupID);
+
+    @Query(value = "select * from \"group\" where id = ?1", nativeQuery = true)
+    Group getUsers(String groupID);
 
     @Query(value = "select distinct(id) from \"group\" as g inner join user_groups as u \n" +
             "on g.id = u.group_id\n" +
