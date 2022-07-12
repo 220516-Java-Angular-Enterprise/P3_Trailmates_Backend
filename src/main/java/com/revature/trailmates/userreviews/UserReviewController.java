@@ -5,6 +5,7 @@ import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.trailflag.TrailFlag;
 import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
 import com.revature.trailmates.userreviews.dtos.requests.NewUserReviewRequest;
+import com.revature.trailmates.userreviews.dtos.responses.ReviewSummaryResponse;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -29,30 +30,57 @@ public class UserReviewController {
     private UserReviewService userReviewService;
     @Autowired
     private TokenService tokenService;
-    //get all by reviewer id
+
+    /**
+     *gets all user reviews attached to an authenticated user's id
+     * @return A list of UserReviews
+     * @param token the authentication token provided under the Authorization header
+     * @return a ReviewSummaryResponse object, which contains an average of reviews as its first element, and a list of anonymized reviews as its second element.
+     */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Optional<List<UserReview>> getByReviewer(@RequestHeader("Authorization") String token) {
+    public @ResponseBody ReviewSummaryResponse getByReviewer(@RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
         //uses principal to request only the authenticated user's reviews.
         return userReviewService.getAllByReviewerId(user.getId());
     }
-    //get all by user id
+
+    /**
+     * gets all reviews submitted on a particular user.  Results are anonymized, with only comment and rating visible.
+     * @param u the id of the user whose reviews
+     * @param token the authentication token provided under the Authorization header
+     * @return a ReviewSummaryResponse object, which contains an average of reviews as its first element, and a list of anonymized reviews as its second element.
+     */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
-    public @ResponseBody Optional<List<UserReview>> getByUser(@RequestParam String u, @RequestHeader("Authorization") String token) {
+    public @ResponseBody ReviewSummaryResponse getByUser(@RequestParam String u, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
         return userReviewService.getAllByUserId(u);
     }
     //save new review (also has update functionality)
+
+    /**
+     * save a user review to the database
+     * @param request the request body in JSON, which must contain 3 fields: a String userId, an integer rating 1-5, comment
+     * @param token the authentication token provided under the Authorization header, and the source if the reviewer id
+     * @return the user review that was saved
+     */
     @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody UserReview saveNewUserReview(@RequestBody NewUserReviewRequest request, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
+        //technically the request could contain a reviewer ID, but the next line ensures that the authenticated user ID is the reviewer ID.
+        request.setReviewerId(user.getId());
         return userReviewService.saveNewUserReview(request, user);
     }
-    //delete review
+
+    /**
+     * delete the review of a user that belongs to the authenticated user's id
+     * @param u the id of the user whose review is being deleted
+     * @param token the authentication token provided under the Authorization header, and the source if the reviewer id
+     * @return
+     */
     @CrossOrigin
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"u"})
     public @ResponseBody String deleteReview(@RequestParam String u, @RequestHeader("Authorization") String token){
@@ -108,6 +136,7 @@ public class UserReviewController {
         responseBody.put("status", 404);
         responseBody.put("message", e.getMessage());
         responseBody.put("timestamp", LocalDateTime.now().toString());
+        System.out.println(e.getMessage());
         return responseBody;
     }
 
