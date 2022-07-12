@@ -34,7 +34,7 @@ public class OwnedConversationController {
      */
     @CrossOrigin
     @GetMapping(value = "/active")
-    public @ResponseBody ArrayList<OwnedConversation> getAllUsers(@RequestHeader("Authorization") String token){
+    public @ResponseBody ArrayList<OwnedConversation> getAllMyActiveChats(@RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
@@ -49,7 +49,7 @@ public class OwnedConversationController {
      */
     @CrossOrigin
     @GetMapping(value = "/active-in-chat/{chatid}")
-    public @ResponseBody ArrayList<User> getAllUsers(@RequestHeader("Authorization") String token, @PathVariable String chatid){
+    public @ResponseBody ArrayList<User> getAllUsersInChat(@RequestHeader("Authorization") String token, @PathVariable String chatid){
         Principal principal = tokenService.noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
