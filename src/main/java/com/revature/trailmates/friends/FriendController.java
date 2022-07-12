@@ -1,4 +1,4 @@
-package com.revature.trailmates.trails;
+package com.revature.trailmates.friends;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
@@ -12,109 +12,77 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/trail")
-public class TrailController {
+@RequestMapping("/friends")
+public class FriendController {
 
     @Inject
-    private final TrailService trailService;
-    private final TokenService tokenService;
+    private final FriendService friendService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Inject
     @Autowired
-    public TrailController(TrailService trailService, TokenService tokenService) {
-        this.trailService = trailService;
-        this.tokenService = tokenService;
-    }
-
-
-
-    /**
-     * Returns a Trail Object with a matching id
-     * @param id the id of the trail
-     * @return Returns a Trail Object
-     */
-    @CrossOrigin
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Optional<Trail> getTrailById(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.getTrail(id);
+    public FriendController(FriendService friendService) {
+        this.friendService = friendService;
     }
 
     /**
-     * Returns All Trails on a given Page (10 Trails Per Page)
-     * @param page
-     * @return A List of at most 10 trails at a certain page
+     * Adds a Friend to the Database
+     * @param friend_id The id of the friend the user is adding
+     * @param token The Token of the current User
      */
     @CrossOrigin
-    @GetMapping(value = "/getAll/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> getAllTrailsByPage(@PathVariable int page, @RequestHeader("Authorization") String token) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/{friend_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void addFriend(@PathVariable("friend_id") String friend_id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailService.getAllTrailsPage(page);
+        friendService.addNewFriend(user.getId(), friend_id);
     }
 
     /**
-     * Returns a List of Every Single Trail in the Database
-     * @return List<Trail>
+     * Returns a List of all the Friends a User has
+     * @param token Token of the current User
+     * @return A List of All the Users Friends
      */
     @CrossOrigin
-    @GetMapping(value = "/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> getAllTrails(@RequestHeader("Authorization") String token) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Friend> getAllFriendsFromUser(@RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailService.getAllTrails();
+        return friendService.getAllFriendsFromUser(user.getId());
     }
 
     /**
-     * Returns a List of Trails the fit the search criteria of search_name on a specific page
-     * @param search_name The value the user types into our search bar
-     * @param page The page that they want to go to.
-     * @return List<Trail> A list of at most 10 trails
+     * Returns a List of all users who have current user as their friend but the current user doesn't have
+     * as their friend.
+     * @param token Token of the Current User
+     * @return List of Pending Friends
      */
     @CrossOrigin
-    @GetMapping(value = "search/{page}/{search_name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByName(@PathVariable("search_name") String search_name, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
+    @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Friend> getAllPendingFriends(@RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByName(search_name, page);
+        return friendService.getAllPendingFriends(user.getId());
     }
 
     /**
-     * Returns a List of Trails that fit the State search criteria on a specified page
-     * @param state The state value user is inserting
-     * @param page The page the user is on
-     * @return List<Trail> A List of 10 trails or less if on the last page
+     * Removes a Friend from the database
+     * @param friend_id The id of the friend they wish to remove
+     * @param token The Current User
      */
     @CrossOrigin
-    @GetMapping(value = "searchState/{page}/{state}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByState(@PathVariable("state") String state, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
+    @DeleteMapping(value = "/{friend_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void deleteFriend(@PathVariable("friend_id") String friend_id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByState(state, page);
+        friendService.deleteFriend(user.getId(), friend_id);
     }
-
-    /**
-     * Returns a List of Trails that fir the Park Name search criteria on a specific page
-     * @param search_park
-     * @param page
-     * @return
-     */
-    @CrossOrigin
-    @GetMapping(value = "searchPark/{page}/{search_park}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByParkName(@PathVariable("search_park") String search_park, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByParkName(search_park, page);
-    }
-
-
-    //FOR BACKEND USE ONLY, DON'T CALL THIS ON FRONT END.
-    //@CrossOrigin
-    //@GetMapping(value = "/getAllAPI/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    //public @ResponseBody List<Trail> getAllTrailsAPI(@PathVariable int page) { return trailService.getAllTrailsAPI(page); }
-
 
     /**
      * Catches any exceptions in other methods and returns status code 401 if
@@ -181,5 +149,4 @@ public class TrailController {
         responseBody.put("timestamp", LocalDateTime.now().toString());
         return responseBody;
     }
-
 }
