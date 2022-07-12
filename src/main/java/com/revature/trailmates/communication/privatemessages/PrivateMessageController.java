@@ -38,13 +38,12 @@ public class PrivateMessageController {
      * This will retrieve all the messages in a conversation and order them by newest to oldest. index 0 -> N
      * @param conversation ID of the Conversation from the 'conversations' table.
      * @param token Authorization token used to retrieve the logged in user to make sure he's logged in.
-     * @return
+     * @return all pms in a chat to the client
      */
     @CrossOrigin
     @GetMapping(value = "/conversation/{conversation}")
     public @ResponseBody ArrayList<PrivateMessage> getConversationsOfUser(@PathVariable String conversation, @RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         return privateMessageService.getAllPrivateMessagesInConversation(conversation);
     }
@@ -58,7 +57,6 @@ public class PrivateMessageController {
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String saveNewPrivateMessage(@RequestHeader("Authorization") String token, @RequestBody NewPrivateMessageRequest request){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         return privateMessageService.saveNewPrivateMessage(principal.getId(), request);
     }

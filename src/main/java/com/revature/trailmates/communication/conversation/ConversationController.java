@@ -56,7 +56,7 @@ public class ConversationController {
      * Creates a new conversation.
      * @param token   Requires user to be logged in.
      * @param request Takes in the name of the conversation & the users in the conversation.
-     * @return
+     * @return the new convo to the client
      */
     @CrossOrigin
     @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +64,6 @@ public class ConversationController {
 
         //Verify user
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         String conversationID = conversationService.createNewConversation(request.getConversationName());
         //System.out.println("Conversation: @@@@@ " + conversationID);
