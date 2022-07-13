@@ -57,6 +57,7 @@ public class AuthService {
     }
 
     private String nullChecker(NewUserRequest request){
+        //todo change to string builder and make it a public util class
         String eMessage = "";
         try {
             Field[] fields = com.revature.trailmates.auth.dtos.requests.NewUserRequest.class.getDeclaredFields();
@@ -70,7 +71,6 @@ public class AuthService {
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         return eMessage;
