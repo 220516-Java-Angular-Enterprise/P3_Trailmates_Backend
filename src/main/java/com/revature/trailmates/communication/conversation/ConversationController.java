@@ -78,6 +78,21 @@ public class ConversationController {
         return new Conversation(conversationID, request.getConversationName());
     }
 
+    /**
+     * Used to add people to conversation after they have been started.
+     * @param token Assures users are logged in
+     * @param conversation  the ID of the conversation you want to add the user to
+     * @param user          The ID of the user you want to add to an existing conversation. 
+     */
+    @CrossOrigin
+    @PostMapping(value = "/add-user-to-conversation/{conversation}/{user}", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void newConversationRequest(@RequestHeader("Authorization") String token, @PathVariable("conversation") String conversation, @PathVariable("user") String user){
+        //Verify user
+        Principal principal = tokenService.noTokenThrow(token);
+
+        ownedConversationService.saveNewOwnedConversation(user, conversation);
+    }
+
     //endregion
 
     //region Exception Handlers
