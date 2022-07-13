@@ -51,13 +51,19 @@ public class ConversationController {
 //    }
 
     //Expects NewConversationRequest json object
+
+    /**
+     * Creates a new conversation.
+     * @param token   Requires user to be logged in.
+     * @param request Takes in the name of the conversation & the users in the conversation.
+     * @return the new convo to the client
+     */
     @CrossOrigin
     @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Conversation newConversationRequest(@RequestHeader("Authorization") String token, @RequestBody NewConversationRequest request){
 
         //Verify user
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         String conversationID = conversationService.createNewConversation(request.getConversationName());
         //System.out.println("Conversation: @@@@@ " + conversationID);
@@ -70,6 +76,21 @@ public class ConversationController {
         }
 
         return new Conversation(conversationID, request.getConversationName());
+    }
+
+    /**
+     * Used to add people to conversation after they have been started.
+     * @param token Assures users are logged in
+     * @param conversation  the ID of the conversation you want to add the user to
+     * @param user          The ID of the user you want to add to an existing conversation. 
+     */
+    @CrossOrigin
+    @PostMapping(value = "/add-user-to-conversation/{conversation}/{user}", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void newConversationRequest(@RequestHeader("Authorization") String token, @PathVariable("conversation") String conversation, @PathVariable("user") String user){
+        //Verify user
+        Principal principal = tokenService.noTokenThrow(token);
+
+        ownedConversationService.saveNewOwnedConversation(user, conversation);
     }
 
     //endregion

@@ -27,20 +27,29 @@ public class OwnedConversationController {
         this.tokenService = tokenService;
     }
 
+    /**
+     * Gets all the conversations the logged in user owns.
+     * @param token authorization token to get user ID.
+     * @return all owned convos to the client
+     */
     @CrossOrigin
     @GetMapping(value = "/active")
-    public @ResponseBody ArrayList<OwnedConversation> getAllUsers(@RequestHeader("Authorization") String token){
+    public @ResponseBody ArrayList<OwnedConversation> getAllMyActiveChats(@RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         return ownedConversationService.getAllOwnedConversationsOfUser(principal.getId());
     }
 
+    /**
+     * Gets all the people that are in a chat.
+     * @param token  Assures the user is logged in before doing their request.
+     * @param chatid The ID of the chat
+     * @return all peeps in chat to the client
+     */
     @CrossOrigin
     @GetMapping(value = "/active-in-chat/{chatid}")
-    public @ResponseBody ArrayList<User> getAllUsers(@RequestHeader("Authorization") String token, @PathVariable String chatid){
+    public @ResponseBody ArrayList<User> getAllUsersInChat(@RequestHeader("Authorization") String token, @PathVariable String chatid){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
 
         return ownedConversationService.getAllUsersOfConversationID(chatid);
     }
