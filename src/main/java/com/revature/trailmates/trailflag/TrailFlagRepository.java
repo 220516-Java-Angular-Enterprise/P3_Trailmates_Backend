@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface TrailFlagRepository extends CrudRepository<TrailFlag,String> {
 
-
     @Query(value ="SELECT * FROM trail_flags where user_id = ?1", nativeQuery =true)
     Optional<List<TrailFlag>> getAllByUserId(String userId);
     @Query(value ="SELECT * FROM trail_flags where trail_id = ?1", nativeQuery =true)

@@ -32,33 +32,33 @@ class TrailFlagServiceTest {
     @Spy
     TrailFlag dummyFlag = new TrailFlag();
     @Spy
-    Principal dummyUser = new Principal("dummy id","dummy username","dummy role");
+    Principal dummyPrincipal = new Principal("dummy id","dummy username","dummy role");
     private static long todayteInt = new Date().getTime()/(1000*60*60*24);
     //todo: should look up how to set up a BeforeEach annotation to clean up these tests and avoid repeating variable assignments
     @Test
     void getAllByDateIntAndUserId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByDateIntAndUserId(anyLong(),any())).thenReturn(Optional.empty());
-        assertThrows(InvalidRequestException.class, () -> service.getAllByDateIntAndUserId(dummyFlag.getDateInt(),dummyFlag.getUserId()));
+        assertThrows(InvalidRequestException.class, () -> service.getAllByDateIntAndUserId(dummyFlag.getDateInt(),dummyFlag.getUserId().getId()));
     }
 
     @Test
     void getAllByUserId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByUserId(any())).thenReturn(Optional.empty());
-        assertThrows(InvalidRequestException.class, () -> service.getAllByUserId(dummyFlag.getUserId()));
+        assertThrows(InvalidRequestException.class, () -> service.getAllByUserId(dummyFlag.getUserId().getId()));
     }
     @Test
     void getAllByTrailId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByTrailId(any())).thenReturn(Optional.empty());
-        assertThrows(InvalidRequestException.class, () -> service.getAllByTrailId(dummyFlag.getTrailId()));
+        assertThrows(InvalidRequestException.class, () -> service.getAllByTrailId(dummyFlag.getTrailId().getId()));
     }
     @Test
     void getAllByUserIdAndTrailId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByUserIdAndTrailId(any(),any())).thenReturn(Optional.empty());
-        assertThrows(InvalidRequestException.class, () -> service.getAllByUserIdAndTrailId(dummyFlag.getUserId(),dummyFlag.getTrailId()));
+        assertThrows(InvalidRequestException.class, () -> service.getAllByUserIdAndTrailId(dummyFlag.getUserId().getId(),dummyFlag.getTrailId().getId()));
     }
 
     @Test
@@ -68,22 +68,22 @@ class TrailFlagServiceTest {
         //assert throws exception if new flag is duplicate (i.e. isDuplicateFlag=true)
         //initialize dummy flag to avoid null pointers
         newTrailFlagRequest.setTrailId("foo");
-        dummyUser.setId("bar");
+        dummyPrincipal.setId("bar");
         newTrailFlagRequest.setDateInt(todayteInt+1);
-        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyUser);
+        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyPrincipal);
         //initialize the dummy list we return
         ArrayList<TrailFlag> dummyList = new ArrayList<TrailFlag>();
         dummyList.add(dummyFlag);
         //"get" dummylist from database
-        Mockito.when(repo.getAllByDateIntAndUserIdAndTrailId(dummyFlag.getDateInt(),dummyFlag.getUserId(),dummyFlag.getTrailId())).thenReturn(Optional.of(dummyList));
+        Mockito.when(repo.getAllByDateIntAndUserIdAndTrailId(dummyFlag.getDateInt(),dummyFlag.getUserId().getId(),dummyFlag.getTrailId().getId())).thenReturn(Optional.of(dummyList));
         //if returned list is populated, we have a duplicate.  Throw exception.
-        assertThrows(ResourceConflictException.class, () -> service.saveNewTrailFlag(newTrailFlagRequest, dummyUser));
+        assertThrows(ResourceConflictException.class, () -> service.saveNewTrailFlag(newTrailFlagRequest, dummyPrincipal));
     }
     @Test
     //save fails when request has null fields
     void saveNewTrailFlagNullFields() {
         //assert throws exception when new flag has null fields.
-        Exception e = assertThrows(RuntimeException.class, () ->service.saveNewTrailFlag(newTrailFlagRequest, dummyUser));
+        Exception e = assertThrows(RuntimeException.class, () ->service.saveNewTrailFlag(newTrailFlagRequest, dummyPrincipal));
         assertTrue(e.getMessage().contains("is null"));
     }
     @Test
@@ -91,36 +91,36 @@ class TrailFlagServiceTest {
     void saveNewTrailFlagSQLException(){
         //assert throws exception if we get an SQL exception due to user_id or trail_id not matching in database
         newTrailFlagRequest.setTrailId("foo");
-        dummyUser.setId("bar");
+        dummyPrincipal.setId("bar");
         newTrailFlagRequest.setDateInt(todayteInt+1);
-        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyUser);
+        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyPrincipal);
         //throw an exception when trying to save this data
         Mockito.when(repo.save(dummyFlag)).thenThrow(new RuntimeException("An exception occurred when saving"));
-        Exception e = assertThrows(InvalidRequestException.class,()->service.saveNewTrailFlag(newTrailFlagRequest, dummyUser));
+        Exception e = assertThrows(InvalidRequestException.class,()->service.saveNewTrailFlag(newTrailFlagRequest, dummyPrincipal));
         assertEquals("Unable to save trail flag.  Either the user or trail id were not found in the database, or the database was inaccessible.",e.getMessage());
     }
     @Test
     //save fails when dateInt is earlier than current date
     void saveNewTrailFlagBadDateInt(){
         newTrailFlagRequest.setTrailId("foo");
-        dummyUser.setId("bar");
-        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyUser);
+        dummyPrincipal.setId("bar");
+        dummyFlag= new TrailFlag(newTrailFlagRequest, dummyPrincipal);
         newTrailFlagRequest.setDateInt(todayteInt-1);
-        Exception e = assertThrows(InvalidRequestException.class, () -> service.saveNewTrailFlag(newTrailFlagRequest,dummyUser));
+        Exception e = assertThrows(InvalidRequestException.class, () -> service.saveNewTrailFlag(newTrailFlagRequest,dummyPrincipal));
         assertEquals("Cannot create a flag for a previous date.",e.getMessage());
     }
     @Test
     //returns false if no matching flag is found with given parameters
     void isDuplicateFlag() {
         //mock an empty list when searching for dummy flag
-        Mockito.when(repo.getAllByDateIntAndUserIdAndTrailId(dummyFlag.getDateInt(),dummyFlag.getUserId(),dummyFlag.getTrailId())).thenReturn(Optional.of(new ArrayList<TrailFlag>()));
+        Mockito.when(repo.getAllByDateIntAndUserIdAndTrailId(dummyFlag.getDateInt(),dummyFlag.getUserId().getId(),dummyFlag.getTrailId().getId())).thenReturn(Optional.of(new ArrayList<TrailFlag>()));
         assertEquals(false,service.isDuplicateFlag(dummyFlag));
     }
     @Test
     //Throws exception if could not find flag
     void deleteTrailFlagNotFound() {
         Mockito.doReturn(Optional.empty()).when(repo).findById(any());
-        Exception e = assertThrows(InvalidRequestException.class, ()->service.deleteTrailFlag(dummyFlag.getId(), dummyUser));
+        Exception e = assertThrows(InvalidRequestException.class, ()->service.deleteTrailFlag(dummyFlag.getId(), dummyPrincipal));
         assertEquals("Could not find a flag with that ID in order to delete it.",e.getMessage());
 
     }
@@ -128,22 +128,22 @@ class TrailFlagServiceTest {
     //Throws exception if deleting user doesn't match flag
     void deleteTrailFlagUserMismatch(){
         //initialize dummy user
-        dummyUser.setId("fool");
+        dummyPrincipal.setId("fool");
         //initialize dummy flag
         dummyFlag = new TrailFlag();
-        dummyFlag.setUserId("foo");
+        dummyFlag.getUserId().setId("foo");
         dummyFlag.setDateInt(todayteInt+1);
         dummyFlag.setId("bar");
-        dummyFlag.setTrailId("baz");
+        dummyFlag.getTrailId().setId("baz");
         //mock database returns dummy flag
         Mockito.when(repo.findById(any())).thenReturn(Optional.of(dummyFlag));
-        Exception e = assertThrows(AuthenticationException.class, ()->service.deleteTrailFlag(dummyFlag.getId(), dummyUser));
+        Exception e = assertThrows(AuthenticationException.class, ()->service.deleteTrailFlag(dummyFlag.getId(), dummyPrincipal));
     }
     @Test
     void getAllByDateIntAndTrailId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByDateIntAndTrailId(anyLong(),any())).thenReturn(Optional.of(new ArrayList<TrailFlag>()));
-        assertThrows(InvalidRequestException.class, () -> service.getAllByDateIntAndTrailId(dummyFlag.getDateInt(),dummyFlag.getTrailId()));
+        assertThrows(InvalidRequestException.class, () -> service.getAllByDateIntAndTrailId(dummyFlag.getDateInt(),dummyFlag.getTrailId().getId()));
     }
 
 

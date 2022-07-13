@@ -73,7 +73,7 @@ public class TrailFlagService {
         return newFlag;
     }
     public boolean isDuplicateFlag(TrailFlag flag){
-        Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByDateIntAndUserIdAndTrailId(flag.getDateInt(),flag.getUserId(),flag.getTrailId());
+        Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByDateIntAndUserIdAndTrailId(flag.getDateInt(),flag.getUserId().getId(),flag.getTrailId().getId());
         if (!returnList.isPresent()||returnList.get().size()==0){
             return false;
         } else return true;
