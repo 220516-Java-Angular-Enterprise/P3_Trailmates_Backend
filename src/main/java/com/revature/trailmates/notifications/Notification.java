@@ -2,11 +2,11 @@ package com.revature.trailmates.notifications;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.trailmates.friends.Friend;
-import com.revature.trailmates.trailflag.TrailFlag;
 import com.revature.trailmates.trailhistory.TrailHistory;
 import com.revature.trailmates.user.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,7 +19,10 @@ public class Notification {
     @Column(name = "message")
     private String message;
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @Column(name = "timeCreated")
+    private Timestamp timeCreated;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user_id;
 
@@ -36,24 +39,28 @@ public class Notification {
     //@JoinColumn(name = "message_id", referencedColumnName = "id")
     //private Message message_id;
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "user1_id", referencedColumnName = "user_id"),
             @JoinColumn(name = "friend_id", referencedColumnName = "friend_id")})
     private Friend friend;
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "trail_history_id", referencedColumnName = "id")
     private TrailHistory trailHistory;
 
-    public Notification(String id, String message, User user_id, String notification_type, Friend friend, TrailHistory trailHistory) {
+    public Notification(String id, String message, Timestamp timeCreated, User user_id, String notification_type, Friend friend, TrailHistory trailHistory) {
         this.id = id;
         this.message = message;
+        this.timeCreated = timeCreated;
         this.user_id = user_id;
         this.notification_type = notification_type;
         this.friend = friend;
         this.trailHistory = trailHistory;
     }
+
+    public Timestamp getTimeCreated() { return timeCreated; }
+    public void setTimeCreated(Timestamp timeCreated) { this.timeCreated = timeCreated; }
 
     public Notification() { }
 

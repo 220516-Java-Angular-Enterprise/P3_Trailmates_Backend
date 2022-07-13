@@ -1,8 +1,6 @@
 package com.revature.trailmates.friends;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import com.revature.trailmates.user.User;
-
 import javax.persistence.*;
 
 @Entity

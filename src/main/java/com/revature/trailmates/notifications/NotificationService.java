@@ -1,7 +1,6 @@
 package com.revature.trailmates.notifications;
 
 import com.revature.trailmates.friends.FriendRepository;
-import com.revature.trailmates.friends.FriendService;
 import com.revature.trailmates.notifications.dto.NewNotificationRequest;
 import com.revature.trailmates.trailhistory.TrailHistoryService;
 import com.revature.trailmates.user.UserService;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +38,7 @@ public class NotificationService {
         Notification notification = new Notification();
 
         notification.setId(UUID.randomUUID().toString());
+        notification.setTimeCreated(Timestamp.from(Instant.now()));
         notification.setUser_id(userService.getUserById(user_id));
         notification.setMessage(request.getMessage());
         notification.setNotification_type(request.getNotification_type());
