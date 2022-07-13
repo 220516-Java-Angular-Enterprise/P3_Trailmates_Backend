@@ -9,49 +9,33 @@ import javax.persistence.Table;
 public class NewTrailFlagRequest {
 
 
-    private String trail_id;
+    private String trailId;
 
-    private String user_id;
-    private long date_int;
+    private long dateInt;
     public NewTrailFlagRequest() { super();
     }
 
-    public NewTrailFlagRequest(String trail_id, String user_id, long date_int) {
-        this.trail_id = trail_id;
-        this.user_id = user_id;
-        this.date_int = date_int;
+    public NewTrailFlagRequest(String trailId, long dateInt) {
+        this.trailId = trailId;
+        this.dateInt = dateInt;
     }
-
-    public String getTrail_id() {
-        return trail_id;
+    public String getTrailId() {
+        return trailId;
     }
-
-    public void setTrail_id(String trail_id) {
-        this.trail_id = trail_id;
+    public void setTrailId(String trailId) {
+        this.trailId = trailId;
     }
-
-    public String getUser_id() {
-        return user_id;
+    public long getDateInt() {
+        return dateInt;
     }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setDateInt(long dateInt) {
+        this.dateInt = dateInt;
     }
-
-    public long getDate_int() {
-        return date_int;
-    }
-
-    public void setDate_int(long date_int) {
-        this.date_int = date_int;
-    }
-
     @Override
     public String toString() {
         return "NewTrailFlagRequest{" +
-                "trail_id='" + trail_id + '\'' +
-                ", user_id='" + user_id + '\'' +
-                ", date_int=" + date_int +
+                "trail_id='" + trailId + '\'' +
+                ", date_int=" + dateInt +
                 '}';
     }
 }
