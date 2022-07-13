@@ -28,6 +28,9 @@ public interface GroupRepository extends CrudRepository<Group, String> {
     @Query(value = "update \"group\" set name = ?1 where id = ?2", nativeQuery = true)
     void editGroupName(String editName, String groupID);
 
+    @Query(value = "select * from \"group\"", nativeQuery = true)
+    List<Group> getAllGroups();
+
     @Query(value = "select * from \"group\" where id = ?1", nativeQuery = true)
     Group getUsers(String groupID);
 

@@ -23,6 +23,10 @@ public class GroupService {
     public GroupService() {
     }
 
+    public List<Group> getAllGroups(){
+        return repo.getAllGroups();
+    }
+
     public void createNewGroup(String userID, String groupName){
         if(isDuplicateGroup(groupName)) throw new ResourceConflictException("Group already exists.");
         String groupID = UUID.randomUUID().toString();
@@ -40,15 +44,18 @@ public class GroupService {
     }
 
     public void removeUserFromGroup(String userID, String groupName){
+        if(!groupExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
         repo.removeUser(userID, repo.retrieveGroupID(groupName));
     }
 
     public void editGroup(String editName, String groupName){
         if(editName.equals(groupName)) throw new ResourceConflictException("Group name needs to be different.");
+        if(isDuplicateGroup(groupName)) throw new ResourceConflictException("Name is already taken.");
         repo.editGroupName(editName, repo.retrieveGroupID(groupName));
     }
 
     public List<User> getUsers(String groupName){
+        if(!groupExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
         return repo.getUsers(repo.retrieveGroupID(groupName)).getUsers();
     }
 
