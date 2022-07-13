@@ -1,5 +1,7 @@
 package com.revature.trailmates.friends;
 
+import com.revature.trailmates.notifications.NotificationService;
+import com.revature.trailmates.notifications.dto.NewNotificationRequest;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -17,17 +19,31 @@ public class FriendService {
     @Inject
     private final FriendRepository friendRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @Inject
     @Autowired
-    public FriendService(FriendRepository friendRepository, UserService userService) {
+    public FriendService(FriendRepository friendRepository, UserService userService, NotificationService notificationService) {
         this.friendRepository = friendRepository;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     public void addNewFriend(String user_id, String friend_id) {
         if (user_id == null || friend_id == null) throw new InvalidRequestException("User ID or Friend ID is null");
+        if (friendRepository.getFriend(user_id, friend_id) != null ) throw new InvalidRequestException("User is already friends with that friend_id");
         friendRepository.addNewFriend(user_id, friend_id);
+
+        // Sends out a friend Notification to the friend_id
+        NewNotificationRequest request = new NewNotificationRequest();
+        request.setMessage("Someone has added you as a friend.");
+        request.setNotification_type("FRIEND");
+        request.setTarget_id(user_id);
+        notificationService.addNotification(request, friend_id);
+    }
+
+    public Friend getFriend(String user_id, String friend_id) {
+        return friendRepository.getFriend(user_id, friend_id);
     }
 
     public List<Friend> getAllFriendsFromUser(String user_id) {
@@ -48,7 +64,9 @@ public class FriendService {
                     if (friend2.getFriendID().getUser_id().equals(friend.getFriendID().getFriend_id()) && friend2.getFriendID().getFriend_id().equals(friend.getFriendID().getUser_id()))
                         break notPending;
                 }
-                result.add(new Friend(new FriendID(friend.getFriendID().getFriend_id(), friend.getFriendID().getUser_id())));
+                Friend friend1 = new Friend();
+                friend1.setFriendID(new FriendID(friend.getFriendID().getFriend_id(), friend.getFriendID().getUser_id()));
+                result.add(friend1);
             }
         }
         return result;

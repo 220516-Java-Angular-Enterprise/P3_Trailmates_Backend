@@ -1,7 +1,8 @@
-package com.revature.trailmates.friends;
+package com.revature.trailmates.notifications;
 
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
+import com.revature.trailmates.notifications.dto.NewNotificationRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -12,77 +13,57 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/friends")
-public class FriendController {
+@RequestMapping("/notification")
+public class NotificationController {
 
     @Inject
-    private final FriendService friendService;
+    private final NotificationService notificationService;
 
     @Autowired
     private TokenService tokenService;
 
     @Inject
     @Autowired
-    public FriendController(FriendService friendService, TokenService tokenService) {
-        this.friendService = friendService;
+    public NotificationController(NotificationService notificationService, TokenService tokenService) {
+        this.notificationService = notificationService;
         this.tokenService = tokenService;
     }
 
-    /**
-     * Adds a Friend to the Database
-     * @param friend_id The id of the friend the user is adding
-     * @param token The Token of the current User
-     */
     @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/{friend_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody void addFriend(@PathVariable("friend_id") String friend_id, @RequestHeader("Authorization") String token) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void addNotification(@RequestBody NewNotificationRequest request, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        friendService.addNewFriend(user.getId(), friend_id);
+        notificationService.addNotification(request, user.getId());
     }
 
-    /**
-     * Returns a List of all the Friends a User has
-     * @param token Token of the current User
-     * @return A List of All the Users Friends
-     */
     @CrossOrigin
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Friend> getAllFriendsFromUser(@RequestHeader("Authorization") String token) {
+    public @ResponseBody List<Notification> getAllNotificationsFromUser(@RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return friendService.getAllFriendsFromUser(user.getId());
+        return notificationService.getAllNotificationsFromUser(user.getId());
     }
 
-    /**
-     * Returns a List of all users who have current user as their friend but the current user doesn't have
-     * as their friend.
-     * @param token Token of the Current User
-     * @return List of Pending Friends
-     */
     @CrossOrigin
-    @GetMapping(value = "/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Friend> getAllPendingFriends(@RequestHeader("Authorization") String token) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<Notification> getNotification(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        return friendService.getAllPendingFriends(user.getId());
+        return notificationService.getNotification(id);
     }
 
-    /**
-     * Removes a Friend from the database
-     * @param friend_id The id of the friend they wish to remove
-     * @param token The Current User
-     */
     @CrossOrigin
-    @DeleteMapping(value = "/{friend_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody void deleteFriend(@PathVariable("friend_id") String friend_id, @RequestHeader("Authorization") String token) {
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody void deleteFriend(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
-        friendService.deleteFriend(user.getId(), friend_id);
+        notificationService.deleteNotification(id);
     }
 
     /**
@@ -101,6 +82,7 @@ public class FriendController {
         responseBody.put("timestamp", LocalDateTime.now().toString());
         return responseBody;
     }
+
     /**
      * Catches any exceptions in other methods and returns status code 403 if
      * a AuthenticationException occurs.
@@ -117,6 +99,7 @@ public class FriendController {
         responseBody.put("timestamp", LocalDateTime.now().toString());
         return responseBody;
     }
+
     /**
      * Catches any exceptions in other methods and returns status code 404 if
      * a InvalidRequestException occurs.
@@ -150,4 +133,5 @@ public class FriendController {
         responseBody.put("timestamp", LocalDateTime.now().toString());
         return responseBody;
     }
+
 }

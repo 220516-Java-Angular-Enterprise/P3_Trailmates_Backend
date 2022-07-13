@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,10 @@ public class TrailHistoryService {
 
     public List<History> getDescHistory(String userID){
         return repo.getDescHistory(userID).stream().map(e -> new History().extractTrail(e)).collect(Collectors.toList());
+    }
+
+    public TrailHistory getHistory(String id) {
+        return repo.getHistory(id);
     }
 
     public void insertNewHistory(NewHistoryRequest newHistory, String userID){
