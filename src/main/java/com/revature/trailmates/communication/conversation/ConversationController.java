@@ -1,72 +1,75 @@
-package com.revature.trailmates.user;
+package com.revature.trailmates.communication.conversation;
 
-
-//This is the class that wraps servlets for all netcode
-
-
-import com.revature.trailmates.auth.AuthService;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
-import com.revature.trailmates.user.dtos.requests.EditUserRequest;
+import com.revature.trailmates.communication.conversation.dtos.requests.NewConversationRequest;
+import com.revature.trailmates.communication.ownedconversation.OwnedConversationRepository;
+import com.revature.trailmates.communication.ownedconversation.OwnedConversationService;
 import com.revature.trailmates.util.annotations.*;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import com.revature.trailmates.util.custom_exception.UnauthorizedException;
+//import com.revature.trailmates.communication.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/conversation")
+public class ConversationController {
     @Inject
-    private final UserService userService;
+    private final ConversationService conversationService;
+    @Inject
+    private final TokenService tokenService;
+    @Inject
+    private final OwnedConversationService ownedConversationService;
 
     @Inject
     @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
-    //region getting users
-    @CrossOrigin
-    @GetMapping(value = "/all-users")
-    public @ResponseBody ArrayList<User> getAllUsers(){
-        return userService.getAllUsers();
+    public ConversationController(ConversationService conversationService, TokenService tokenService, OwnedConversationService ownedConversationService){
+        this.conversationService = conversationService;
+        this.tokenService = tokenService;
+        this.ownedConversationService = ownedConversationService;
     }
 
+    //region Gets
 
+//    @GetMapping(value = "/user-conversations")
+//    public @ResponseBody ArrayList<Conversation> getConversationsOfUser(@RequestHeader("Authorization") String token){
+//        Principal principal = tokenService.noTokenThrow(token);
+//        if (principal.getId() == null) throw new UnauthorizedException();
+//
+//        return conversationService.getAllConversationsOfUser(principal.getId());
+//    }
+
+    //Expects NewConversationRequest json object
     @CrossOrigin
-    @GetMapping(value = "user-id/{id}")
-    public @ResponseBody User getUserById(@PathVariable String id){
-        return userService.getUserById(id);
-    }
+    @PostMapping(value = "/new-conversation", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Conversation newConversationRequest(@RequestHeader("Authorization") String token, @RequestBody NewConversationRequest request){
 
-    @CrossOrigin
-    @GetMapping(value = "user-username/{username}")
-    public @ResponseBody User getUserByUsername(@PathVariable String username){
-        return userService.getUserByUsername(username);
-    }
-
-    //endregion
-
-    //region Modify User
-    @CrossOrigin
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody User editUser(@RequestHeader("Authorization") String token, @RequestBody EditUserRequest request) {
-        Principal principal = new TokenService().extractRequesterDetails(token);
+        //Verify user
+        Principal principal = tokenService.noTokenThrow(token);
         if (principal.getId() == null) throw new UnauthorizedException();
 
-        return userService.UpdateUser(principal.getId(), request);
+        String conversationID = conversationService.createNewConversation(request.getConversationName());
+        //System.out.println("Conversation: @@@@@ " + conversationID);
+
+        ArrayList<String> usersToAddToConversation = request.getUserIDs();
+
+        ownedConversationService.saveNewOwnedConversation(principal.getId(), conversationID);
+        for(String user : usersToAddToConversation){
+            ownedConversationService.saveNewOwnedConversation(user, conversationID);
+        }
+
+        return new Conversation(conversationID, request.getConversationName());
     }
 
     //endregion
@@ -119,6 +122,5 @@ public class UserController {
         return responseBody;
     }
     //endregion
-
 
 }

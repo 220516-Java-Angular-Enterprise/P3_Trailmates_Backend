@@ -36,4 +36,23 @@ public class TrailReviewID implements Serializable {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TrailReviewID)) return false;
+
+        TrailReviewID that = (TrailReviewID) o;
+
+        if (!trailID.equals(that.trailID)) return false;
+        return userID.equals(that.userID);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = trailID.hashCode();
+        result = 31 * result + userID.hashCode();
+        return result;
+    }
+
 }
