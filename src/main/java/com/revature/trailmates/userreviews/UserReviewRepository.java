@@ -1,6 +1,7 @@
 package com.revature.trailmates.userreviews;
 
 import com.revature.trailmates.trailflag.TrailFlag;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -27,6 +28,7 @@ public interface UserReviewRepository extends CrudRepository<UserReview, String>
     @Query(value ="DELETE * FROM user_reviews where user_id = ?1 and reviewer_id = ?2", nativeQuery =true)
     Optional<List<UserReview>> deleteByCompositeId(String user_id, String reviewer_id);
     //edit review
-    @Query(value ="UPDATE  user_reviews SET rating=?3, comment=?4  where user_id = ?1 and reviewer_id = ?2", nativeQuery =true)
-    Optional<List<UserReview>> updateReview(String user_id, String reviewer_id, int rating, String comment);
+    @Modifying
+    @Query(value ="UPDATE  user_reviews SET rating=?1, comment=?2  where user_id = ?3 and reviewer_id = ?4", nativeQuery =true)
+    int updateReview( int rating,String comment, String user_id, String reviewer_id);
 }
