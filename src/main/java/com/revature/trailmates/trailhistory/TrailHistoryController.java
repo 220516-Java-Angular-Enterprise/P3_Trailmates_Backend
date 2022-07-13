@@ -60,6 +60,20 @@ public class TrailHistoryController {
         return trailHistoryService.getAscHistory(user.getId());
     }
 
+    /**
+     * @param token authorized user
+     * @param userID specific user we want to retrieve from
+     * @return the list of their trail history
+     */
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @CrossOrigin
+    @GetMapping(path = "/asc/{userID}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<History> userTrailHistory(@RequestHeader("Authorization") String token, @PathVariable String userID){
+        Principal user = tokenService.noTokenThrow(token);
+        return trailHistoryService.getAscHistory(userID);
+    }
+
 
     /**
      * @param token verifying it is a user in the database
@@ -76,47 +90,4 @@ public class TrailHistoryController {
         return newHistory;
     }
 
-
-    //region Exception Handlers
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody
-    Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 401);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public @ResponseBody Map<String, Object> handleAuthenticationException(AuthenticationException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 403);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleInvalidRequestException(InvalidRequestException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 404);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody Map<String, Object> handleResourceConflictException(ResourceConflictException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 409);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
 }

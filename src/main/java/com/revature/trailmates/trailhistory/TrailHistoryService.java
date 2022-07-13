@@ -34,8 +34,8 @@ public class TrailHistoryService {
 
     public void insertNewHistory(NewHistoryRequest newHistory, String userID){
         Timestamp date = Timestamp.valueOf(newHistory.getDate().replaceAll("[A-Z]", " "));
-        if(!correctDate(date)) throw new InvalidRequestException("Invalid Date");
         String trailID = repo.trailID(newHistory.getTrail_name());
+        if(!correctDate(date)) throw new InvalidRequestException("Invalid Date");
         if(trailID == null) throw new InvalidRequestException("Trail doesn't exist");
         repo.addNewHistory(UUID.randomUUID().toString(), newHistory.getComment(), date, trailID, userID);
     }
@@ -43,6 +43,7 @@ public class TrailHistoryService {
     private boolean correctDate(Timestamp date){
         return date.getTime() <= System.currentTimeMillis();
     }
+
 
     /*private boolean isDuplicateHistory(Timestamp date, String trail_id){
         return repo.isDuplicateHistory(date, trail_id) != null;
