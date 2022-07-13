@@ -45,24 +45,24 @@ public class TrailFlag {
         return trailId;
     }
 
-    public void setTrailId(String trail_id) {
-        this.trailId = trail_id;
+    public void setTrailId(String trailId) {
+        this.trailId = trailId;
     }
 
     public String getUserId() {
         return userId.getId();
     }
 
-    public void setUserId(String user_id) {
-        this.userId.setId(user_id);
+    public void setUserId(String userId) {
+        this.userId.setId(userId);
     }
 
     public long getDateInt() {
         return dateInt;
     }
 
-    public void setDateInt(long date_int) {
-        this.dateInt = date_int;
+    public void setDateInt(long dateInt) {
+        this.dateInt = dateInt;
     }
 
     @Override
