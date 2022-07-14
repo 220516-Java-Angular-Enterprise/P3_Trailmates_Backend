@@ -49,4 +49,16 @@ public class ImageDataService {
         }
         return returnImageData.get();
     }
+    public boolean deleteByUrl(String url){
+        Optional<ImageData> returnImageData=imageDataRepo.findById(url);
+        if (!returnImageData.isPresent()){
+            throw new InvalidRequestException("No image data found for that url");
+        }
+        try{
+            imageDataRepo.deleteById(url);
+            return true;
+        } catch (Exception e) {
+            throw new InvalidRequestException("Could not delete image data.");
+        }
+    }
 }

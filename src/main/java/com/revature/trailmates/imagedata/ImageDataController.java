@@ -30,10 +30,9 @@ public class ImageDataController {
     }
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/gen-url/{extension}")
-    public ResponseEntity<String> generateUploadUrl(@RequestHeader("Authorization") String token,@PathVariable String extension) {
+    public String generateUploadUrl(@RequestHeader("Authorization") String token,@PathVariable String extension) {
         Principal user = tokenService.noTokenThrow(token);
-        return ResponseEntity.ok(
-                imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT));
+        return imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -41,6 +40,14 @@ public class ImageDataController {
     public ImageData getByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
         Principal user = tokenService.noTokenThrow(token);
         return imageDataService.getByUrl(url);
+    }
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(value="/{url}")
+    public String deleteByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
+        Principal user = tokenService.noTokenThrow(token);
+        if(imageDataService.deleteByUrl(url)){
+            return "Image data deleted.";
+        } else return "Unable to delete image data.";
     }
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
