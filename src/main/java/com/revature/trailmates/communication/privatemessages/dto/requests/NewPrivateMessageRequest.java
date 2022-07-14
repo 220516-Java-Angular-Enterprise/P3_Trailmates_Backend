@@ -1,10 +1,12 @@
 package com.revature.trailmates.communication.privatemessages.dto.requests;
 
+import java.sql.Timestamp;
+
 public class NewPrivateMessageRequest {
 
     //private String id;
     private String message;
-    private long time_sent;
+    private Timestamp time_sent;
     private String conversation_id;
 
     public NewPrivateMessageRequest(){}
@@ -19,11 +21,11 @@ public class NewPrivateMessageRequest {
         this.message = message;
     }
 
-    public long getTime_sent() {
+    public Timestamp getTime_sent() {
         return time_sent;
     }
 
-    public void setTime_sent(long time_sent) {
+    public void setTime_sent(Timestamp time_sent) {
         this.time_sent = time_sent;
     }
 
