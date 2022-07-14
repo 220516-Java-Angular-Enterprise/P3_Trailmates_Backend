@@ -82,66 +82,27 @@ public class ConversationController {
      * Used to add people to conversation after they have been started.
      * @param token Assures users are logged in
      * @param conversation  the ID of the conversation you want to add the user to
-     * @param user          The ID of the user you want to add to an existing conversation. 
+     * @param user          The ID of the user you want to add to an existing conversation.
      */
     @CrossOrigin
-    @PostMapping(value = "/add-user-to-conversation/{conversation}/{user}", consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-user-to-conversation/{conversation}/{user}")
     public @ResponseBody void newConversationRequest(@RequestHeader("Authorization") String token, @PathVariable("conversation") String conversation, @PathVariable("user") String user){
         //Verify user
         Principal principal = tokenService.noTokenThrow(token);
+
+        //If logged in user DOES NOT have access
+        if (!ownedConversationService.getUserHasConversation(principal.getId(), conversation)) {
+            throw new UnauthorizedException("Logged in user doesn't have access to conversation.");
+        }
+
+        if (ownedConversationService.getUserHasConversation(user, conversation)) {
+            throw new ResourceConflictException("User is already in the conversation!");
+        }
 
         ownedConversationService.saveNewOwnedConversation(user, conversation);
     }
 
     //endregion
 
-    //region Exception Handlers
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 401);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public @ResponseBody Map<String, Object> handleAuthenticationException(AuthenticationException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 403);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleInvalidRequestException(InvalidRequestException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 404);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    /**
-     * Catches any exceptions in other methods and returns status code 409 if
-     * a ResourceConflictException occurs.
-     * @param e The resource conflict request being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody Map<String, Object> handleResourceConflictException(ResourceConflictException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 409);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-    //endregion
 
 }
