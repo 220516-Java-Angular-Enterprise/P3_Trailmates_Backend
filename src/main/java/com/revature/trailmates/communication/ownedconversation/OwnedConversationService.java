@@ -41,6 +41,15 @@ public class OwnedConversationService {
         return users;
     }
 
+    public boolean getUserHasConversation (String userID, String conversationID) {
+        ArrayList<OwnedConversation> conversations = ownedConversationRepository.getOwnerHasConversation(userID, conversationID);
+        System.out.println("USER: " + userID + " has conversation count: " + conversations.size());
+        if (conversations.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     //endregion
 
     //region save
