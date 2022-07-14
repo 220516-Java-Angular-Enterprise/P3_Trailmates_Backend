@@ -13,8 +13,8 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class TrailMatesDriver {
 
-    @Value("${http.port}")
-    private int httpPort;
+    /*@Value("${http.port}")
+    private int httpPort;*/
 
     public static void main(String[] args) {
         SpringApplication.run(TrailMatesDriver.class, args);
