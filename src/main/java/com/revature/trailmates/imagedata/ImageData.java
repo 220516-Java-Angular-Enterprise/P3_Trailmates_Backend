@@ -15,9 +15,6 @@ public class ImageData {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable=false)
     private User userId;
-//    //url is unnecessary, as the id is the url
-//    @Column(name = "url")
-//    private String URL;
     @Column(name = "timestamp")
     private Timestamp timestamp;
     @Column(name = "filetype")

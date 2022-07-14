@@ -4,15 +4,11 @@ import com.amazonaws.HttpMethod;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
-import com.revature.trailmates.trailflag.TrailFlag;
-import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
 @CrossOrigin
@@ -38,7 +34,7 @@ public class ImageDataController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/gen-url/{extension}")
     public String generateUploadUrl(@RequestHeader("Authorization") String token,@PathVariable String extension) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT);
     }
 
@@ -51,7 +47,7 @@ public class ImageDataController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/{url}")
     public ImageData getByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return imageDataService.getByUrl(url);
     }
 
