@@ -24,6 +24,8 @@ public class ConversationService {
     public Conversation getConversationById(String id) { return conversationRepository.getConversationByID(id); }
 
     public ArrayList<Conversation> getAllConversationsOfUser(String id) { return conversationRepository.getAllConversationsOfUser(id); }
+
+
     //endregion
 
     //region Save
