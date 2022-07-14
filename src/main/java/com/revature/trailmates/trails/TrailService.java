@@ -134,6 +134,14 @@ public class TrailService {
         return trails;
     }
 
+    public Trail getTrailByID(String id) {
+        Trail returnList = trailRepository.getById(id);
+        //if (!returnList.isPresent()||returnList.get().getId() == null){
+        //    throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        //} else
+        return returnList;
+    }
+
     public Optional<Trail> getTrail(String id) {
         Optional<Trail> returnList = trailRepository.findById(id);
         if (!returnList.isPresent()||returnList.get().getId() == null){

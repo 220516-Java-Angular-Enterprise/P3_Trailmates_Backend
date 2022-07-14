@@ -3,10 +3,12 @@ package com.revature.trailmates.notifications;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.trailmates.friends.Friend;
 import com.revature.trailmates.trailhistory.TrailHistory;
+import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Optional;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,7 +51,11 @@ public class Notification {
     @JoinColumn(name = "trail_history_id", referencedColumnName = "id")
     private TrailHistory trailHistory;
 
-    public Notification(String id, String message, Timestamp timeCreated, User user_id, String notification_type, Friend friend, TrailHistory trailHistory) {
+    @ManyToOne
+    @JoinColumn(name = "trail_id", referencedColumnName = "id")
+    private Trail trail;
+
+    public Notification(String id, String message, Timestamp timeCreated, User user_id, String notification_type, Friend friend, TrailHistory trailHistory, Trail trail) {
         this.id = id;
         this.message = message;
         this.timeCreated = timeCreated;
@@ -57,6 +63,7 @@ public class Notification {
         this.notification_type = notification_type;
         this.friend = friend;
         this.trailHistory = trailHistory;
+        this.trail = trail;
     }
 
     public Timestamp getTimeCreated() { return timeCreated; }
@@ -111,4 +118,8 @@ public class Notification {
     public void setTrailHistory(TrailHistory trailHistory) {
         this.trailHistory = trailHistory;
     }
+
+    public Trail getTrail() { return trail; }
+
+    public void setTrail(Trail trail) { this.trail = trail; }
 }

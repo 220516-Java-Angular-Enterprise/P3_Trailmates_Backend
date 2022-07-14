@@ -51,6 +51,11 @@ public class FriendService {
         return friendRepository.getAllFriendsFromUser(user_id);
     }
 
+    public List<Friend> getAllFriendsFromFriendID(String friend_id) {
+        if (friend_id == null) throw new InvalidRequestException("User ID is null.");
+        return friendRepository.getAllFriendsFromFriendID(friend_id);
+    }
+
     public List<Friend> getAllPendingFriends(String friend_id) {
         if (friend_id == null) throw new InvalidRequestException("Friend_id is null.");
         List<Friend> list1 = friendRepository.getAllFriendsFromFriendID(friend_id);
