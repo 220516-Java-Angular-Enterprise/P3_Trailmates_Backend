@@ -6,6 +6,7 @@ import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
+import com.revature.trailmates.util.custom_exception.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,9 @@ public class ImageDataService {
         calendar.add(Calendar.MINUTE, 10); //url valid for 10 minutes
         return amazonS3.generatePresignedUrl(bucketName, filePath, calendar.getTime(), httpMethod).toString();
     }
-    //for saving to DB
     public ImageData saveNewImageData(NewImageDataRequest request, Principal user){
         ImageData newImage = new ImageData(request, user, new Date());
-        //input validation
-        //check if URL actually connects to anything in S3 bucket
+        //input validation?
         //save to database
         try {
             imageDataRepo.save(newImage);
@@ -49,10 +48,15 @@ public class ImageDataService {
         }
         return returnImageData.get();
     }
-    public boolean deleteByUrl(String url){
+    public boolean deleteByUrl(String url, Principal user){
         Optional<ImageData> returnImageData=imageDataRepo.findById(url);
+        //make sure the thing exists before trying to delete it
         if (!returnImageData.isPresent()){
             throw new InvalidRequestException("No image data found for that url");
+        }
+        //make sure the person deleting the image is its owner.
+        if (!returnImageData.get().getUserId().getId().equals(user.getId())){
+            throw new UnauthorizedException("Cannot delete image data for an image that you did not upload.");
         }
         try{
             imageDataRepo.deleteById(url);
