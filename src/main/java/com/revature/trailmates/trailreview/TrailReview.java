@@ -1,5 +1,6 @@
 package com.revature.trailmates.trailreview;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
 
@@ -25,6 +26,7 @@ public class TrailReview {
 
     @ManyToOne
     @JoinColumn(name = "trail_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Trail trailID;
 
     public TrailReview() {

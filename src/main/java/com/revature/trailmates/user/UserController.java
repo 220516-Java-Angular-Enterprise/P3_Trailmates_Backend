@@ -36,12 +36,13 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
-//region getting users
-@CrossOrigin
+    //region getting users
+    @CrossOrigin
     @GetMapping(value = "/all-users")
     public @ResponseBody ArrayList<User> getAllUsers(){
         return userService.getAllUsers();
     }
+
 
     @CrossOrigin
     @GetMapping(value = "user-id/{id}")
@@ -55,8 +56,9 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
-//endregion
+    //endregion
 
+    //region Modify User
     @CrossOrigin
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,6 +68,8 @@ public class UserController {
 
         return userService.UpdateUser(principal.getId(), request);
     }
+
+    //endregion
 
     //region Exception Handlers
     @ExceptionHandler
