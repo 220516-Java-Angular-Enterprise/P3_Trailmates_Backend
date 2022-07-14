@@ -25,7 +25,7 @@ public class TrailMatesDriver {
         return builder.build();
     }
 
-    @Bean
+    /*@Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
         tomcat.addAdditionalTomcatConnectors(createStandardConnector());
@@ -36,6 +36,6 @@ public class TrailMatesDriver {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setPort(httpPort);
         return connector;
-    }
+    }*/
 
 }
