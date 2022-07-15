@@ -73,6 +73,8 @@ public class FriendService {
                 }
                 Friend friend1 = new Friend();
                 friend1.setFriendID(new FriendID(friend.getFriendID().getFriend_id(), friend.getFriendID().getUser_id()));
+                friend1.setUser_id(userService.getUserById(friend1.getFriendID().getUser_id()));
+                friend1.setFriend_id(userService.getUserById(friend1.getFriendID().getFriend_id()));
                 result.add(friend1);
             }
         }

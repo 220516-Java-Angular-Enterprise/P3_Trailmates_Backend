@@ -66,7 +66,7 @@ public class FriendController {
     }
 
     /**
-     *
+     * Retrieves a list of users that they are friends with.
      * @param user_id
      * @param token
      * @return
