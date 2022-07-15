@@ -3,6 +3,7 @@ package com.revature.trailmates.communication.privatemessages;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
 
+import com.revature.trailmates.communication.ownedconversation.OwnedConversationService;
 import com.revature.trailmates.communication.privatemessages.dto.requests.NewPrivateMessageRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
@@ -28,79 +29,55 @@ public class PrivateMessageController {
     @Inject
     private final TokenService tokenService;
     @Inject
+    private final OwnedConversationService ownedConversationService;
+    @Inject
     @Autowired
-    public PrivateMessageController(PrivateMessageService privateMessageService, TokenService tokenService){
+    public PrivateMessageController(PrivateMessageService privateMessageService, TokenService tokenService, OwnedConversationService ownedConversationService){
         this.privateMessageService = privateMessageService;
         this.tokenService = tokenService;
+        this.ownedConversationService = ownedConversationService;
     }
 
-
+    /**
+     * This will retrieve all the messages in a conversation and order them by newest to oldest. index 0 -> N
+     * @param conversation ID of the Conversation from the 'conversations' table.
+     * @param token Authorization token used to retrieve the logged in user to make sure he's logged in.
+     * @return all pms in a chat to the client
+     */
+    @CrossOrigin
     @GetMapping(value = "/conversation/{conversation}")
     public @ResponseBody ArrayList<PrivateMessage> getConversationsOfUser(@PathVariable String conversation, @RequestHeader("Authorization") String token){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
+
+        //If logged in user DOES NOT have access
+        if (!ownedConversationService.getUserHasConversation(principal.getId(), conversation)) {
+            throw new UnauthorizedException("Logged in user doesn't have access to conversation.");
+        }
 
         return privateMessageService.getAllPrivateMessagesInConversation(conversation);
     }
 
+    /**
+     * Use this method when you intend to send a private message. This will save it into the database taking the sender by token &
+     * it will take the message, time sent, & conversation by the NewPrivateMessageRequest request.
+     * @param token assures user is logged in
+     * @param request takes in a NewPrivateMessageRequest packet.
+     * @return the UUID of the private message.
+     */
+    @CrossOrigin
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String saveNewPrivateMessage(@RequestHeader("Authorization") String token, @RequestBody NewPrivateMessageRequest request){
         Principal principal = tokenService.noTokenThrow(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
+
+        //If logged in user DOES NOT have access
+        if (!ownedConversationService.getUserHasConversation(principal.getId(), request.getConversation_id())) {
+            throw new UnauthorizedException("Logged in user doesn't have access to conversation.");
+        }
 
         return privateMessageService.saveNewPrivateMessage(principal.getId(), request);
     }
 
-
-    //region Exception Handlers
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 401);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public @ResponseBody Map<String, Object> handleAuthenticationException(AuthenticationException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 403);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleInvalidRequestException(InvalidRequestException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 404);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    /**
-     * Catches any exceptions in other methods and returns status code 409 if
-     * a ResourceConflictException occurs.
-     * @param e The resource conflict request being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody Map<String, Object> handleResourceConflictException(ResourceConflictException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 409);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-    //endregion
 
 
 }

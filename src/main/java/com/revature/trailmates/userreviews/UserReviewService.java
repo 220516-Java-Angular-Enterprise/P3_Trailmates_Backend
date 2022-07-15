@@ -1,19 +1,21 @@
 package com.revature.trailmates.userreviews;
 
 import com.revature.trailmates.userreviews.dtos.requests.NewUserReviewRequest;
+import com.revature.trailmates.userreviews.dtos.responses.ReviewSummaryResponse;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import com.revature.trailmates.auth.dtos.response.Principal;
-
 @Service
 @Transactional
 public class UserReviewService {
@@ -23,20 +25,25 @@ public class UserReviewService {
     public UserReviewService (UserReviewRepository userReviewRepository){
         this.userReviewRepository=userReviewRepository;
     }
-
     //get all reviews by user id
-    public Optional<List<UserReview>> getAllByUserId(String user_id){
-        Optional<List<UserReview>> returnList = userReviewRepository.getAllByUserId(user_id);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+    public ReviewSummaryResponse getAllByUserId(String user_id){
+        Optional<List<UserReview>> retrievedList = userReviewRepository.getAllByUserId(user_id);
+        if (!retrievedList.isPresent()||retrievedList.get().size()==0){
             throw new InvalidRequestException("Could not retrieve any reviews for that user.");
-        } else return returnList;
+        } else {
+            OptionalDouble revAvg = retrievedList.get().stream().mapToDouble(r -> r.getRating()).average();
+            return new ReviewSummaryResponse(revAvg.orElse(0.0),retrievedList.get());
+        }
     }
     //get all reviews by reviewer id.
-    public Optional<List<UserReview>> getAllByReviewerId(String reviewer_id){
-        Optional<List<UserReview>> returnList = userReviewRepository.getAllByReviewerId(reviewer_id);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+    public ReviewSummaryResponse getAllByReviewerId(String reviewer_id){
+        Optional<List<UserReview>> retrievedList = userReviewRepository.getAllByReviewerId(reviewer_id);
+        if (!retrievedList.isPresent()||retrievedList.get().size()==0){
             throw new InvalidRequestException("Could not retrieve any reviews by that reviewer.");
-        } else return returnList;
+        } else {
+                OptionalDouble revAvg = retrievedList.get().stream().mapToDouble(r -> r.getRating()).average();
+            return new ReviewSummaryResponse(revAvg.orElse(0.0),retrievedList.get());
+        }
     }
     //save new review
     public UserReview saveNewUserReview(NewUserReviewRequest request, Principal requestor) {
@@ -47,23 +54,23 @@ public class UserReviewService {
                 throw new InvalidRequestException(nullChecker(request));
             }
         }
-        //check that requestor has same ID as reviewer_ID
-        if (!requestor.getId().equals(request.getCompId().getReviewer_id())){
-            throw new AuthenticationException("Reviewer ID does not match person submitting review.");
+        //check that the review rating is 1-5 stars
+        if (request.getRating()<1||request.getRating()>5){
+            throw new InvalidRequestException("The rating in the review must be an integer in the range 1-5.");
         }
         //check that requestor is not same as target of review
-        if (requestor.getId().equals(request.getCompId().getUser_id().getId())){
+        if (requestor.getId().equals(request.getUserId())){
             throw new InvalidRequestException("Cannot submit review for ID that matches ID user making request");
         }
         UserReview newReview = new UserReview(request);
         //if review already exists, update instead of save
-        if (isDuplicateReview(newReview)) {
+        if (this.isDuplicateReview(newReview)) {
             try{
                 this.editReview(newReview);
             } catch (InvalidRequestException e){throw e;}
             return newReview;
         }
-        //finally, save new review
+        //finally, save new review if we didn't end up just editing an old one.
         try {
             userReviewRepository.save(newReview);
         } catch (Exception e) {
@@ -71,11 +78,10 @@ public class UserReviewService {
         }
         return newReview;
     }
-
     //method is private because edit function is rolled into the save function.
     private void editReview(UserReview review){
         try {
-            userReviewRepository.updateReview(review.extractUser_id(),review.extractReviewer_id(), review.getRating(),review.getComment());
+            userReviewRepository.updateReview(review.getRating(),review.getComment(),review.getUserId().getId(),review.getReviewerId().getId());
         } catch (Exception e) {
             throw new InvalidRequestException("Unable to update review.");
         }
@@ -111,9 +117,11 @@ public class UserReviewService {
         return eMessage;
     }
     private boolean isDuplicateReview(UserReview review){
-        Optional<List<UserReview>> returnList = userReviewRepository.getByCompositeId(review.extractUser_id(), review.extractReviewer_id());
+        Optional<List<UserReview>> returnList = userReviewRepository.getByCompositeId(review.getUserId().getId(), review.getReviewerId().getId());
         if (!returnList.isPresent()||returnList.get().size()==0){
             return false;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 }

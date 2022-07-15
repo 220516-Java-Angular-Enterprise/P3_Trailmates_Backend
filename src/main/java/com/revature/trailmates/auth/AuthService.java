@@ -5,7 +5,6 @@ import com.revature.trailmates.auth.dtos.requests.NewUserRequest;
 import com.revature.trailmates.user.User;
 import com.revature.trailmates.user.UserRepository;
 import com.revature.trailmates.util.annotations.Inject;
-import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -60,8 +57,8 @@ public class AuthService {
     }
 
     private String nullChecker(NewUserRequest request){
+        //todo change to string builder and make it a public util class
         String eMessage = "";
-        //Checks if any fields are null and builds a message accordingly
         try {
             Field[] fields = com.revature.trailmates.auth.dtos.requests.NewUserRequest.class.getDeclaredFields();
             for (Field field : fields) {
@@ -74,12 +71,12 @@ public class AuthService {
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
         return eMessage;
     }
 
+    //todo fix up this regex
     public boolean isValidEmail(String email){
         return email.matches("^([\\w][\\-\\_\\.]?)*\\w@([\\w+]\\-?)*\\w\\.\\w+$");
     }
@@ -95,27 +92,4 @@ public class AuthService {
     private boolean isValidBio(String bio){
         return bio.length() < 255;
     }
-
-
-    /*private String nullChecker(NewUserRequest request){
-        String eMessage = "";
-        //Checks if any fields are null and builds a message accordingly
-        //todo talk with team about using bean utils
-        try {
-            Map<String, String> nullFields = BeanUtils.describe(request);
-            for (Map.Entry<String, String> key : nullFields.entrySet()) {
-                if (key.getValue() == null) {
-                    if(!eMessage.isEmpty()){
-                        eMessage += ", ";
-                    }
-                    eMessage += key.getKey() + " is null";
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
-        return eMessage;
-    }*/
-
 }
