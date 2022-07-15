@@ -32,7 +32,7 @@ public class ImageDataController {
      * @return A string that is the URL to which the PUT request should be sent.
      */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value="/gen-url/{extension}")
+    @GetMapping(value="/gen-url/{extension}",produces = MediaType.APPLICATION_JSON_VALUE)
     public String generateUploadUrl(@RequestHeader("Authorization") String token,@PathVariable String extension) {
         tokenService.noTokenThrow(token);
         return imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT);
@@ -45,7 +45,7 @@ public class ImageDataController {
      * @return An ImageData object,which contains its url, the user who created it, the timestamp at which it was created, and a string with filetype information
      */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value="/{url}")
+    @GetMapping(value="/{url}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ImageData getByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
         tokenService.noTokenThrow(token);
         return imageDataService.getByUrl(url);
@@ -58,7 +58,7 @@ public class ImageDataController {
      * @return A string "Image data deleted" if deletion works, "Unable to delete image data" if it fails and no other exception was thrown.
      */
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value="/{url}")
+    @DeleteMapping(value="/{url}",produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
         Principal user = tokenService.noTokenThrow(token);
         if(imageDataService.deleteByUrl(url, user)){
