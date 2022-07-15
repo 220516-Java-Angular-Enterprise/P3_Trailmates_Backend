@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailhistory;
 
 
+import com.revature.trailmates.imagedata.ImageData;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
 
@@ -25,6 +26,10 @@ public class TrailHistory {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trail_id", referencedColumnName = "id")
     private Trail trail;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "url")
+    private ImageData image;
 
     public TrailHistory() {
         super();
