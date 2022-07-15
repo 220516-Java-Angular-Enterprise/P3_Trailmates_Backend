@@ -2,6 +2,7 @@ package com.revature.trailmates.trailreview;
 
 import com.revature.trailmates.trailreview.dtos.requests.TrailReviewRequest;
 import com.revature.trailmates.trailreview.dtos.responses.TrailAverageRating;
+import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.trails.TrailService;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +38,7 @@ class TrailReviewServiceTest {
     @Spy
     private TrailAverageRating trailAverageRating;
 
-    @Spy
+    @Mock
     private TrailReviewAverage trailReviewAverage;
 
     private String userID = "1";
@@ -103,12 +106,13 @@ class TrailReviewServiceTest {
         assertTrue(actualMessage.equals(expectedMessage));
     }
 
-    /*@Test
+    @Test
     void getAverageReviewsForTrailTrailDoesExist() {
         // Arrange
         //Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
         //TrailReviewAverage trailReviewAverage;
-        Mockito.doNothing().when(trailService.getTrail(trailID));
+        Mockito.when(trailService.getTrail(trailID)).thenReturn(Optional.of(new Trail()));
+        Mockito.when(trailAverageRating.getRatingAvg());
         //Mockito.when(trailReviewRepository.avgRating(trailID)).thenReturn(trailReviewAverage);
 
         // Act
@@ -118,19 +122,30 @@ class TrailReviewServiceTest {
 
         // Assert
         assertTrue(actualMessage.equals(expectedMessage));
-    }*/
+    }
 
-   /* @Test
-    void getAllReviewsForTrail() {
+    @Test
+    void getAllReviewsForTrailDoesNotExist() {
         // Arrange
         Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
         // Act
 
         // Assert
-    }*/
+    }
+
+
 
     @Test
-    void getReviewByTrailIDAndUserID() {
+    void getReviewByTrailIDAndUserIDTrailDoesExist() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    void getReviewByTrailIDAndUserIDTrailDoesNotExist() {
         // Arrange
 
         // Act

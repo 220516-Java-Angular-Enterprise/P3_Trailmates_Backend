@@ -13,8 +13,8 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class TrailMatesDriver {
 
-    @Value("${http.port}")
-    private int httpPort;
+    /*@Value("${http.port}")
+    private int httpPort;*/
 
     public static void main(String[] args) {
         SpringApplication.run(TrailMatesDriver.class, args);
@@ -25,7 +25,7 @@ public class TrailMatesDriver {
         return builder.build();
     }
 
-    @Bean
+    /*@Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
         tomcat.addAdditionalTomcatConnectors(createStandardConnector());
@@ -36,6 +36,6 @@ public class TrailMatesDriver {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setPort(httpPort);
         return connector;
-    }
+    }*/
 
 }
