@@ -13,6 +13,7 @@ import com.revature.trailmates.util.custom_exception.AuthenticationException;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import com.revature.trailmates.util.custom_exception.ResourceConflictException;
 import com.revature.trailmates.util.custom_exception.UnauthorizedException;
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,11 +31,14 @@ import java.util.Optional;
 public class UserController {
     @Inject
     private final UserService userService;
+    @Inject
+    private final TokenService tokenService;
 
     @Inject
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService, TokenService tokenService){
         this.userService = userService;
+        this.tokenService = tokenService;
     }
     //region getting users
     @CrossOrigin
@@ -63,8 +67,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping(value = "/edit", consumes="application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody User editUser(@RequestHeader("Authorization") String token, @RequestBody EditUserRequest request) {
-        Principal principal = new TokenService().extractRequesterDetails(token);
-        if (principal.getId() == null) throw new UnauthorizedException();
+        Principal principal = tokenService.noTokenThrow(token);
 
         return userService.UpdateUser(principal.getId(), request);
     }
