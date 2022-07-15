@@ -1,12 +1,10 @@
 package com.revature.trailmates.trails;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +132,14 @@ public class TrailService {
             }
         }
         return trails;
+    }
+
+    public Trail getTrailByID(String id) {
+        Trail returnList = trailRepository.getById(id);
+        //if (!returnList.isPresent()||returnList.get().getId() == null){
+        //    throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        //} else
+        return returnList;
     }
 
     public Optional<Trail> getTrail(String id) {
