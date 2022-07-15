@@ -35,6 +35,14 @@ public class TrailHistory {
         super();
     }
 
+    public TrailHistory(String id, String comment, Timestamp date, User user, Trail trail) {
+        this.id = id;
+        this.comment = comment;
+        this.date = date;
+        this.user = user;
+        this.trail = trail;
+    }
+
     public String getId() {
         return id;
     }

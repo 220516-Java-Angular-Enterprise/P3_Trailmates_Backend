@@ -74,6 +74,20 @@ public class TrailHistoryController {
         return trailHistoryService.getAscHistory(userID);
     }
 
+    /**
+     * @param token authorized user
+     * @param userID specific user we want to retrieve from
+     * @return the list of their trail history
+     */
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @CrossOrigin
+    @GetMapping(path = "/desc/{userID}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<History> userDescTrailHistory(@RequestHeader("Authorization") String token, @PathVariable String userID){
+        Principal user = tokenService.noTokenThrow(token);
+        return trailHistoryService.getDescHistory(userID);
+    }
+
 
     /**
      * @param token verifying it is a user in the database
