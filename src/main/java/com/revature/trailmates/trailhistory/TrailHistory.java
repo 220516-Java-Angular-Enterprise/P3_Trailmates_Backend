@@ -22,11 +22,6 @@ public class TrailHistory {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    /*
-    * creating a group table that will contain a list of users
-    * that went to the trail with the current user
-    */
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trail_id", referencedColumnName = "id")
     private Trail trail;
