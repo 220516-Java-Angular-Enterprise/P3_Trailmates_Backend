@@ -26,43 +26,40 @@ public class TrailFlagController {
     public TrailFlagController() {super();}
     /**
      * gets all flags that match a dateInt and trail ID
-     * @param d The dateInt of the date to be queried, added in the url as a parameter
      * @param t The trail ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
+     * @param d a long with the date as an int that represents days in UNIX epoch
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","t"})
-    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndTrailId(@RequestHeader("Authorization") String token,@RequestParam Long d, String t) {
+    @GetMapping(value="/dateAndTrail/{d}/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndTrailId(@RequestHeader("Authorization") String token,@PathVariable Long d, @PathVariable String t) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndTrailId(d, t);
     }
     /**
      * gets all flags that match a dateInt and user ID
-     * @param d The dateInt of the date to be queried, added in the url as a parameter
      * @param u the user ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
+     * @param d a long with the date as an int that represents days in UNIX epoch
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"d","u"})
-    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndUserId(@RequestHeader("Authorization") String token, @RequestParam Long d, String u) {
+    @GetMapping(params = {"d","u"}, value="/dateAndUser",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndUserId(@RequestHeader("Authorization") String token, @RequestParam long d, @RequestParam String u) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndUserId(d,u);
     }
     /**
      * gets all flags that match a user ID and trail ID
-     * @param u The dateInt of the date to be queried, added in the url as a parameter
+     * @param u the user ID to be queried, added in the url as a parameter
      * @param t The trail ID to be queried, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u","t"})
-    public @ResponseBody Optional<List<TrailFlag>> getAllByUserIdAndTrailId(@RequestHeader("Authorization") String token,@RequestParam String u, String t) {
+    @GetMapping(value="/userAndTrail/{u}/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByUserIdAndTrailId(@RequestHeader("Authorization") String token,@PathVariable String u, @PathVariable String t) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByUserIdAndTrailId(u,t);
     }
@@ -76,8 +73,8 @@ public class TrailFlagController {
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"u"})
-    public @ResponseBody Optional<List<TrailFlag>> getAllByUserId(@RequestHeader("Authorization") String token, @RequestParam String u) {
+    @GetMapping(value="/user/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByUserId(@RequestHeader("Authorization") String token, @PathVariable String u) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByUserId(u);
     }
@@ -89,8 +86,8 @@ public class TrailFlagController {
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,params = {"t"})
-    public @ResponseBody Optional<List<TrailFlag>> getAllByTrailId(@RequestHeader("Authorization") String token, @RequestParam String t) {
+    @GetMapping(value="/trail/{t}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByTrailId(@RequestHeader("Authorization") String token, @PathVariable String t) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByTrailId(t);
     }
@@ -109,8 +106,6 @@ public class TrailFlagController {
     }
     /**
      * deletes a trail flag from the database
-     * @param id id of the TrailFlag to be deleted, added in the url as a parameter
-     * @param token the authentication token provided under the Authorization header
      * @return On success, returns true
      */
     @CrossOrigin
