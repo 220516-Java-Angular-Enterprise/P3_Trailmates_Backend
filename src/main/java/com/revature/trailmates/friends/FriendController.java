@@ -73,7 +73,7 @@ public class FriendController {
      */
     @CrossOrigin
     @GetMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Friend> getAllFriendsFromUserID(@PathVariable("friend_id") String user_id, @RequestHeader("Authorization") String token) {
+    public @ResponseBody List<Friend> getAllFriendsFromUserID(@PathVariable("user_id") String user_id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
         return friendService.getAllFriendsFromUser(user_id);
     }
