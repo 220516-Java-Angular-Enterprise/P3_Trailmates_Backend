@@ -64,7 +64,6 @@ class TrailFlagServiceTest {
     @Test
     //save fails when flag is a duplicate
     void saveNewTrailFlagResourceConflict() {
-
         //assert throws exception if new flag is duplicate (i.e. isDuplicateFlag=true)
         //initialize dummy flag to avoid null pointers
         newTrailFlagRequest.setTrailId("foo");

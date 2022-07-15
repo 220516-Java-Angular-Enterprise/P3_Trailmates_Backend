@@ -18,6 +18,9 @@ public interface OwnedConversationRepository extends CrudRepository<OwnedConvers
     @Query(value = "SELECT * FROM owned_conversations ocv WHERE ocv.owner = ?1", nativeQuery = true)
     ArrayList<OwnedConversation> getAllOwnedConversationsOfUser(String userID); // INNER JOIN conversations cv ON ocv.conversation = cv.id INNER JOIN private_messages pm ON ocv.conversation = pm.conversation ORDER BY pm.time_sent
 
+    @Query(value = "SELECT * FROM owned_conversations WHERE owner = ?1 AND conversation = ?2", nativeQuery = true)
+    ArrayList<OwnedConversation> getOwnerHasConversation(String ownerID, String conversationID);
+
     @Modifying
     @Query(value = "INSERT INTO owned_conversations (id, conversation, owner) VALUES (?1, ?2, ?3)", nativeQuery = true)
     public void saveNewOwnedConversation(String id, String conversationID, String userID);
