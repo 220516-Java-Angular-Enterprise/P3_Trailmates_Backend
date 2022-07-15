@@ -14,6 +14,9 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,15 +127,52 @@ class TrailReviewServiceTest {
         assertTrue(actualMessage.equals(expectedMessage));
     }
 
+    //region getAllReviewsForTrail tests
     @Test
     void getAllReviewsForTrailDoesNotExist() {
         // Arrange
         Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
+
         // Act
+        Exception exception = assertThrows(InvalidRequestException.class, () -> trailReviewService.getAllReviewsForTrail(trailID));
+        String expectedMessage = "Cannot find trail";
+        String actualMessage = exception.getMessage();
 
         // Assert
+        assertTrue(actualMessage.equals(expectedMessage));
     }
 
+    @Test
+    void getAllReviewsForTrailNoTrailReviews() {
+        // Arrange
+        //Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
+        //Mockito.doNothing().when(trailReviewRepository.findAll());
+
+        // Act
+        Exception exception = assertThrows(InvalidRequestException.class, () -> trailReviewService.getAllReviewsForTrail(trailID));
+        String expectedMessage = "No reviews found";
+        String actualMessage = exception.getMessage();
+
+        // Assert
+        assertTrue(actualMessage.equals(expectedMessage));
+    }
+
+    @Test
+    void getAllReviewsForTrailSuccess() {
+        // Arrange
+        //Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
+        List<TrailReview> expectedList = new ArrayList<>();
+        TrailReview trailReview = new TrailReview();
+        expectedList.add(trailReview);
+        Mockito.when(trailReviewRepository.findAll()).thenReturn(Collections.singleton(trailReview));
+
+        // Act
+        List<TrailReview> actualList = trailReviewService.getAllReviewsForTrail(trailID);
+
+        // Assert
+
+    }
+    //endregion
 
 
     @Test
