@@ -2,6 +2,7 @@ package com.revature.trailmates.friends;
 
 import com.revature.trailmates.notifications.NotificationService;
 import com.revature.trailmates.notifications.dto.NewNotificationRequest;
+import com.revature.trailmates.user.User;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
@@ -36,7 +37,8 @@ public class FriendService {
 
         // Sends out a friend Notification to the friend_id
         NewNotificationRequest request = new NewNotificationRequest();
-        request.setMessage("Someone has added you as a friend.");
+        User user = userService.getUserById(user_id);
+        request.setMessage(user.getUsername() + " has added you as a friend.");
         request.setNotification_type("FRIEND");
         request.setTarget_id(user_id);
         notificationService.addNotification(request, friend_id);
