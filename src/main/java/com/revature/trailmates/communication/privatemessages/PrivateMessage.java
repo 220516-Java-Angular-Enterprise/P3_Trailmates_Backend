@@ -5,6 +5,7 @@ import com.revature.trailmates.communication.conversation.Conversation;
 import com.revature.trailmates.user.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "private_messages")
@@ -14,7 +15,7 @@ public class PrivateMessage {
     @Column (name="message", nullable = false)
     private String message;
     @Column (name="time_sent", nullable = false)
-    private long time_sent;
+    private Timestamp time_sent;
     @ManyToOne
     @JoinColumn(name="sender_id", nullable = false)
     private User sender_id;
@@ -40,11 +41,11 @@ public class PrivateMessage {
         this.message = message;
     }
 
-    public long getTime_sent() {
+    public Timestamp getTime_sent() {
         return time_sent;
     }
 
-    public void setTime_sent(long time_sent) {
+    public void setTime_sent(Timestamp time_sent) {
         this.time_sent = time_sent;
     }
 

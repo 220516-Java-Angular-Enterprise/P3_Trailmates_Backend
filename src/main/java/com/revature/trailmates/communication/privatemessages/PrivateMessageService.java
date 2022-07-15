@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class PrivateMessageService {
 
     public String saveNewPrivateMessage(String userID, NewPrivateMessageRequest request) {
         String newUUID = UUID.randomUUID().toString();
-        privateMessageRepository.saveNewPrivateMessage(newUUID, request.getMessage(), request.getTime_sent(), userID, request.getConversation_id());
+        privateMessageRepository.saveNewPrivateMessage(newUUID, request.getMessage(), new Timestamp(request.getTime_sent())/*(1000*60*60*24))*/, userID, request.getConversation_id());
         return newUUID;
     }
     //endregion

@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -23,6 +24,9 @@ public interface TrailHistoryRepository extends CrudRepository<TrailHistory, Str
 
     @Query(value = "select id from trails where name = ?1", nativeQuery = true)
     String trailID(String trail_name);
+
+    @Query(value = "SELECT FROM trails WHERE id = ?1", nativeQuery = true)
+    TrailHistory getHistory(String id);
 
     /*@Query(value = "select id from trailhistory where trail_date = ?1 and trail_id = ?2")
     String isDuplicateHistory(Timestamp date, String trail_id);*/

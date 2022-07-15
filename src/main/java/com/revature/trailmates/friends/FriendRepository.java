@@ -23,4 +23,7 @@ public interface FriendRepository extends CrudRepository<Friend, String> {
     @Modifying
     @Query(value = "DELETE FROM friends WHERE user_id = ?1 AND friend_id = ?2", nativeQuery = true)
     void deleteFriend(String user_id, String friend_id);
+
+    @Query(value = "SELECT * FROM friends WHERE user_id = ?1 AND friend_id = ?2", nativeQuery = true)
+    Friend getFriend(String user_id, String friend_id);
 }

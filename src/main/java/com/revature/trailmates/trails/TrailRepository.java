@@ -18,4 +18,6 @@ public interface TrailRepository extends CrudRepository<Trail, String> {
     @Query(value = "SELECT * FROM trails", nativeQuery = true)
     List<Trail> getAllTrails();
 
+    @Query(value = "SELECT * FROM trails WHERE id = ?1", nativeQuery = true)
+    Trail getById(String id);
 }
