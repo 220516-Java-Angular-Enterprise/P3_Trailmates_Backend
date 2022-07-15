@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 @Service
 @Transactional
@@ -88,8 +91,8 @@ public class TrailFlagService {
         for ( Friend f : friends ) {
             NewNotificationRequest request1 = new NewNotificationRequest();
             request1.setNotification_type("FLAG");
-            String[] date = String.valueOf(request.getDateInt() * (1000 * 60 * 60 * 24)).split("\\s+");
-            request1.setMessage(user.getUsername() + " has marked that they are going hiking on " + date[0]);// + " " + date[1] + " " + date[2]);
+            //String[] date = String.valueOf(request.getDateInt() * (1000 * 60 * 60 * 24)).split("\\s+");
+            request1.setMessage(user.getUsername() + " has marked that they are going hiking on " + new SimpleDateFormat("MM/dd/yyyy").format(Timestamp.from(Instant.now())));
             request1.setTarget_id(request.getTrailId());
             notificationService.addNotification(request1, f.getUser_id().getId());
         }

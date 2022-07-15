@@ -1,10 +1,14 @@
 package com.revature.trailmates.notifications;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.revature.trailmates.communication.ownedconversation.OwnedConversation;
 import com.revature.trailmates.friends.Friend;
 import com.revature.trailmates.trailhistory.TrailHistory;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,7 +28,7 @@ public class Notification {
     @Column(name = "timeCreated")
     private Timestamp timeCreated;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user_id;
 
@@ -41,21 +45,26 @@ public class Notification {
     //@JoinColumn(name = "message_id", referencedColumnName = "id")
     //private Message message_id;
 
+
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "user1_id", referencedColumnName = "user_id"),
             @JoinColumn(name = "friend_id", referencedColumnName = "friend_id")})
     private Friend friend;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trail_history_id", referencedColumnName = "id")
     private TrailHistory trailHistory;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trail_id", referencedColumnName = "id")
     private Trail trail;
 
-    public Notification(String id, String message, Timestamp timeCreated, User user_id, String notification_type, Friend friend, TrailHistory trailHistory, Trail trail) {
+    @ManyToOne
+    @JoinColumn(name = "owned_conversation", referencedColumnName = "id")
+    private OwnedConversation convo;
+
+    public Notification(String id, String message, Timestamp timeCreated, User user_id, String notification_type, Friend friend, TrailHistory trailHistory, Trail trail, OwnedConversation convo) {
         this.id = id;
         this.message = message;
         this.timeCreated = timeCreated;
@@ -64,6 +73,7 @@ public class Notification {
         this.friend = friend;
         this.trailHistory = trailHistory;
         this.trail = trail;
+        this.convo = convo;
     }
 
     public Timestamp getTimeCreated() { return timeCreated; }
@@ -122,4 +132,12 @@ public class Notification {
     public Trail getTrail() { return trail; }
 
     public void setTrail(Trail trail) { this.trail = trail; }
+
+    public OwnedConversation getConvo() {
+        return convo;
+    }
+
+    public void setConvo(OwnedConversation convo) {
+        this.convo = convo;
+    }
 }
