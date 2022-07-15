@@ -45,8 +45,8 @@ public class TrailFlagController {
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(params = {"d","u"}, value="/dateAndUser",produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndUserId(@RequestHeader("Authorization") String token, @RequestParam long d, @RequestParam String u) {
+    @GetMapping(value="/dateAndUser/{d}/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndUserId(@RequestHeader("Authorization") String token, @PathVariable long d, @PathVariable String u) {
         Principal user = tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndUserId(d,u);
     }
@@ -110,8 +110,8 @@ public class TrailFlagController {
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, params ={"id"})
-    public @ResponseBody String deleteEntry( @RequestHeader("Authorization") String token, @RequestParam String id){
+    @DeleteMapping(value="/delete/{id}",produces = MediaType.APPLICATION_JSON_VALUE, params ={"id"})
+    public @ResponseBody String deleteEntry( @RequestHeader("Authorization") String token, @PathVariable String id){
         Principal user = tokenService.noTokenThrow(token);
         if(trailFlagService.deleteTrailFlag(id, user)){
             return "Flag was deleted.";
