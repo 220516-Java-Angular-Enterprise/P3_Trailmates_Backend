@@ -83,6 +83,14 @@ public class TrailHistory {
         this.trail = trail;
     }
 
+    public ImageData getImage() {
+        return image;
+    }
+
+    public void setImage(ImageData image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "TrailHistory{" +

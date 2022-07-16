@@ -42,7 +42,7 @@ public class TrailHistoryService {
         String trailID = repo.trailID(newHistory.getTrail_name());
         if(!correctDate(date)) throw new InvalidRequestException("Invalid Date");
         if(trailID == null) throw new InvalidRequestException("Trail doesn't exist");
-        repo.addNewHistory(UUID.randomUUID().toString(), newHistory.getComment(), date, trailID, userID);
+        repo.addNewHistory(UUID.randomUUID().toString(), newHistory.getComment(), date, trailID, userID, newHistory.getImageURL());
     }
 
     private boolean correctDate(Timestamp date){

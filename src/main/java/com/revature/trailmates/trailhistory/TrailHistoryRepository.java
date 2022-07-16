@@ -19,8 +19,8 @@ public interface TrailHistoryRepository extends CrudRepository<TrailHistory, Str
     List<TrailHistory> getDescHistory(String userID);
 
     @Modifying
-    @Query(value = "insert into trailhistory values(?1,?2,?3,?4,?5)", nativeQuery = true)
-    void addNewHistory(String id, String comment, Timestamp date, String trail_id, String user_id);
+    @Query(value = "insert into trailhistory values(?1,?2,?3,?4,?5, ?6)", nativeQuery = true)
+    void addNewHistory(String id, String comment, Timestamp date, String trail_id, String user_id, String image_url);
 
     @Query(value = "select id from trails where name = ?1", nativeQuery = true)
     String trailID(String trail_name);
