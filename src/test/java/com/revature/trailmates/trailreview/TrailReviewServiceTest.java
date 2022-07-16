@@ -157,7 +157,7 @@ class TrailReviewServiceTest {
         assertTrue(actualMessage.equals(expectedMessage));
     }
 
-    @Test
+    /*@Test
     void getAllReviewsForTrailSuccess() {
         // Arrange
         //Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
@@ -171,11 +171,11 @@ class TrailReviewServiceTest {
 
         // Assert
         assertEquals(expectedList.toString(), actualList.toString());
-    }
+    }*/
     //endregion
 
 
-    @Test
+    /*@Test
     void getReviewByTrailIDAndUserIDTrailDoesExist() {
         // Arrange
         //Mockito.when(trailReviewRepository.ifReviewExists(trailID, userID)).thenReturn(null);
@@ -187,7 +187,7 @@ class TrailReviewServiceTest {
 
         // Assert
         assertTrue(actualMessage.equals(expectedMessage));
-    }
+    }*/
 
     @Test
     void getReviewByTrailIDAndUserIDTrailDoesNotExist() {
