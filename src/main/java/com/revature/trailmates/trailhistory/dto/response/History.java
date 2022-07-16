@@ -14,6 +14,7 @@ public class History {
     private String partnername;
     private String comment;
     private Date trail_date;
+    private String imageURL;
 
     public History() {
     }
@@ -57,11 +58,20 @@ public class History {
         this.trail_date = date;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     public History extractTrail(TrailHistory trail){
         this.comment = trail.getComment();
         this.trailname = trail.getTrail().getName();
         this.trail_date = new Date(trail.getDate().getTime());
         this.partnername = trail.getUser().getUsername();
+        this.imageURL = trail.getImage().getUrl();
         return this;
     }
 
