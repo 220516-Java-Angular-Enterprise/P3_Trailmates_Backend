@@ -66,6 +66,19 @@ public class FriendController {
     }
 
     /**
+     * Retrieves a list of users that they are friends with.
+     * @param user_id
+     * @param token
+     * @return
+     */
+    @CrossOrigin
+    @GetMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Friend> getAllFriendsFromUserID(@PathVariable("user_id") String user_id, @RequestHeader("Authorization") String token) {
+        Principal user = tokenService.noTokenThrow(token);
+        return friendService.getAllFriendsFromUser(user_id);
+    }
+
+    /**
      * Removes a Friend from the database
      * @param friend_id The id of the friend they wish to remove
      * @param token The Current User
