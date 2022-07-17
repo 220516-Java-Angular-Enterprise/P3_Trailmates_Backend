@@ -86,8 +86,8 @@ public class TrailReviewController {
 
     @CrossOrigin
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping(params = {"trailID","userID"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public TrailReview getReviewForTrail(@RequestHeader("Authorization") String token, @RequestParam String trailID, String userID){
+    @GetMapping(value = "/{trailID}/{userID}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public TrailReview getReviewForTrail(@RequestHeader("Authorization") String token, @PathVariable String trailID, @PathVariable String userID){
         tokenService.noTokenThrow(token);
         return trailReviewService.getReviewByTrailIDAndUserID(trailID, userID);
     }

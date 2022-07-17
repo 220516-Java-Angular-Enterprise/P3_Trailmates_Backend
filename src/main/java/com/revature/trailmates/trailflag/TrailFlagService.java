@@ -1,6 +1,10 @@
 package com.revature.trailmates.trailflag;
 
 import com.revature.trailmates.auth.dtos.response.Principal;
+import com.revature.trailmates.friends.Friend;
+import com.revature.trailmates.friends.FriendService;
+import com.revature.trailmates.notifications.NotificationService;
+import com.revature.trailmates.notifications.dto.NewNotificationRequest;
 import com.revature.trailmates.trailflag.dtos.requests.NewTrailFlagRequest;
 import com.revature.trailmates.util.annotations.Inject;
 import com.revature.trailmates.util.custom_exception.AuthenticationException;
@@ -10,16 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 @Service
 @Transactional
 public class TrailFlagService {
     @Inject
     private final TrailFlagRepository trailFlagRepository;
+    private final FriendService friendService;
+    private final NotificationService notificationService;
+
     @Autowired
-    public TrailFlagService(TrailFlagRepository trailFlagRepository){
-        this.trailFlagRepository=trailFlagRepository;
+    public TrailFlagService(TrailFlagRepository trailFlagRepository, FriendService friendService, NotificationService notificationService) {
+        this.trailFlagRepository = trailFlagRepository;
+        this.friendService = friendService;
+        this.notificationService = notificationService;
     }
+
+
+
     public Optional<List<TrailFlag>> getAllByDateIntAndUserId(long dateInt, String userId){
         Optional<List<TrailFlag>> returnList =  trailFlagRepository.getAllByDateIntAndUserId(dateInt,userId);
         if (!returnList.isPresent()||returnList.get().size()==0){
@@ -70,6 +85,18 @@ public class TrailFlagService {
         }catch (Exception e){
             throw new InvalidRequestException("Unable to save trail flag.  Either the user or trail id were not found in the database, or the database was inaccessible.");
         }
+
+        //Sending a notification out to all the People that are friends with the User
+        List<Friend> friends = friendService.getAllFriendsFromFriendID(user.getId());
+        for ( Friend f : friends ) {
+            NewNotificationRequest request1 = new NewNotificationRequest();
+            request1.setNotification_type("FLAG");
+            //String[] date = String.valueOf(request.getDateInt() * (1000 * 60 * 60 * 24)).split("\\s+");
+            request1.setMessage(user.getUsername() + " has marked that they are going hiking on " + new SimpleDateFormat("MM/dd/yyyy").format(Timestamp.from(Instant.now())));
+            request1.setTarget_id(request.getTrailId());
+            notificationService.addNotification(request1, f.getUser_id().getId());
+        }
+
         return newFlag;
     }
     public boolean isDuplicateFlag(TrailFlag flag){

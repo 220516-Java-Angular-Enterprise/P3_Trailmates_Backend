@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailhistory;
 
 
+import com.revature.trailmates.imagedata.ImageData;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
 
@@ -22,17 +23,24 @@ public class TrailHistory {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    /*
-    * creating a group table that will contain a list of users
-    * that went to the trail with the current user
-    */
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trail_id", referencedColumnName = "id")
     private Trail trail;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "url")
+    private ImageData image;
+
     public TrailHistory() {
         super();
+    }
+
+    public TrailHistory(String id, String comment, Timestamp date, User user, Trail trail) {
+        this.id = id;
+        this.comment = comment;
+        this.date = date;
+        this.user = user;
+        this.trail = trail;
     }
 
     public String getId() {
@@ -73,6 +81,14 @@ public class TrailHistory {
 
     public void setTrail(Trail trail) {
         this.trail = trail;
+    }
+
+    public ImageData getImage() {
+        return image;
+    }
+
+    public void setImage(ImageData image) {
+        this.image = image;
     }
 
     @Override

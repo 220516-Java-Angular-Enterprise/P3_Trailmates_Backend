@@ -11,11 +11,13 @@ public class NewHistoryRequest {
     private String trail_name;
     private String comment;
     private String date;
+    private String imageURL;
 
-    public NewHistoryRequest(String trail_name, String comment, String date) {
+    public NewHistoryRequest(String trail_name, String comment, String date, String imageURL) {
         this.trail_name = trail_name;
         this.comment = comment;
         this.date = date;
+        this.imageURL = imageURL;
     }
 
     public NewHistoryRequest() {
@@ -45,12 +47,21 @@ public class NewHistoryRequest {
         this.date = date;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
     @Override
     public String toString() {
-        return "NewHistory{" +
+        return "NewHistoryRequest{" +
                 "trail_name='" + trail_name + '\'' +
                 ", comment='" + comment + '\'' +
-                ", date=" + date +
+                ", date='" + date + '\'' +
+                ", imageURL='" + imageURL + '\'' +
                 '}';
     }
 }
