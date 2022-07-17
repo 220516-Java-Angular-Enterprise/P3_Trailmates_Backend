@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailhistory;
 
 
+import com.revature.trailmates.imagedata.ImageData;
 import com.revature.trailmates.trailhistory.dto.requests.NewHistoryRequest;
 import com.revature.trailmates.trailhistory.dto.response.History;
 import com.revature.trailmates.trails.Trail;
@@ -48,7 +49,7 @@ class TrailHistoryServiceTest {
     @Test
     void getAscHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
-        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
+        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail(), new ImageData());
         trailHistoryList.add(trail);
         when(repo.getAscHistory(any(String.class))).thenReturn(trailHistoryList);
         List<History> historyList = new ArrayList<>();
@@ -59,7 +60,7 @@ class TrailHistoryServiceTest {
     @Test
     void getDescHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
-        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
+        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail(), new ImageData());
         trailHistoryList.add(trail);
         when(repo.getDescHistory(any(String.class))).thenReturn(trailHistoryList);
         List<History> historyList = new ArrayList<>();
