@@ -27,6 +27,12 @@ public class ImageDataController {
         this.tokenService = tokenService;
     }
 
+    //get latest profile image for user
+
+    //remove flag
+
+
+
     /**
      * Generates a secure URL for making a PUT request to the trailmates-images S3 bucket
      * @param token Authorization token from header
