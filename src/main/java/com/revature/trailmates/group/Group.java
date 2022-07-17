@@ -13,7 +13,7 @@ public class Group {
     @Id
     private String id;
     @Column(name ="gc_id", nullable = true)
-    private String gc_id;
+    private String gcId;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "size",nullable = false)
@@ -32,7 +32,7 @@ public class Group {
 
     public Group(String id, String gc_id, String name, int size, List<User> users) {
         this.id = id;
-        this.gc_id = gc_id;
+        this.gcId = gc_id;
         this.name = name;
         this.size = size;
         this.users = users;
@@ -47,11 +47,11 @@ public class Group {
     }
 
     public String getGc_id() {
-        return gc_id;
+        return gcId;
     }
 
     public void setGc_id(String gc_id) {
-        this.gc_id = gc_id;
+        this.gcId = gc_id;
     }
 
     public String getName() {
@@ -82,7 +82,7 @@ public class Group {
     public String toString() {
         return "Group{" +
                 "id='" + id + '\'' +
-                ", gc_id='" + gc_id + '\'' +
+                ", gc_id='" + gcId + '\'' +
                 ", name='" + name + '\'' +
                 ", size=" + size +
                 ", users=" + users +

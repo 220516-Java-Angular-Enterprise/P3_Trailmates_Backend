@@ -34,33 +34,32 @@ public class GroupService {
         repo.createGroup(groupID, conversationID, groupName);
         //adding the founder to the group
         repo.addUser(groupID,userID);
-
     }
 
     public void addUserToGroup(String userID, String groupName){
-        if(!groupExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
+        if(groupDoesntExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
         if(isDuplicateUser(userID, groupName)) throw new ResourceConflictException("You are already in this group.");
         repo.addUser(repo.retrieveGroupID(groupName), userID);
     }
 
     public void removeUserFromGroup(String userID, String groupName){
-        if(!groupExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
+        if(groupDoesntExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
         repo.removeUser(userID, repo.retrieveGroupID(groupName));
     }
 
     public void editGroup(String editName, String groupName){
         if(editName.equals(groupName)) throw new ResourceConflictException("Group name needs to be different.");
-        if(isDuplicateGroup(groupName)) throw new ResourceConflictException("Name is already taken.");
+        if(isDuplicateGroup(editName)) throw new ResourceConflictException("Name is already taken.");
         repo.editGroupName(editName, repo.retrieveGroupID(groupName));
     }
 
     public List<User> getUsers(String groupName){
-        if(!groupExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
+        if(groupDoesntExists(groupName)) throw new InvalidRequestException("Group doesn't exist.");
         return repo.getUsers(repo.retrieveGroupID(groupName)).getUsers();
     }
 
-    private boolean groupExists(String groupName){
-        return repo.retrieveGroupID(groupName) != null;
+    private boolean groupDoesntExists(String groupName){
+        return repo.retrieveGroupID(groupName) == null;
     }
 
     private boolean isDuplicateUser(String userID, String groupName){
