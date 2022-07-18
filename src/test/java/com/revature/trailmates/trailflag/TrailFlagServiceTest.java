@@ -139,6 +139,22 @@ class TrailFlagServiceTest {
         Exception e = assertThrows(AuthenticationException.class, ()->service.deleteTrailFlag(dummyFlag.getId(), dummyPrincipal));
     }
     @Test
+    //Verify that delete method is executed.
+    void deleteTrailFlagWorks(){
+        dummyPrincipal.setId("foo");
+        //initialize dummy flag
+        dummyFlag = new TrailFlag();
+        dummyFlag.getUserId().setId("foo");
+        dummyFlag.setDateInt(todayteInt+1);
+        dummyFlag.setId("bar");
+        dummyFlag.getTrailId().setId("baz");
+        //make find by ID return dummy flag so that we get to end of method.
+        Mockito.when(repo.findById(any())).thenReturn(Optional.of(dummyFlag));
+        //don't actually delete anything
+        assertEquals(true,service.deleteTrailFlag("foo",dummyPrincipal));
+        Mockito.verify(repo, Mockito.times(1)).deleteById("foo");
+    }
+    @Test
     void getAllByDateIntAndTrailId() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByDateIntAndTrailId(anyLong(),any())).thenReturn(Optional.of(new ArrayList<TrailFlag>()));

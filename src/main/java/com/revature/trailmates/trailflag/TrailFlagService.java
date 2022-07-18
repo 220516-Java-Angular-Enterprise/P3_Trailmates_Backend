@@ -114,7 +114,7 @@ public class TrailFlagService {
             throw new InvalidRequestException("Could not find a flag with that ID in order to delete it.");
         }
         //throw exception if the user deleting the flag is not the one who created it
-        if (!markedFlag.get().getUserId().equals(user.getId())){
+        if (!markedFlag.get().getUserId().getId().equals(user.getId())){
             throw new AuthenticationException("You may only delete flags that you created.");
         }
         //try to delete flag.  If it fails, explain in the error message.
