@@ -32,16 +32,21 @@ public class FriendService {
 
     public void addNewFriend(String user_id, String friend_id) {
         if (user_id == null || friend_id == null) throw new InvalidRequestException("User ID or Friend ID is null");
-        if (friendRepository.getFriend(user_id, friend_id) != null ) throw new InvalidRequestException("User is already friends with that friend_id");
-        friendRepository.addNewFriend(user_id, friend_id);
+        if (getFriend(user_id, friend_id) != null ) throw new InvalidRequestException("User is already friends with that friend_id");
 
         // Sends out a friend Notification to the friend_id
         NewNotificationRequest request = new NewNotificationRequest();
-        User user = userService.getUserById(user_id);
-        request.setMessage(user.getUsername() + " has added you as a friend.");
-        request.setNotification_type("FRIEND");
-        request.setTarget_id(user_id);
-        notificationService.addNotification(request, friend_id);
+        try {
+            User user = userService.getUserById(user_id);
+            request.setMessage(user.getUsername() + " has added you as a friend.");
+            request.setNotification_type("FRIEND");
+            request.setTarget_id(user_id);
+            notificationService.addNotification(request, friend_id);
+        }catch (InvalidRequestException e) {
+            throw new InvalidRequestException("User does not exist");
+        }
+
+        friendRepository.addNewFriend(user_id, friend_id);
     }
 
     public Friend getFriend(String user_id, String friend_id) {
