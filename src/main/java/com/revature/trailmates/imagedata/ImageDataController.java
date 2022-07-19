@@ -4,6 +4,7 @@ import com.amazonaws.HttpMethod;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
+import com.revature.trailmates.imagedata.dtos.responses.SecureUrlResponse;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,26 @@ public class ImageDataController {
     }
 
     /**
+     * returns the imagedata for the authenticated user with the most recent timestamp of filetype 'PROFILE'
+     * @param token Authorization token from header
+     * @return an ImageData object with the authenticated user's most recent profile picture.'
+     */
+     @GetMapping(value="/profpic",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ImageData getLatestProfPic(@RequestHeader("Authorization") String token) {
+        Principal user = tokenService.noTokenThrow(token);
+        return imageDataService.getLatestProfPic(user);
+    }
+    /**
      * Generates a secure URL for making a PUT request to the trailmates-images S3 bucket
      * @param token Authorization token from header
      * @param extension the file extension (jpeg, png, etc) under which it will be saved on S3
      * @return A string that is the URL to which the PUT request should be sent.
      */
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value="/gen-url/{extension}")
-    public String generateUploadUrl(@RequestHeader("Authorization") String token,@PathVariable String extension) {
+
+    @GetMapping(value="/gen-url/{extension}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public SecureUrlResponse generateUploadUrl(@RequestHeader("Authorization") String token, @PathVariable String extension) {
         tokenService.noTokenThrow(token);
-        return imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT);
+        return new SecureUrlResponse(imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT));
     }
 
     /**
@@ -45,7 +56,7 @@ public class ImageDataController {
      * @return An ImageData object,which contains its url, the user who created it, the timestamp at which it was created, and a string with filetype information
      */
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value="/{url}")
+    @GetMapping(value="/{url}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ImageData getByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
         tokenService.noTokenThrow(token);
         return imageDataService.getByUrl(url);
@@ -58,7 +69,7 @@ public class ImageDataController {
      * @return A string "Image data deleted" if deletion works, "Unable to delete image data" if it fails and no other exception was thrown.
      */
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value="/{url}")
+    @DeleteMapping(value="/{url}",produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteByUrl(@RequestHeader("Authorization") String token,@PathVariable String url) {
         Principal user = tokenService.noTokenThrow(token);
         if(imageDataService.deleteByUrl(url, user)){
