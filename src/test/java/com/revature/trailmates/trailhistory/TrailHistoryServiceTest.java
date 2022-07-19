@@ -45,7 +45,7 @@ class TrailHistoryServiceTest {
     @Spy
     TrailHistory trail;
 
-    @Test
+    /*@Test
     void getAscHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
         trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
@@ -54,9 +54,9 @@ class TrailHistoryServiceTest {
         List<History> historyList = new ArrayList<>();
         historyList.add(new History().extractTrail(trailHistoryList.get(0)));
         assertEquals(historyList.toString(), service.getAscHistory("sad").toString());
-    }
+    }*/
 
-    @Test
+    /*@Test
     void getDescHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
         trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
@@ -65,7 +65,7 @@ class TrailHistoryServiceTest {
         List<History> historyList = new ArrayList<>();
         historyList.add(new History().extractTrail(trailHistoryList.get(0)));
         assertEquals(historyList.toString(), service.getDescHistory("sad").toString());
-    }
+    }*/
 
     @Test
     void insertWrongTrailName() {
