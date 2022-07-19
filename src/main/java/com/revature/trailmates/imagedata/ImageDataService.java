@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+
 @Service
 @Transactional
 public class ImageDataService {
@@ -40,6 +39,22 @@ public class ImageDataService {
             throw new InvalidRequestException("Couldn't save image data.");
         }
         return newImage;
+    }
+    public ImageData getLatestProfPic(Principal user){
+        //initialize the object that will hold what we get from database.
+        Optional<List<ImageData>> retrievedImageData = Optional.of(new ArrayList<ImageData>());
+        //get imagedata from database, throw exception if we can't.
+        try{
+            retrievedImageData=imageDataRepo.getLatestPPByUserId(user.getId());
+        } catch (Exception e) {
+            throw new InvalidRequestException("There was an error accessing the database to obtain a profile pic.");
+        }
+        //if the result is an empty list, throw exception
+        if (!retrievedImageData.isPresent()){
+            throw new InvalidRequestException("Unable to locate profile pic for this user.");
+        }
+        //return the entry we found
+        return retrievedImageData.get().get(0);
     }
     public ImageData getByUrl(String url){
         Optional<ImageData> returnImageData=imageDataRepo.findById(url);

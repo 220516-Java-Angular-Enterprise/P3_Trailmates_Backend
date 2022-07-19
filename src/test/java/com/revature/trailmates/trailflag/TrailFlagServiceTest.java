@@ -109,6 +109,10 @@ class TrailFlagServiceTest {
         assertEquals("Cannot create a flag for a previous date.",e.getMessage());
     }
     @Test
+    void saveNewTrailFlagNotification(){
+
+    }
+    @Test
     //returns false if no matching flag is found with given parameters
     void isDuplicateFlag() {
         //mock an empty list when searching for dummy flag
@@ -150,7 +154,7 @@ class TrailFlagServiceTest {
         dummyFlag.getTrailId().setId("baz");
         //make find by ID return dummy flag so that we get to end of method.
         Mockito.when(repo.findById(any())).thenReturn(Optional.of(dummyFlag));
-        //don't actually delete anything
+        //pretend to delete something
         assertEquals(true,service.deleteTrailFlag("foo",dummyPrincipal));
         Mockito.verify(repo, Mockito.times(1)).deleteById("foo");
     }

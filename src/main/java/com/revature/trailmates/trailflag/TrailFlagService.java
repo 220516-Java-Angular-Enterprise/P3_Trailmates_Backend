@@ -59,10 +59,24 @@ public class TrailFlagService {
             throw new InvalidRequestException("Could not retrieve any results for the given user");
         } else return returnList;
     }
+    public Optional<List<TrailFlag>> getAllActiveByUserId(String userId){
+        long todayteInt=new Date().getTime()/(1000*60*60*24);
+        Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllActiveByUserId(userId,todayteInt);
+        if (!returnList.isPresent()||returnList.get().size()==0){
+            throw new InvalidRequestException("Could not retrieve any active results for the given user");
+        } else return returnList;
+    }
     public Optional<List<TrailFlag>> getAllByTrailId(String trailId){
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByTrailId(trailId);
         if (!returnList.isPresent()||returnList.get().size()==0){
             throw new InvalidRequestException("Could not retrieve any results for the given trail.");
+        } else return returnList;
+    }
+    public Optional<List<TrailFlag>> getAllActiveByTrailId(String trailId){
+        long todayteInt=new Date().getTime()/(1000*60*60*24);
+        Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllActiveByTrailId(trailId, todayteInt);
+        if (!returnList.isPresent()||returnList.get().size()==0){
+            throw new InvalidRequestException("Could not retrieve any active results for the given trail.");
         } else return returnList;
     }
     public TrailFlag saveNewTrailFlag(NewTrailFlagRequest request, Principal user){

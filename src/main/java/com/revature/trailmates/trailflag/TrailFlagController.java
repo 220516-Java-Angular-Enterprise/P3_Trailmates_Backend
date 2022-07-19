@@ -25,8 +25,30 @@ public class TrailFlagController {
     private TokenService tokenService;
     public TrailFlagController() {super();}
     /**
+     * gets all flags on or after today by user ID
+     * @param u the user ID to be queried
+     */
+//    @CrossOrigin
+//    @ResponseStatus(HttpStatus.OK)
+//    @GetMapping(value="/activeByUser/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByUserId(@RequestHeader("Authorization") String token, @PathVariable String u) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailFlagService.getAllActiveByUserId(u);
+//    }
+//    /**
+//     * gets all flags on or after today by trail ID
+//     * @param t the trail ID to be queried
+//     */
+//    @CrossOrigin
+//    @ResponseStatus(HttpStatus.OK)
+//    @GetMapping(value="/activeByTrail/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByTrailId(@RequestHeader("Authorization") String token, @PathVariable String t) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailFlagService.getAllActiveByTrailId(t);
+//    }
+    /**
      * gets all flags that match a dateInt and trail ID
-     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param t The trail ID to be queried
      * @param d a long with the date as an int that represents days in UNIX epoch
      * @return A list of TrailFlag objects
      */
@@ -39,7 +61,7 @@ public class TrailFlagController {
     }
     /**
      * gets all flags that match a dateInt and user ID
-     * @param u the user ID to be queried, added in the url as a parameter
+     * @param u the user ID to be queried
      * @param d a long with the date as an int that represents days in UNIX epoch
      * @return A list of TrailFlag objects
      */
@@ -52,8 +74,8 @@ public class TrailFlagController {
     }
     /**
      * gets all flags that match a user ID and trail ID
-     * @param u the user ID to be queried, added in the url as a parameter
-     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param u the user ID to be queried
+     * @param t The trail ID to be queried
      * @return A list of TrailFlag objects
      */
     @CrossOrigin
@@ -67,7 +89,7 @@ public class TrailFlagController {
 
     /**
      * gets all flags that match a user ID
-     * @param u the user ID to be queried, added in the url as a parameter
+     * @param u the user ID to be queried
      * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
@@ -80,7 +102,7 @@ public class TrailFlagController {
     }
     /**
      * gets all flags that match a trail ID
-     * @param t The trail ID to be queried, added in the url as a parameter
+     * @param t The trail ID to be queried
      * @param token the authentication token provided under the Authorization header
      * @return A list of TrailFlag objects
      */
@@ -110,7 +132,7 @@ public class TrailFlagController {
      */
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value="/delete/{id}",produces = MediaType.APPLICATION_JSON_VALUE, params ={"id"})
+    @DeleteMapping(value="/delete/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String deleteEntry( @RequestHeader("Authorization") String token, @PathVariable String id){
         Principal user = tokenService.noTokenThrow(token);
         if(trailFlagService.deleteTrailFlag(id, user)){
