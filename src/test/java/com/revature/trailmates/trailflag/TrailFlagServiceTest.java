@@ -36,31 +36,85 @@ class TrailFlagServiceTest {
     private static long todayteInt = new Date().getTime()/(1000*60*60*24);
     //todo: should look up how to set up a BeforeEach annotation to clean up these tests and avoid repeating variable assignments
     @Test
-    void getAllByDateIntAndUserId() {
+    void getAllByDateIntAndUserId404() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByDateIntAndUserId(anyLong(),any())).thenReturn(Optional.empty());
         assertThrows(InvalidRequestException.class, () -> service.getAllByDateIntAndUserId(dummyFlag.getDateInt(),dummyFlag.getUserId().getId()));
     }
+    @Test
+    void getAllByDateIntAndUserIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllByDateIntAndUserId(anyLong(),any())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllByDateIntAndUserId(dummyFlag.getDateInt(),dummyFlag.getUserId().getId()));
+    }
 
     @Test
-    void getAllByUserId() {
+    void getAllByUserId404() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByUserId(any())).thenReturn(Optional.empty());
         assertThrows(InvalidRequestException.class, () -> service.getAllByUserId(dummyFlag.getUserId().getId()));
     }
     @Test
-    void getAllByTrailId() {
+    void getAllByUserIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllByUserId(any())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllByUserId(dummyFlag.getUserId().getId()));
+    }
+    @Test
+    void getAllActiveByUserId404() {
+        //empty list should 404, so mock an empty list when calling DB
+        Mockito.when(repo.getAllActiveByUserId(any(), anyLong())).thenReturn(Optional.empty());
+        assertThrows(InvalidRequestException.class, () -> service.getAllActiveByUserId(dummyFlag.getUserId().getId()));
+    }
+    @Test
+    void getAllActiveByUserIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllActiveByUserId(any(),anyLong())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllActiveByUserId(dummyFlag.getUserId().getId()));
+    }
+
+    @Test
+    void getAllActiveByTrailId404() {
+        //empty list should 404, so mock an empty list when calling DB
+        Mockito.when(repo.getAllActiveByTrailId(any(),anyLong())).thenReturn(Optional.empty());
+        assertThrows(InvalidRequestException.class, () -> service.getAllActiveByTrailId(dummyFlag.getTrailId().getId()));
+    }
+    @Test
+    void getAllActiveByTrailIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllActiveByTrailId(any(),anyLong())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllActiveByTrailId(dummyFlag.getTrailId().getId()));
+    }
+    @Test
+    void getAllByTrailId404() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByTrailId(any())).thenReturn(Optional.empty());
         assertThrows(InvalidRequestException.class, () -> service.getAllByTrailId(dummyFlag.getTrailId().getId()));
     }
     @Test
-    void getAllByUserIdAndTrailId() {
+    void getAllByTrailIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllByTrailId(any())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllByTrailId(dummyFlag.getTrailId().getId()));
+    }
+    @Test
+    void getAllByUserIdAndTrailId404() {
         //empty list should 404, so mock an empty list when calling DB
         Mockito.when(repo.getAllByUserIdAndTrailId(any(),any())).thenReturn(Optional.empty());
         assertThrows(InvalidRequestException.class, () -> service.getAllByUserIdAndTrailId(dummyFlag.getUserId().getId(),dummyFlag.getTrailId().getId()));
     }
-
+    @Test
+    void getAllByUserIdAndTrailIdWorks() {
+        ArrayList<TrailFlag> dummyReturn = new ArrayList<TrailFlag>();
+        dummyReturn.add(dummyFlag);
+        Mockito.when(repo.getAllByUserIdAndTrailId(any(),any())).thenReturn(Optional.of(dummyReturn));
+        assertEquals(Optional.of(dummyReturn), service.getAllByUserIdAndTrailId(dummyFlag.getUserId().getId(),dummyFlag.getTrailId().getId()));
+    }
     @Test
     //save fails when flag is a duplicate
     void saveNewTrailFlagResourceConflict() {

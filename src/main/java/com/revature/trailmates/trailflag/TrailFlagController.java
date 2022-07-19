@@ -27,25 +27,27 @@ public class TrailFlagController {
     /**
      * gets all flags on or after today by user ID
      * @param u the user ID to be queried
+     * @return an optional list with the trail flags from the queried user, but only those with date >= today, sorted in descending order of date
      */
-//    @CrossOrigin
-//    @ResponseStatus(HttpStatus.OK)
-//    @GetMapping(value="/activeByUser/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
-//    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByUserId(@RequestHeader("Authorization") String token, @PathVariable String u) {
-//        Principal user = tokenService.noTokenThrow(token);
-//        return trailFlagService.getAllActiveByUserId(u);
-//    }
-//    /**
-//     * gets all flags on or after today by trail ID
-//     * @param t the trail ID to be queried
-//     */
-//    @CrossOrigin
-//    @ResponseStatus(HttpStatus.OK)
-//    @GetMapping(value="/activeByTrail/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
-//    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByTrailId(@RequestHeader("Authorization") String token, @PathVariable String t) {
-//        Principal user = tokenService.noTokenThrow(token);
-//        return trailFlagService.getAllActiveByTrailId(t);
-//    }
+    @CrossOrigin
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value="/userActive/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByUserId(@RequestHeader("Authorization") String token, @PathVariable String u) {
+        tokenService.noTokenThrow(token);
+        return trailFlagService.getAllActiveByUserId(u);
+    }
+    /**
+     * gets all flags on or after today by trail ID
+     * @param t the trail ID to be queried
+     * @return an optional list with the trail flags from the queried trail, but only those with date >= today, sorted in descending order of date
+     */
+    @CrossOrigin
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value="/trailActive/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Optional<List<TrailFlag>> getAllByActiveByTrailId(@RequestHeader("Authorization") String token, @PathVariable String t) {
+        tokenService.noTokenThrow(token);
+        return trailFlagService.getAllActiveByTrailId(t);
+    }
     /**
      * gets all flags that match a dateInt and trail ID
      * @param t The trail ID to be queried
@@ -56,7 +58,7 @@ public class TrailFlagController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/dateAndTrail/{d}/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndTrailId(@RequestHeader("Authorization") String token,@PathVariable Long d, @PathVariable String t) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndTrailId(d, t);
     }
     /**
@@ -69,7 +71,7 @@ public class TrailFlagController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/dateAndUser/{d}/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Optional<List<TrailFlag>> getAllByDateIntAndUserId(@RequestHeader("Authorization") String token, @PathVariable long d, @PathVariable String u) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailFlagService.getAllByDateIntAndUserId(d,u);
     }
     /**
@@ -82,7 +84,7 @@ public class TrailFlagController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/userAndTrail/{u}/{t}",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Optional<List<TrailFlag>> getAllByUserIdAndTrailId(@RequestHeader("Authorization") String token,@PathVariable String u, @PathVariable String t) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailFlagService.getAllByUserIdAndTrailId(u,t);
     }
 
@@ -97,7 +99,7 @@ public class TrailFlagController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/user/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Optional<List<TrailFlag>> getAllByUserId(@RequestHeader("Authorization") String token, @PathVariable String u) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailFlagService.getAllByUserId(u);
     }
     /**
@@ -110,7 +112,7 @@ public class TrailFlagController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value="/trail/{t}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Optional<List<TrailFlag>> getAllByTrailId(@RequestHeader("Authorization") String token, @PathVariable String t) {
-        Principal user = tokenService.noTokenThrow(token);
+        tokenService.noTokenThrow(token);
         return trailFlagService.getAllByTrailId(t);
     }
     /**

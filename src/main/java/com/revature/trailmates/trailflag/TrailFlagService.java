@@ -37,45 +37,45 @@ public class TrailFlagService {
 
     public Optional<List<TrailFlag>> getAllByDateIntAndUserId(long dateInt, String userId){
         Optional<List<TrailFlag>> returnList =  trailFlagRepository.getAllByDateIntAndUserId(dateInt,userId);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any flags matching the given date and user.");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllByDateIntAndTrailId(long dateInt, String trailId){
         Optional<List<TrailFlag>> returnList =  trailFlagRepository.getAllByDateIntAndTrailId(dateInt,trailId);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any results for the given date and trail.");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllByUserIdAndTrailId(String userId, String trailId){
         Optional<List<TrailFlag>> returnList =  trailFlagRepository.getAllByUserIdAndTrailId(userId,trailId);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any results for the given user and trail.");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllByUserId(String userId){
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByUserId(userId);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any results for the given user");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllActiveByUserId(String userId){
         long todayteInt=new Date().getTime()/(1000*60*60*24);
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllActiveByUserId(userId,todayteInt);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any active results for the given user");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllByTrailId(String trailId){
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByTrailId(trailId);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any results for the given trail.");
         } else return returnList;
     }
     public Optional<List<TrailFlag>> getAllActiveByTrailId(String trailId){
         long todayteInt=new Date().getTime()/(1000*60*60*24);
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllActiveByTrailId(trailId, todayteInt);
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             throw new InvalidRequestException("Could not retrieve any active results for the given trail.");
         } else return returnList;
     }
@@ -115,7 +115,7 @@ public class TrailFlagService {
     }
     public boolean isDuplicateFlag(TrailFlag flag){
         Optional<List<TrailFlag>> returnList = trailFlagRepository.getAllByDateIntAndUserIdAndTrailId(flag.getDateInt(),flag.getUserId().getId(),flag.getTrailId().getId());
-        if (!returnList.isPresent()||returnList.get().size()==0){
+        if (!returnList.isPresent()||returnList.get().isEmpty()){
             return false;
         } else return true;
     }

@@ -1,6 +1,5 @@
 package com.revature.trailmates.imagedata;
 
-import com.revature.trailmates.trailflag.TrailFlag;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
