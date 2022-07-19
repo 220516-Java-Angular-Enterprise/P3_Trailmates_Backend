@@ -52,7 +52,7 @@ public class NotificationController {
 
     @CrossOrigin
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody void deleteFriend(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
+    public @ResponseBody void deleteNotification(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
         Principal user = tokenService.noTokenThrow(token);
         notificationService.deleteNotification(id);
     }

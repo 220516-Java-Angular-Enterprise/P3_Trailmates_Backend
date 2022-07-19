@@ -28,7 +28,7 @@ public class Notification {
     @Column(name = "timeCreated")
     private Timestamp timeCreated;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user_id;
 
@@ -52,11 +52,11 @@ public class Notification {
             @JoinColumn(name = "friend_id", referencedColumnName = "friend_id")})
     private Friend friend;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "trail_history_id", referencedColumnName = "id")
     private TrailHistory trailHistory;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "trail_id", referencedColumnName = "id")
     private Trail trail;
 
