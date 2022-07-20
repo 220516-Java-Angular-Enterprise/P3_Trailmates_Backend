@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -32,6 +34,52 @@ class UserServiceTest {
 
     @Test
     void getUserByUsername() {
+        User dummy = new User();
+        dummy.setUsername("foobar");
+
+        Mockito.when(userRepository.getUserByUsername(dummy.getUsername())).thenReturn(dummy);
+
+        userRepository.getUserByUsername(dummy.getUsername());
+
+        assertTrue("foobar".contains(dummy.getUsername()));
+    }
+
+    @Test
+    void getUserById(){
+        User dummy = new User();
+        dummy.setId("foobar");
+
+        Mockito.when(userRepository.getUserByID(dummy.getId())).thenReturn(dummy);
+
+        userRepository.getUserByID(dummy.getId());
+
+        assertTrue("foobar".contains(dummy.getId()));
+    }
+
+    @Test
+    void getAllUsers(){
+        ArrayList<User> users = new ArrayList<User>();
+
+        User myUser = new User();
+
+        myUser.setId("0");
+        myUser.setUsername("foo");
+        myUser.setPassword("123");
+        myUser.setEmail("email");
+        myUser.setAge(20);
+        myUser.setBio("I'm the guy");
+        myUser.setRole("DEFAULT");
+
+        users.add(myUser);
+
+
+        Mockito.when(userRepository.getAllUsers()).thenReturn(users);
+
+        ArrayList<User> usersToCheck = userRepository.getAllUsers();
+
+        //assertTrue("foobar".contains(dummy.getId()));
+        assertEquals(users.get(0).getId(), usersToCheck.get(0).getId());
+
     }
 
     @Test
@@ -100,5 +148,7 @@ class UserServiceTest {
         //endregion
 
     }
+
+
 
 }
