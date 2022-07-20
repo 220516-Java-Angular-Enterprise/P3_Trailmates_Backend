@@ -36,6 +36,13 @@ class GroupServiceTest {
 
     @Test
     void getGroups(){
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(new Group());
+        groupList.get(0).setName("213");
+        group.setName("name");
+        group.setId("123");
+        when(repo.getAllGroups()).thenReturn(groupList);
+        assertEquals(groupList, service.getAllGroups());
     }
 
     @Test
@@ -45,6 +52,30 @@ class GroupServiceTest {
         doAnswer(invocationOnMock -> null).when(repo).createGroup(any(String.class), any(String.class), any(String.class));
         repo.createGroup(groupID,conversationID,"name");
         service.createNewGroup("ad", "name");
+    }
+
+    @Test
+    void addUserToGroup(){
+        doAnswer(invocationOnMock -> null).when(repo).addUser(any(String.class), any(String.class));
+        when(repo.retrieveGroupID(any(String.class))).thenReturn("123");
+        repo.addUser("123", "1234");
+        service.addUserToGroup("1234", "name");
+    }
+
+    @Test
+    void editGroup(){
+        doAnswer(invocationOnMock -> null).when(repo).editGroupName(any(String.class), any(String.class));
+        when(repo.retrieveGroupID(any(String.class))).thenReturn("123");
+        repo.editGroupName("name", "123");
+        service.editGroup("name", "123456");
+    }
+
+    @Test
+    void removeUserFromGroup(){
+        doAnswer(invocationOnMock -> null).when(repo).removeUser(any(String.class), any(String.class));
+        when(repo.retrieveGroupID(any(String.class))).thenReturn("123");
+        repo.removeUser("1234", "123");
+        service.removeUserFromGroup("1234", "name");
     }
 
     @Test
@@ -72,7 +103,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void removeUserFromGroup() {
+    void removeNonExistentGroup() {
         when(repo.retrieveGroupID(any(String.class))).thenReturn(null);
         Exception e = assertThrows(InvalidRequestException.class, () -> service.removeUserFromGroup("123", "demo2"));
         assertEquals("Group doesn't exist.", e.getMessage());

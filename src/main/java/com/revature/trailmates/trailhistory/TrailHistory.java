@@ -20,27 +20,28 @@ public class TrailHistory {
     private Timestamp date;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trail_id", referencedColumnName = "id")
+    @JoinColumn(name = "trail_id", referencedColumnName = "id", nullable = false)
     private Trail trail;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id", referencedColumnName = "url")
+    @JoinColumn(name = "image_id", referencedColumnName = "url", nullable = false)
     private ImageData image;
 
     public TrailHistory() {
         super();
     }
 
-    public TrailHistory(String id, String comment, Timestamp date, User user, Trail trail) {
+    public TrailHistory(String id, String comment, Timestamp date, User user, Trail trail, ImageData image) {
         this.id = id;
         this.comment = comment;
         this.date = date;
         this.user = user;
         this.trail = trail;
+        this.image = image;
     }
 
     public String getId() {
