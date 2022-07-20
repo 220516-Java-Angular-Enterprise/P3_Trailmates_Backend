@@ -31,36 +31,15 @@ class TrailServiceTest {
     Trail dummyTrail = new Trail();
 
     @Test
-    void searchTrailByState() {
-        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByState("", -1));
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByState("~", 0));
-    }
-
-    @Test
-    void searchTrailByName() {
-        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByName("", -1));
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByName("~", 0));
-    }
-
-    @Test
-    void searchTrailByParkName() {
-        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByParkName("", -1));
-        assertThrows(InvalidRequestException.class, () -> trailService.searchTrailByParkName("~", 0));
-    }
-
-    @Test
-    void getAllTrailsPage() {
-        Mockito.when(trailRepository.getAllTrails()).thenReturn(new ArrayList<Trail>());
-        assertThrows(InvalidRequestException.class, () -> trailService.getAllTrailsPage(-1));
-    }
-
-    @Test
     void getTrail() {
         Mockito.when(trailRepository.findById(any())).thenReturn(Optional.of(new Trail()));
         assertThrows(InvalidRequestException.class, () -> trailService.getTrail(dummyTrail.getId()));
+    }
+
+    @Test
+    void getTrailByID() {
+        Mockito.when(trailRepository.getById(any())).thenReturn(new Trail());
+        assertThrows(InvalidRequestException.class, () -> trailService.getTrailByID(dummyTrail.getId()));
     }
 
     @Test

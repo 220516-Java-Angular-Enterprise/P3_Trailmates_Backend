@@ -1,18 +1,14 @@
 package com.revature.trailmates.notifications;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.trailmates.communication.ownedconversation.OwnedConversation;
 import com.revature.trailmates.friends.Friend;
 import com.revature.trailmates.trailhistory.TrailHistory;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.user.User;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Optional;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)

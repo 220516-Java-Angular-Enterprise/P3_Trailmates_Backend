@@ -1,16 +1,13 @@
 package com.revature.trailmates.notifications;
 
-import com.revature.trailmates.communication.ownedconversation.OwnedConversation;
 import com.revature.trailmates.communication.ownedconversation.OwnedConversationRepository;
 import com.revature.trailmates.friends.FriendRepository;
 import com.revature.trailmates.notifications.dto.NewNotificationRequest;
-import com.revature.trailmates.trailflag.TrailFlag;
-import com.revature.trailmates.trailflag.TrailFlagService;
 import com.revature.trailmates.trailhistory.TrailHistoryRepository;
-import com.revature.trailmates.trailhistory.TrailHistoryService;
 import com.revature.trailmates.trails.TrailService;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
+import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +28,8 @@ public class NotificationService {
     private final TrailHistoryRepository trailHistoryService;
     private final TrailService trailService;
     private final OwnedConversationRepository ownedConversationRepository;
-
     private final UserService userService;
+
 
     @Inject
     @Autowired
@@ -71,12 +68,15 @@ public class NotificationService {
     }
 
     public List<Notification> getAllNotificationsFromUser(String user_id) {
+        if (user_id == null) throw new InvalidRequestException("User ID is null");
         return notificationRepository.getAllNotificationsFromUser(user_id);
     }
     public Optional<Notification> getNotification(String id) {
+        if (id == null) throw new InvalidRequestException("ID is null");
         return notificationRepository.findById(id);
     }
     public void deleteNotification(String id) {
+        if (id == null) throw new InvalidRequestException("ID is null");
         notificationRepository.deleteById(id);
     }
 }
