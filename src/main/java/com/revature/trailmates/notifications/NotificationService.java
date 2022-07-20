@@ -1,13 +1,13 @@
 package com.revature.trailmates.notifications;
 
+import com.revature.trailmates.communication.ownedconversation.OwnedConversationRepository;
 import com.revature.trailmates.friends.FriendRepository;
 import com.revature.trailmates.notifications.dto.NewNotificationRequest;
-import com.revature.trailmates.trailflag.TrailFlag;
-import com.revature.trailmates.trailflag.TrailFlagService;
-import com.revature.trailmates.trailhistory.TrailHistoryService;
+import com.revature.trailmates.trailhistory.TrailHistoryRepository;
 import com.revature.trailmates.trails.TrailService;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.annotations.Inject;
+import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +25,20 @@ public class NotificationService {
     @Inject
     private final NotificationRepository notificationRepository;
     private final FriendRepository friendRepository;
-    private final TrailHistoryService trailHistoryService;
+    private final TrailHistoryRepository trailHistoryService;
     private final TrailService trailService;
-
+    private final OwnedConversationRepository ownedConversationRepository;
     private final UserService userService;
+
 
     @Inject
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, FriendRepository friendRepository, TrailHistoryService trailHistoryService, TrailService trailService, UserService userService) {
+    public NotificationService(NotificationRepository notificationRepository, FriendRepository friendRepository, TrailHistoryRepository trailHistoryService, TrailService trailService, OwnedConversationRepository ownedConversationRepository, UserService userService) {
         this.notificationRepository = notificationRepository;
         this.friendRepository = friendRepository;
         this.trailHistoryService = trailHistoryService;
         this.trailService = trailService;
+        this.ownedConversationRepository = ownedConversationRepository;
         this.userService = userService;
     }
 
@@ -58,17 +60,23 @@ public class NotificationService {
         else if (request.getNotification_type().equals("FLAG")) {
             notification.setTrail(trailService.getTrailByID(request.getTarget_id()));
         }
+        else if (request.getNotification_type().equals("NEW_CONVO")) {
+            notification.setConvo(ownedConversationRepository.getOwnedConversationByID(request.getTarget_id()));
+        }
 
         notificationRepository.save(notification);
     }
 
     public List<Notification> getAllNotificationsFromUser(String user_id) {
+        if (user_id == null) throw new InvalidRequestException("User ID is null");
         return notificationRepository.getAllNotificationsFromUser(user_id);
     }
     public Optional<Notification> getNotification(String id) {
+        if (id == null) throw new InvalidRequestException("ID is null");
         return notificationRepository.findById(id);
     }
     public void deleteNotification(String id) {
+        if (id == null) throw new InvalidRequestException("ID is null");
         notificationRepository.deleteById(id);
     }
 }

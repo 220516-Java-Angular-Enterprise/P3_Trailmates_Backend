@@ -68,7 +68,7 @@ public class TrailReviewService {
     public List<TrailReview> getAllReviewsForTrail(String trailID){
         if(!trailExists(trailID)) throw new InvalidRequestException("Cannot find trail");
         List<TrailReview> trailReviews = new ArrayList<>();
-        trailReviewRepository.findAll().forEach(trailReviews::add);
+        trailReviewRepository.getAllReviewsOfATrail(trailID).forEach(trailReviews::add);
         if(trailReviews.isEmpty()) throw new InvalidRequestException("No reviews found");
         return trailReviews;
     }

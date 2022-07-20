@@ -24,122 +24,121 @@ public class TrailService {
         this.trailAPIConnector = trailAPIConnector;
         this.trailRepository = trailRepository;
     }
+//
+//    public List<Trail> searchTrailByName(String name, int page) {
+//        List<Trail> allTrails = trailRepository.getAllTrails();
+//        List<Trail> searchedTrails = new ArrayList<>();
+//
+//        for (int i = 0; i < allTrails.size(); i++) {
+//            try {
+//                if (allTrails.get(i).getName().toLowerCase().contains(name.toLowerCase())) searchedTrails.add(allTrails.get(i));
+//            } catch (IndexOutOfBoundsException ignore) { }
+//        }
+//
+//        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+//        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+//
+//
+//        List<Trail> trails = new ArrayList<>();
+//        int total = searchedTrails.size() - (page * 10);
+//        if (total > 10) {
+//            for (int i = 0; i < 10; i++) {
+//                trails.add(searchedTrails.get(page * 10 + i));
+//            }
+//        }
+//        else if (total > 0){
+//            for (int i = 0; i < total; i++) {
+//                trails.add(searchedTrails.get(page*10 + i));
+//            }
+//        }
+//
+//        return trails;
+//    }
+//
+//    public List<Trail> searchTrailByState(String state, int page) {
+//        List<Trail> allTrails = trailRepository.getAllTrails();
+//        List<Trail> searchedTrails = new ArrayList<>();
+//
+//        for (int i = 0; i < allTrails.size(); i++) {
+//            try {
+//                if (allTrails.get(i).getStates().toLowerCase().contains(state.toLowerCase())) searchedTrails.add(allTrails.get(i));
+//            } catch (IndexOutOfBoundsException ignore) { }
+//        }
+//
+//        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+//        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+//
+//        List<Trail> trails = new ArrayList<>();
+//        int total = searchedTrails.size() - (page * 10);
+//        if (total > 10) {
+//            for (int i = 0; i < 10; i++) {
+//                trails.add(searchedTrails.get(page*10 + i));
+//            }
+//        }
+//
+//        else if (total > 0){
+//            for (int i = 0; i < total; i++) {
+//                trails.add(searchedTrails.get(page*10 + i));
+//            }
+//        }
+//        return trails;
+//    }
+//
+//    public List<Trail> searchTrailByParkName(String parkName, int page) {
+//        List<Trail> allTrails = trailRepository.getAllTrails();
+//        List<Trail> searchedTrails = new ArrayList<>();
+//
+//        for (int i = 0; i < allTrails.size(); i++) {
+//            try {
+//                if (allTrails.get(i).getPark_name().toLowerCase().contains(parkName.toLowerCase())) searchedTrails.add(allTrails.get(i));
+//            } catch (IndexOutOfBoundsException ignore) { }
+//        }
+//
+//        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+//        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
+//
+//        List<Trail> trails = new ArrayList<>();
+//        int total = searchedTrails.size() - (page * 10);
+//        if (total > 10) {
+//            for (int i = 0; i < 10; i++) {
+//                trails.add(searchedTrails.get(page*10 + i));
+//            }
+//        }
+//
+//        else if (total > 0){
+//            for (int i = 0; i < total; i++) {
+//                trails.add(searchedTrails.get(page*10 + i));
+//            }
+//        }
+//        return trails;
+//    }
 
-    public List<Trail> searchTrailByName(String name, int page) {
-        List<Trail> allTrails = trailRepository.getAllTrails();
-        List<Trail> searchedTrails = new ArrayList<>();
-
-        for (int i = 0; i < allTrails.size(); i++) {
-            try {
-                if (allTrails.get(i).getName().toLowerCase().contains(name.toLowerCase())) searchedTrails.add(allTrails.get(i));
-            } catch (IndexOutOfBoundsException ignore) { }
-        }
-
-        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
-        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
-
-
-        List<Trail> trails = new ArrayList<>();
-        int total = searchedTrails.size() - (page * 10);
-        if (total > 10) {
-            for (int i = 0; i < 10; i++) {
-                trails.add(searchedTrails.get(page * 10 + i));
-            }
-        }
-        else if (total > 0){
-            for (int i = 0; i < total; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
-            }
-        }
-
-        return trails;
-    }
-
-    public List<Trail> searchTrailByState(String state, int page) {
-        List<Trail> allTrails = trailRepository.getAllTrails();
-        List<Trail> searchedTrails = new ArrayList<>();
-
-        for (int i = 0; i < allTrails.size(); i++) {
-            try {
-                if (allTrails.get(i).getStates().toLowerCase().contains(state.toLowerCase())) searchedTrails.add(allTrails.get(i));
-            } catch (IndexOutOfBoundsException ignore) { }
-        }
-
-        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
-        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
-
-        List<Trail> trails = new ArrayList<>();
-        int total = searchedTrails.size() - (page * 10);
-        if (total > 10) {
-            for (int i = 0; i < 10; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
-            }
-        }
-
-        else if (total > 0){
-            for (int i = 0; i < total; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
-            }
-        }
-        return trails;
-    }
-
-    public List<Trail> searchTrailByParkName(String parkName, int page) {
-        List<Trail> allTrails = trailRepository.getAllTrails();
-        List<Trail> searchedTrails = new ArrayList<>();
-
-        for (int i = 0; i < allTrails.size(); i++) {
-            try {
-                if (allTrails.get(i).getPark_name().toLowerCase().contains(parkName.toLowerCase())) searchedTrails.add(allTrails.get(i));
-            } catch (IndexOutOfBoundsException ignore) { }
-        }
-
-        if (searchedTrails.isEmpty())           throw new InvalidRequestException("Could not retrieve any results for the provided query.");
-        if (page > searchedTrails.size() / 10)  throw new InvalidRequestException("Page Out of Bounds.");
-
-        List<Trail> trails = new ArrayList<>();
-        int total = searchedTrails.size() - (page * 10);
-        if (total > 10) {
-            for (int i = 0; i < 10; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
-            }
-        }
-
-        else if (total > 0){
-            for (int i = 0; i < total; i++) {
-                trails.add(searchedTrails.get(page*10 + i));
-            }
-        }
-        return trails;
-    }
-
-    public List<Trail> getAllTrailsPage(int page) {
-        List<Trail> allTrails = trailRepository.getAllTrails();
-        if (allTrails.isEmpty())    throw new InvalidRequestException("Could not retrieve any results from the Database.");
-        if (page < 0)               throw new InvalidRequestException("Invalid Page Number");
-
-        List<Trail> trails = new ArrayList<>();
-
-        int total = allTrails.size() - (page * 10);
-        if (total > 10) {
-            for (int i = 0; i < 10; i++) {
-                trails.add(allTrails.get(page*10 + i));
-            }
-        }
-        else if (total > 0){
-            for (int i = 0; i < total; i++) {
-                trails.add(allTrails.get(page*10 + i));
-            }
-        }
-        return trails;
-    }
+//    public List<Trail> getAllTrailsPage(int page) {
+//        List<Trail> allTrails = trailRepository.getAllTrails();
+//        if (allTrails.isEmpty())    throw new InvalidRequestException("Could not retrieve any results from the Database.");
+//        if (page < 0)               throw new InvalidRequestException("Invalid Page Number");
+//
+//        List<Trail> trails = new ArrayList<>();
+//
+//        int total = allTrails.size() - (page * 10);
+//        if (total > 10) {
+//            for (int i = 0; i < 10; i++) {
+//                trails.add(allTrails.get(page*10 + i));
+//            }
+//        }
+//        else if (total > 0){
+//            for (int i = 0; i < total; i++) {
+//                trails.add(allTrails.get(page*10 + i));
+//            }
+//        }
+//        return trails;
+//    }
 
     public Trail getTrailByID(String id) {
-        Trail returnList = trailRepository.getById(id);
-        //if (!returnList.isPresent()||returnList.get().getId() == null){
-        //    throw new InvalidRequestException("Could not retrieve any results for the provided query.");
-        //} else
-        return returnList;
+        Trail returnTrail = trailRepository.getById(id);
+        if (returnTrail.getId() == null){
+            throw new InvalidRequestException("Could not retrieve any results for the provided query.");
+        } else return returnTrail;
     }
 
     public Optional<Trail> getTrail(String id) {

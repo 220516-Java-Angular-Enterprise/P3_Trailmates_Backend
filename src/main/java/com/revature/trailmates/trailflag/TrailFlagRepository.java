@@ -12,6 +12,10 @@ public interface TrailFlagRepository extends CrudRepository<TrailFlag,String> {
     Optional<List<TrailFlag>> getAllByUserId(String userId);
     @Query(value ="SELECT * FROM trail_flags where trail_id = ?1", nativeQuery =true)
     Optional<List<TrailFlag>> getAllByTrailId(String trailId);
+    @Query(value ="SELECT * FROM trail_flags where user_id = ?1 and date_int >= ?2 order by date_int desc", nativeQuery =true)
+    Optional<List<TrailFlag>> getAllActiveByUserId(String userId, long todayteInt);
+    @Query(value ="SELECT * FROM trail_flags where trail_id = ?1 and date_int >= ?2 order by date_int desc", nativeQuery =true)
+    Optional<List<TrailFlag>> getAllActiveByTrailId(String trailId, long todayteInt);
     @Query(value ="SELECT * FROM trail_flags where date_int = ?1 and user_id = ?2", nativeQuery =true)
     Optional<List<TrailFlag>> getAllByDateIntAndUserId(long dateInt, String userId);
     @Query(value ="SELECT * FROM trail_flags where date_int = ?1 and user_id = ?2 and trail_id = ?3", nativeQuery =true)

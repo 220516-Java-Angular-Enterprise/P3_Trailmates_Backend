@@ -41,7 +41,6 @@ public class GroupController {
     public void creatingNewGroup(@RequestHeader("Authorization") String token, @PathVariable String newGroup){
         Principal user = tokenService.noTokenThrow(token);
         service.createNewGroup(user.getId(), newGroup);
-
     }
 
     /**
