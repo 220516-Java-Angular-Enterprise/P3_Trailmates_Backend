@@ -31,10 +31,10 @@ public class ImageDataController {
      * @param token Authorization token from header
      * @return an ImageData object with the authenticated user's most recent profile picture.'
      */
-     @GetMapping(value="/profpic",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ImageData getLatestProfPic(@RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return imageDataService.getLatestProfPic(user);
+     @GetMapping(value="/profpic/{u}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ImageData getLatestProfPic(@RequestHeader("Authorization") String token, @PathVariable String u) {
+        tokenService.noTokenThrow(token);
+        return imageDataService.getLatestProfPic(u);
     }
     /**
      * Generates a secure URL for making a PUT request to the trailmates-images S3 bucket
