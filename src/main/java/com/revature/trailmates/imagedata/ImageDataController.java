@@ -36,18 +36,6 @@ public class ImageDataController {
         tokenService.noTokenThrow(token);
         return imageDataService.getLatestProfPic(u);
     }
-    /**
-     * Generates a secure URL for making a PUT request to the trailmates-images S3 bucket
-     * @param token Authorization token from header
-     * @param extension the file extension (jpeg, png, etc) under which it will be saved on S3
-     * @return A string that is the URL to which the PUT request should be sent.
-     */
-
-    @GetMapping(value="/gen-url/{extension}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public SecureUrlResponse generateUploadUrl(@RequestHeader("Authorization") String token, @PathVariable String extension) {
-        tokenService.noTokenThrow(token);
-        return new SecureUrlResponse(imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT));
-    }
 
     /**
      * Obtains an ImageData object given its unique url on S3 (does not query S3; the url is a primary key in database)

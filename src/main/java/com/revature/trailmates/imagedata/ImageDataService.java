@@ -1,7 +1,5 @@
 package com.revature.trailmates.imagedata;
 
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
 import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
 import com.revature.trailmates.util.annotations.Inject;
@@ -17,22 +15,11 @@ import java.util.*;
 @Transactional
 public class ImageDataService {
     @Inject
-    private final AmazonS3 amazonS3;
-    @Inject
     private final ImageDataRepository imageDataRepo;
     @Autowired
-    public ImageDataService(AmazonS3 amazonS3, ImageDataRepository imageDataRepo) {this.amazonS3 = amazonS3; this.imageDataRepo= imageDataRepo;}
-
-    public String generatePreSignedUrl(String filePath, String bucketName, HttpMethod httpMethod) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, 10); //url valid for 10 minutes
-        return amazonS3.generatePresignedUrl(bucketName, filePath, calendar.getTime(), httpMethod).toString();
-    }
+    public ImageDataService(ImageDataRepository imageDataRepo) {this.imageDataRepo= imageDataRepo;}
     public ImageData saveNewImageData(NewImageDataRequest request, Principal user){
         ImageData newImage = new ImageData(request, user, new Date());
-        //input validation?
-        //save to database
         try {
             imageDataRepo.save(newImage);
         } catch (Exception e) {

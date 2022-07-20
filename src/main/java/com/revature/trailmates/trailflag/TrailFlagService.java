@@ -99,7 +99,6 @@ public class TrailFlagService {
         }catch (Exception e){
             throw new InvalidRequestException("Unable to save trail flag.  Either the user or trail id were not found in the database, or the database was inaccessible.");
         }
-
         //Sending a notification out to all the People that are friends with the User
         List<Friend> friends = friendService.getAllFriendsFromFriendID(user.getId());
         for ( Friend f : friends ) {
