@@ -75,18 +75,26 @@ class FriendServiceTest {
     @Test
     void getAllPendingFriends() {
         String friend_id = "810f2743-0210-4569-9101-e8c84a0c1f41";
+        FriendID dummyId = new FriendID("0", "1");
+        Friend dummyFriend = new Friend();
+        dummyFriend.setFriendID(dummyId);
 
         List<Friend> dummyList = new ArrayList<>();
+        dummyList.add(dummyFriend);
+
         Mockito.when(friendRepository.getAllFriendsFromFriendID(friend_id)).thenReturn(dummyList);
         Mockito.when(friendRepository.getAllFriendsFromUser(friend_id)).thenReturn(dummyList);
 
         friendService.getAllPendingFriends(friend_id);
 
         List<Friend> resultList = friendService.getAllPendingFriends(friend_id);
-        assertEquals(dummyList, resultList);
+        assertEquals(dummyList.get(0).getFriendID().getUser_id(), resultList.get(0).getFriendID().getFriend_id());
     }
 
-
+    @Test
+    void getAllPendingWithNullID() {
+        assertThrows(InvalidRequestException.class, () -> friendService.getAllPendingFriends(null));
+    }
 
     @Test
     void getAllFriendsFromUser() {
@@ -114,11 +122,6 @@ class FriendServiceTest {
 
         List<Friend> resultList = friendService.getAllFriendsFromFriendID(friend_id);
         assertEquals(dummyList, resultList);
-    }
-
-    @Test
-    void getAllPendingWithNullID() {
-        assertThrows(InvalidRequestException.class, () -> friendService.getAllPendingFriends(null));
     }
 
     @Test
