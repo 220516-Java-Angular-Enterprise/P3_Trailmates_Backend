@@ -1,16 +1,13 @@
 package com.revature.trailmates.imagedata;
 
-import com.amazonaws.HttpMethod;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
-import com.revature.trailmates.imagedata.dtos.responses.SecureUrlResponse;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -35,18 +32,6 @@ public class ImageDataController {
     public ImageData getLatestProfPic(@RequestHeader("Authorization") String token, @PathVariable String u) {
         tokenService.noTokenThrow(token);
         return imageDataService.getLatestProfPic(u);
-    }
-    /**
-     * Generates a secure URL for making a PUT request to the trailmates-images S3 bucket
-     * @param token Authorization token from header
-     * @param extension the file extension (jpeg, png, etc) under which it will be saved on S3
-     * @return A string that is the URL to which the PUT request should be sent.
-     */
-
-    @GetMapping(value="/gen-url/{extension}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public SecureUrlResponse generateUploadUrl(@RequestHeader("Authorization") String token, @PathVariable String extension) {
-        tokenService.noTokenThrow(token);
-        return new SecureUrlResponse(imageDataService.generatePreSignedUrl(UUID.randomUUID()+"."+extension, "trailmates-images", HttpMethod.PUT));
     }
 
     /**
