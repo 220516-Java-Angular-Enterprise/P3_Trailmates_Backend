@@ -1,6 +1,7 @@
 package com.revature.trailmates.trailhistory;
 
 
+import com.revature.trailmates.imagedata.ImageData;
 import com.revature.trailmates.trailhistory.dto.requests.NewHistoryRequest;
 import com.revature.trailmates.trailhistory.dto.response.History;
 import com.revature.trailmates.trails.Trail;
@@ -23,8 +24,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +48,7 @@ class TrailHistoryServiceTest {
     @Test
     void getAscHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
-        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
+        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail(), new ImageData());
         trailHistoryList.add(trail);
         when(repo.getAscHistory(any(String.class))).thenReturn(trailHistoryList);
         List<History> historyList = new ArrayList<>();
@@ -59,7 +59,7 @@ class TrailHistoryServiceTest {
     @Test
     void getDescHistory() {
         List<TrailHistory> trailHistoryList = new ArrayList<>();
-        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail());
+        trail = new TrailHistory("123", "213", new Timestamp(System.currentTimeMillis()), new User(), new Trail(), new ImageData());
         trailHistoryList.add(trail);
         when(repo.getDescHistory(any(String.class))).thenReturn(trailHistoryList);
         List<History> historyList = new ArrayList<>();
@@ -81,6 +81,23 @@ class TrailHistoryServiceTest {
         newHistory.setTrail_name("asd");
         newHistory.setDate("2022-12-10 13:45:00.0");
         assertThrows(InvalidRequestException.class, () -> service.insertNewHistory(newHistory, "0c2b4bc1-7270-4264-96c0-7d897fbd1771"));
+    }
+
+    @Test
+    void addNewHistory(){
+       /* List<TrailHistory> trailHistoryList = new ArrayList<>();
+        Trail trails = new Trail();
+        trails.setName("1234");
+        trail.setTrail(trails);
+        trailHistoryList.add(trail);
+        when(repo.getAscHistory(any(String.class))).thenReturn(trailHistoryList);
+        doAnswer(invocationOnMock -> null).when(repo).addNewHistory(any(String.class), any(String.class),any(Timestamp.class),any(String.class), any(String.class), any(String.class));
+        repo.addNewHistory("name", "123", new Timestamp(System.currentTimeMillis()), "12", "12345", "123546");
+        newHistory.setDate("2021-09-12 12:12:00.00");
+        newHistory.setTrail_name("1234");
+        newHistory.setComment("123");
+        newHistory.setImageURL("123454");
+        service.insertNewHistory(newHistory, "123456");*/
     }
 
 
