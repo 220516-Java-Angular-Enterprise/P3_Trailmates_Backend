@@ -1,10 +1,7 @@
 package com.revature.trailmates.friends;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.revature.trailmates.notifications.Notification;
 import com.revature.trailmates.user.User;
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "friends")

@@ -52,12 +52,12 @@ public class TrailController {
      * @param page
      * @return A List of at most 10 trails at a certain page
      */
-    @CrossOrigin
-    @GetMapping(value = "/getAll/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> getAllTrailsByPage(@PathVariable int page, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.getAllTrailsPage(page);
-    }
+//    @CrossOrigin
+//    @GetMapping(value = "/getAll/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody List<Trail> getAllTrailsByPage(@PathVariable int page, @RequestHeader("Authorization") String token) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailService.getAllTrailsPage(page);
+//    }
 
     /**
      * Returns a List of Every Single Trail in the Database
@@ -76,12 +76,12 @@ public class TrailController {
      * @param page The page that they want to go to.
      * @return List<Trail> A list of at most 10 trails
      */
-    @CrossOrigin
-    @GetMapping(value = "search/{page}/{search_name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByName(@PathVariable("search_name") String search_name, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByName(search_name, page);
-    }
+//    @CrossOrigin
+//    @GetMapping(value = "search/{page}/{search_name}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody List<Trail> searchTrailByName(@PathVariable("search_name") String search_name, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailService.searchTrailByName(search_name, page);
+//    }
 
     /**
      * Returns a List of Trails that fit the State search criteria on a specified page
@@ -89,12 +89,12 @@ public class TrailController {
      * @param page The page the user is on
      * @return List<Trail> A List of 10 trails or less if on the last page
      */
-    @CrossOrigin
-    @GetMapping(value = "searchState/{page}/{state}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByState(@PathVariable("state") String state, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByState(state, page);
-    }
+//    @CrossOrigin
+//    @GetMapping(value = "searchState/{page}/{state}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody List<Trail> searchTrailByState(@PathVariable("state") String state, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailService.searchTrailByState(state, page);
+//    }
 
     /**
      * Returns a List of Trails that fir the Park Name search criteria on a specific page
@@ -102,12 +102,12 @@ public class TrailController {
      * @param page
      * @return
      */
-    @CrossOrigin
-    @GetMapping(value = "searchPark/{page}/{search_park}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Trail> searchTrailByParkName(@PathVariable("search_park") String search_park, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
-        Principal user = tokenService.noTokenThrow(token);
-        return trailService.searchTrailByParkName(search_park, page);
-    }
+//    @CrossOrigin
+//    @GetMapping(value = "searchPark/{page}/{search_park}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public @ResponseBody List<Trail> searchTrailByParkName(@PathVariable("search_park") String search_park, @PathVariable("page") int page, @RequestHeader("Authorization") String token) {
+//        Principal user = tokenService.noTokenThrow(token);
+//        return trailService.searchTrailByParkName(search_park, page);
+//    }
 
 
     //FOR BACKEND USE ONLY, DON'T CALL THIS ON FRONT END.
@@ -115,71 +115,5 @@ public class TrailController {
     //@GetMapping(value = "/getAllAPI/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
     //public @ResponseBody List<Trail> getAllTrailsAPI(@PathVariable int page) { return trailService.getAllTrailsAPI(page); }
 
-
-    /**
-     * Catches any exceptions in other methods and returns status code 401 if
-     * a UnauthorizedException occurs.
-     * @param e The unauthorized exception being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleUnauthorizedException(UnauthorizedException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 401);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-    /**
-     * Catches any exceptions in other methods and returns status code 403 if
-     * a AuthenticationException occurs.
-     * @param e The authentication exception being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public @ResponseBody Map<String, Object> handleAuthenticationException(AuthenticationException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 403);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-    /**
-     * Catches any exceptions in other methods and returns status code 404 if
-     * a InvalidRequestException occurs.
-     * @param e The invalid request exception being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Map<String, Object> handleInvalidRequestException(InvalidRequestException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 404);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
-
-    /**
-     * Catches any exceptions in other methods and returns status code 409 if
-     * a ResourceConflictException occurs.
-     * @param e The resource conflict request being thrown
-     * @return A map containing the status code, error message, and timestamp of
-     * when the error occurred.
-     */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody Map<String, Object> handleResourceConflictException(ResourceConflictException e){
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("status", 409);
-        responseBody.put("message", e.getMessage());
-        responseBody.put("timestamp", LocalDateTime.now().toString());
-        return responseBody;
-    }
 
 }
