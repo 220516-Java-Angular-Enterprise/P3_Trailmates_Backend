@@ -1,16 +1,13 @@
 package com.revature.trailmates.imagedata;
 
-import com.amazonaws.HttpMethod;
 import com.revature.trailmates.auth.TokenService;
 import com.revature.trailmates.auth.dtos.response.Principal;
 import com.revature.trailmates.imagedata.dtos.requests.NewImageDataRequest;
-import com.revature.trailmates.imagedata.dtos.responses.SecureUrlResponse;
 import com.revature.trailmates.util.annotations.Inject;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
