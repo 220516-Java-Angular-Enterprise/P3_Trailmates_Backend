@@ -50,10 +50,6 @@ public class TrailHistoryService {
         return repo.getDescHistory(userID).stream().map(e -> new History().extractTrail(e)).collect(Collectors.toList());
     }
 
-    public TrailHistory getHistory(String id) {
-        return repo.getHistory(id);
-    }
-
     public void insertNewHistory(NewHistoryRequest newHistory, String userID){
         Timestamp date = Timestamp.valueOf(newHistory.getDate().replaceAll("[A-Z]", " "));
         String trailID = repo.trailID(newHistory.getTrail_name());
