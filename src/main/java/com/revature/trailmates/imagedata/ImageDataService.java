@@ -40,12 +40,12 @@ public class ImageDataService {
         }
         return newImage;
     }
-    public ImageData getLatestProfPic(Principal user){
+    public ImageData getLatestProfPic(String userID){
         //initialize the object that will hold what we get from database.
         Optional<List<ImageData>> retrievedImageData = Optional.of(new ArrayList<ImageData>());
         //get imagedata from database, throw exception if we can't.
         try{
-            retrievedImageData=imageDataRepo.getLatestPPByUserId(user.getId());
+            retrievedImageData=imageDataRepo.getLatestPPByUserId(userID);
         } catch (Exception e) {
             throw new InvalidRequestException("There was an error accessing the database to obtain a profile pic.");
         }
