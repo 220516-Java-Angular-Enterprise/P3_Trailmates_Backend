@@ -37,9 +37,9 @@ class UserServiceTest {
         User dummy = new User();
         dummy.setUsername("foobar");
 
-        Mockito.when(userRepository.getUserByUsername(dummy.getUsername())).thenReturn(dummy);
+        Mockito.when(userService.getUserByUsername(dummy.getUsername())).thenReturn(dummy);
 
-        userRepository.getUserByUsername(dummy.getUsername());
+        userService.getUserByUsername(dummy.getUsername());
 
         assertTrue("foobar".contains(dummy.getUsername()));
     }
@@ -49,9 +49,9 @@ class UserServiceTest {
         User dummy = new User();
         dummy.setId("foobar");
 
-        Mockito.when(userRepository.getUserByID(dummy.getId())).thenReturn(dummy);
+        Mockito.when(userService.getUserById(dummy.getId())).thenReturn(dummy);
 
-        userRepository.getUserByID(dummy.getId());
+        userService.getUserById(dummy.getId());
 
         assertTrue("foobar".contains(dummy.getId()));
     }
@@ -73,9 +73,9 @@ class UserServiceTest {
         users.add(myUser);
 
 
-        Mockito.when(userRepository.getAllUsers()).thenReturn(users);
+        Mockito.when(userService.getAllUsers()).thenReturn(users);
 
-        ArrayList<User> usersToCheck = userRepository.getAllUsers();
+        ArrayList<User> usersToCheck = userService.getAllUsers();
 
         //assertTrue("foobar".contains(dummy.getId()));
         assertEquals(users.get(0).getId(), usersToCheck.get(0).getId());
@@ -90,7 +90,7 @@ class UserServiceTest {
         User dummy = new User();
         dummy.setId("0");
 
-        Mockito.when(userRepository.getUserByID(editUserRequest.getId())).thenReturn(dummy);
+        Mockito.when(userService.getUserById(editUserRequest.getId())).thenReturn(dummy);
 
         //region email invalid
         {

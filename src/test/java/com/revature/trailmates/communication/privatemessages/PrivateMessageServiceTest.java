@@ -31,9 +31,9 @@ class PrivateMessageServiceTest {
         PrivateMessage dummy = new PrivateMessage();
         dummy.setId("foobar");
 
-        Mockito.when(privateMessageRepository.getPrivateMessageByID(dummy.getId())).thenReturn(dummy);
+        Mockito.when(privateMessageService.getPrivateMessageById(dummy.getId())).thenReturn(dummy);
 
-        privateMessageRepository.getPrivateMessageByID(dummy.getId());
+        privateMessageService.getPrivateMessageById(dummy.getId());
 
         assertTrue("foobar".contains(dummy.getId()));
     }
@@ -49,9 +49,9 @@ class PrivateMessageServiceTest {
         pms.add(myPM);
 
 
-        Mockito.when(privateMessageRepository.getAllPrivateMessages()).thenReturn(pms);
+        Mockito.when(privateMessageService.getAllPrivateMessages()).thenReturn(pms);
 
-        ArrayList<PrivateMessage> pmsToCheck = privateMessageRepository.getAllPrivateMessages();
+        ArrayList<PrivateMessage> pmsToCheck = privateMessageService.getAllPrivateMessages();
 
         //assertTrue("foobar".contains(dummy.getId()));
         assertEquals(pms.get(0).getId(), pmsToCheck.get(0).getId());
@@ -68,9 +68,9 @@ class PrivateMessageServiceTest {
         pms.add(myPM);
 
 
-        Mockito.when(privateMessageRepository.getAllPrivateMessagesInConversation("foo")).thenReturn(pms);
+        Mockito.when(privateMessageService.getAllPrivateMessagesInConversation("foo")).thenReturn(pms);
 
-        ArrayList<PrivateMessage> pmsToCheck = privateMessageRepository.getAllPrivateMessagesInConversation("foo");
+        ArrayList<PrivateMessage> pmsToCheck = privateMessageService.getAllPrivateMessagesInConversation("foo");
 
         //assertTrue("foobar".contains(dummy.getId()));
         assertEquals(pms.get(0).getId(), pmsToCheck.get(0).getId());

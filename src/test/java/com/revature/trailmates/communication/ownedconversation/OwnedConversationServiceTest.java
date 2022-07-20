@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,9 +29,9 @@ class OwnedConversationServiceTest {
         OwnedConversation dummy = new OwnedConversation();
         dummy.setId("foobar");
 
-        Mockito.when(ownedConversationRepository.getOwnedConversationByID(dummy.getId())).thenReturn(dummy);
+        Mockito.when(ownedConversationService.getOwnedConversationById(dummy.getId())).thenReturn(dummy);
 
-        ownedConversationRepository.getOwnedConversationByID(dummy.getId());
+        OwnedConversation ownedConversation = ownedConversationService.getOwnedConversationById(dummy.getId());
 
         assertTrue("foobar".contains(dummy.getId()));
     }
@@ -80,9 +81,9 @@ class OwnedConversationServiceTest {
         ArrayList<OwnedConversation> convos = new ArrayList<OwnedConversation>();
         convos.add(dummy);
 
-        Mockito.when(ownedConversationRepository.getAllOwnedConversationsOfUser("foo")).thenReturn(convos);
+        Mockito.when(ownedConversationService.getAllOwnedConversationsOfUser("foo")).thenReturn(convos);
 
-        ArrayList<OwnedConversation> usersToCheck = ownedConversationRepository.getAllOwnedConversationsOfUser("foo");
+        ArrayList<OwnedConversation> usersToCheck = ownedConversationService.getAllOwnedConversationsOfUser("foo");
 
         assertEquals(convos.get(0).getId(), usersToCheck.get(0).getId());
     }
