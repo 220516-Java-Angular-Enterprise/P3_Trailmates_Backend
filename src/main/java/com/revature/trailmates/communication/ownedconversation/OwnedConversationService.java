@@ -60,16 +60,20 @@ public class OwnedConversationService {
 
     //region save
 
-    public void saveNewOwnedConversation(String userID, String conversationID){
+    public String saveNewOwnedConversation(String userID, String conversationID){
         String newID = UUID.randomUUID().toString();
         ownedConversationRepository.saveNewOwnedConversation(newID, conversationID, userID);
 
+        //region notif
         // Add a new notification for when you get added to a new group
         NewNotificationRequest request1 = new NewNotificationRequest();
         request1.setNotification_type("NEW_CONVO");
         request1.setMessage("You have been added to a new group chat.");
         request1.setTarget_id(newID);
         notificationService.addNotification(request1, userID);
+        //endregion
+
+        return conversationID;
     }
 
     //endregion
