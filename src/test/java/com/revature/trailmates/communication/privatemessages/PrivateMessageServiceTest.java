@@ -13,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class PrivateMessageServiceTest {
@@ -81,12 +83,10 @@ class PrivateMessageServiceTest {
         String newConvID = "foo";
 
 
-        //Mockito.when(conversationService.createNewConversation("name")).thenReturn("foo");
 
-        //String newConvName = conversationService.createNewConversation("name");
 
-        assertTrue(newConvID.contains("foo"));
+        String newConvName = privateMessageService.saveNewPrivateMessage("name", newPrivateMessageRequest);
+        Mockito.verify(privateMessageRepository, times(1)).saveNewPrivateMessage(any(), any(), any(), any(), any());
+        //assertTrue(newConvID.contains("foo"));
     }
 }
-
-

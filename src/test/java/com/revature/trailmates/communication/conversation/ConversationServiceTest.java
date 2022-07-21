@@ -11,8 +11,10 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +29,7 @@ class ConversationServiceTest {
     @Spy
     NewConversationRequest newConversationRequest;
 
+
     @Test
     void getConversationById() {
         Conversation dummy = new Conversation();
@@ -34,7 +37,7 @@ class ConversationServiceTest {
 
         Mockito.when(conversationRepository.getConversationByID(dummy.getId())).thenReturn(dummy);
 
-        conversationRepository.getConversationByID(dummy.getId());
+        conversationService.getConversationById(dummy.getId());
 
         assertTrue("foobar".contains(dummy.getId()));
     }
@@ -51,7 +54,7 @@ class ConversationServiceTest {
 
         Mockito.when(conversationRepository.getAllConversationsOfUser("Foo")).thenReturn(convos);
 
-        ArrayList<Conversation> convosToCheck = conversationRepository.getAllConversationsOfUser("Foo");
+        ArrayList<Conversation> convosToCheck = conversationService.getAllConversationsOfUser("Foo");
 
         //assertTrue("foobar".contains(dummy.getId()));
         assertEquals(convos.get(0).getId(), convosToCheck.get(0).getId());
@@ -61,12 +64,9 @@ class ConversationServiceTest {
     void createNewConversation() {
         String newConvID = "foo";
 
-
-        //Mockito.when(conversationService.createNewConversation("name")).thenReturn("foo");
-
-        //String newConvName = conversationService.createNewConversation("name");
-
-        assertTrue(newConvID.contains("foo"));
+        //Mockito.when(conversationRepository.saveConversations("name"));
+        String newConvName = conversationService.createNewConversation("name");
+        Mockito.verify(conversationRepository, times(1)).saveConversations(newConvName, "name");
 
     }
 }

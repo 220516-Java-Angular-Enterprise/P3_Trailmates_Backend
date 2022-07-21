@@ -19,7 +19,6 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobExceptionHandlers extends ResponseEntityExceptionHandler {
 
-    private final static String status = "Status";
     //region Exception Handlers
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

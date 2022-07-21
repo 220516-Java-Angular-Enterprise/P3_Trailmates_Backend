@@ -4,6 +4,7 @@ import com.revature.trailmates.trailreview.dtos.requests.TrailReviewRequest;
 import com.revature.trailmates.trailreview.dtos.responses.TrailAverageRating;
 import com.revature.trailmates.trails.Trail;
 import com.revature.trailmates.trails.TrailService;
+import com.revature.trailmates.user.User;
 import com.revature.trailmates.user.UserService;
 import com.revature.trailmates.util.custom_exception.InvalidRequestException;
 import org.junit.jupiter.api.Test;
@@ -14,12 +15,16 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+
 @ExtendWith(MockitoExtension.class)
 class TrailReviewServiceTest {
 
@@ -49,21 +54,30 @@ class TrailReviewServiceTest {
 
 
     @Test
-    void newTrailReview() {
+    void newTrailReviewSuccess() {
         // Arrange
+        trailReviewRequest = new TrailReviewRequest();
+        trailReviewRequest.setRating(BigDecimal.valueOf(3));
+        trailReviewRequest.setComment("test comment");
+        Mockito.when(userService.getUserById(userID)).thenReturn(new User());
+        //Mockito.when(trailService.getTrail(trailID)).thenThrow(new InvalidRequestException("Could not retrieve any results for the provided query."));
 
         // Act
+        trailReviewService.newTrailReview(trailReviewRequest,userID,trailID);
 
         // Assert
+        Mockito.verify(trailReviewRepository, times(1)).save(any());
     }
 
     @Test
-    void updateTrailReview() {
+    void updateTrailReviewSuccess() {
         // Arrange
-
+        TrailReview trailReview = new TrailReview();
         // Act
 
+
         // Assert
+        //Mockito.verify()
     }
 
     //region deleteReview tests
@@ -95,6 +109,7 @@ class TrailReviewServiceTest {
     }
     //endregion
 
+    //region getAverageReviewsForTrail
     @Test
     void getAverageReviewsForTrailTrailDoesNotExist() {
         // Arrange
@@ -126,6 +141,7 @@ class TrailReviewServiceTest {
         // Assert
         assertTrue(actualMessage.equals(expectedMessage));
     }*/
+    //endregion
 
     //region getAllReviewsForTrail tests
     @Test
@@ -174,7 +190,7 @@ class TrailReviewServiceTest {
     }*/
     //endregion
 
-
+    //region getReviewByTrailIDAndUserID tests
     /*@Test
     void getReviewByTrailIDAndUserIDTrailDoesExist() {
         // Arrange
@@ -190,11 +206,17 @@ class TrailReviewServiceTest {
     }*/
 
     @Test
-    void getReviewByTrailIDAndUserIDTrailDoesNotExist() {
+    void getReviewByTrailIDAndUserIDSuccess() {
         // Arrange
+        TrailReview expectedReview = new TrailReview();
+        expectedReview.setComment("test comment");
+        Mockito.when(trailReviewRepository.ifReviewExists(trailID, userID)).thenReturn(expectedReview);
 
         // Act
+        TrailReview actualReview = trailReviewService.getReviewByTrailIDAndUserID(trailID, userID);
 
         // Assert
+        assertEquals(expectedReview.getComment(), actualReview.getComment());
     }
+    //endregion
 }
